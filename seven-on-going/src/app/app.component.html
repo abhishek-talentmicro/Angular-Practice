@@ -1,0 +1,47 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <br>
+      <button class="btn btn-primary" (click)="odd=!odd">Only show odd numbers</button>
+      <br>
+      <br>
+      <ul class="list-group">
+        <div *ngIf="odd==true">
+          <li class="list-group-item" *ngFor="let odd of oddNumbers" [ngStyle]="{ backgroundColor : 'yellow' }"
+            [ngClass]="{ oddClass : odd }">
+            {{ odd }}
+          </li>
+        </div>
+        <!-- <div *ngIf="odd!=true">
+          <li class="list-group-item" *ngFor="let eve of evenNumbers" [ngStyle]="{ backgroundColor: 'green'}"
+            [ngClass]="{ evenClass : eve }">
+            {{ eve }}
+          </li>
+        </div>
+        <ng-template [ngIf]="odd!=true">
+          <div>
+            <li class="list-group-item" *ngFor="let eve of evenNumbers" [ngStyle]="{ backgroundColor: 'green'}"
+              [ngClass]="{ evenClass : eve }">
+              {{ eve }}
+            </li>
+          </div>
+        </ng-template> -->
+        <div *notIf="odd==true">
+          <li class="list-group-item" *ngFor="let eve of evenNumbers" [ngStyle]="{ backgroundColor: 'green'}"
+            [ngClass]="{ evenClass : eve }">
+            {{ eve }}
+          </li>
+        </div>
+      </ul>
+      <p yellow-directive>hellow where are you</p>
+      <hr>
+      <p appNewYellowBackground yellowColor='orange' defaultColor='blue'>new directive using rendrer</p>
+      <div [ngSwitch]="value">
+        <p *ngSwitchCase='10'>value=10</p>
+        <p *ngSwitchCase='5'>value=5</p>
+        <p *ngSwitchCase='8'>value=8</p>
+        <p *ngDefaultValue>default value</p>
+      </div>
+    </div>
+  </div>
+</div>
