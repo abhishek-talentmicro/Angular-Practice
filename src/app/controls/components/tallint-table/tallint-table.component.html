@@ -1,0 +1,472 @@
+<div class="h-100 tallint-table" *ngIf="!hide_table">
+  <div title="Export" class="pointer" style="
+    z-index: 1000;
+    /* top: 0px; */
+    left: 0px;
+    position: fixed;
+    background: #2471b0;
+    display: inline-block;
+    width: 23px;
+    text-align: center;
+">
+    <!-- <div>
+            <ngc-float-button style="z-index: 999;" icon="add" direction="{{'bottom'}}">
+                <ngc-float-item-button icon="person_add" content="float item 1"> </ngc-float-item-button>
+                <ngc-float-item-button icon="gps_fixed" content="float item 2"></ngc-float-item-button>
+                <ngc-float-item-button icon="mode_edit" content="float item 3"></ngc-float-item-button>
+            </ngc-float-button>
+        </div> -->
+    <div *ngIf="false" class="text-center" (click)="exportDataToExcel()" style="box-shadow: 0 0px 2px gainsboro;">
+      <i class="fa fa-file-excel-o" style="color: white;"></i>
+    </div>
+    <div *ngIf="grid_configuration" class="text-center" style="box-shadow: 0 0px 2px gainsboro;"
+      (click)="openColumnDetails()">
+      <i title="Column Details" class="fa fa-cog" style="color: white;"></i>
+    </div>
+  </div>
+
+  <cdk-virtual-scroll-viewport #virtual_scroll class="h-100" (scrolledIndexChange)="getNextBatch($event)"
+    [itemSize]="24">
+    <!-- <table class="table skeleton" *ngIf="fetching_entries">
+            <tbody>
+                <tr *ngFor="let a of [1,2,3,4,5,6,7,8,9,10,11,12,13,14]; let i=index;" style="width: 100%;">
+                    <th *ngFor="let bs of [1,2,3,4,5,6,7,8,9,10]; let j=index;" class="skeleton-th">
+                        <div [style.width]="random_width[i][j]" class="horizontal-bar"></div>
+                    </th>
+                </tr>
+            </tbody>
+        </table> -->
+
+
+    <!--[style.height.px]="table_height"-->
+
+    <!--[style.height.px]="table_height"-->
+    <!-- [style.height.px]="nested?null:item_size*total_count" -->
+    <!-- <span><i class=" fa fa-upload " style="z-index: 100; top: 0px; position: absolute;" (click)="exportDataToExcel()" *ngIf="export"></i></span> -->
+
+    <table class="table table-striped table-hover m-0">
+      <tr style="background: none;
+      background-color: #f3f3f3;" *ngIf="tallint_table_columns && tallint_table_columns.length>0">
+        <th class="tallint-th" *ngIf="nested == true"><i class="fa fa-plus-square"></i></th>
+
+        <th class="p-0 pl-2 pr-2 text-center" *ngIf="multi_select" [style.top]="calclateTop()"
+          style="position: sticky;width: 35px;padding-top:0 !important;padding-bottom:0 !important;">
+          <i style="color:#196ca5 !important;font-size:16px;" class="fa fa-square-o pointer mt-1" type="checkbox"
+            (click)="selectAll(true)" *ngIf="!select_all"></i>
+          <i style="color:#196ca5 !important;font-size:16px;" class="fa fa-check-square-o pointer mt-1"
+            (click)="selectAll(false)" *ngIf="select_all && selected_entries.length >0"></i>
+        </th>
+
+        <th style="width: 30px;" class="tallint-th pointer" *ngIf="edit" [style.top]="calclateTop()"
+          style="position: sticky;">
+          <div style="width: 30px;">
+            Edit
+          </div>
+        </th>
+
+        <ng-container *ngFor="let column of tallint_table_columns; let index=index;">
+          <th title="{{column.title}}" *ngIf="column.visible" class="tallint-th" (click)="sortColumn(column)"
+            [ngClass]="{'text-right':column.data_type=='int'}" [style.top]="calclateTop()" style="position: sticky;">
+            <div style="cursor: col-resize !important; border-right: 3px solid transparent; z-index: 1000;height: 18px;"
+              (mousedown)="resizeTable($event,column)"
+              [ngStyle]="{'width':column.width > 20 ? column.width+'px':'100px'}"
+              [ngClass]="{'text-right float-right':column.data_type=='int'}">
+              <i class="fa fa-arrow-up" *ngIf="column.sort == true"></i>
+              <i class="fa fa-arrow-down" *ngIf="column.sort == false"></i>
+              <!-- <a class="from-label-code" *ngIf="(column.module_code&&column.sub_module_code&&column.form_code&&column.label_code);else coltitle"> {{'1001_10004_1200010_1002' | translate }}</a> -->
+              <span class="pointer d-inline-block" style="width: 100%;overflow: hidden;"
+                [ngClass]="{'text-right float-right':column.data_type=='int'}" [class]="column.cell_class">
+                <span *ngIf="column.title; else label_code">
+                  <span class="margin">
+                    <span [innerHTML]='column.title | HTMLFormatter'>
+                    </span>
+                  </span>
+                </span>
+                <ng-template #label_code>
+
+                  <span class="margin">
+                    <span [innerHTML]='(column.label_code | translate) | HTMLFormatter'></span>
+                  </span>
+                  <!--{{column.label_code | translate}}-->
+                </ng-template>
+              </span>
+              <!-- <ng-template class="from-title">{{column.title}}</ng-template> -->
+            </div>
+          </th>
+
+        </ng-container>
+
+        <!-- <th class="tallint-th pointer" style="min-width: 80px;  position:sticky;" (click)="exportDataToExcel()" *ngIf="export">Export</th> -->
+      </tr>
+      <!-- <tr *ngIf="display_filter" [style.top]="calclateTopSearch() " style="position: sticky;">
+        <td *ngIf="multi_select">
+          <div class="input-group border-radius-0 border-0"></div>
+        </td>
+        <td class="tallint-td p-0 bg-white" *ngIf="edit">
+          <div class="input-group border-radius-0 border-0">
+          </div>
+        </td>
+        <ng-container *ngFor="let column of tallint_table_columns; let index=index;">
+          <td *ngIf="column.visible" class="tallint-td p-0">
+            <div class="input-group border-radius-0 border-0">
+              <input (keyup.enter)="filterEntries(false)" type="text"
+                class="form-control border-radius-0 border-0 tallint-table-search" [(ngModel)]="filter[index].value">
+              <div (click)="filterEntries(false)" class="input-group-append border-radius-0 border-0 cursor-pointer">
+                <span class="input-group-text border-radius-0 border-0 bg-white">
+                  <i class="fa fa-search"></i>
+                </span>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+      </tr> -->
+
+      <tr *ngIf="display_filter" style="position: sticky;">
+        <td *ngIf="multi_select">
+          <div class="input-group border-radius-0 border-0"></div>
+        </td>
+        <td class="tallint-td p-0 bg-white" *ngIf="edit">
+          <div class="input-group border-radius-0 border-0">
+          </div>
+        </td>
+        <ng-container *ngFor="let column of tallint_table_columns; let index=index;">
+          <th *ngIf="column.visible" class="tallint-td p-0"
+            style="position: sticky; background-color: gainsboro !important;" [style.top]="calclateTopSearch()">
+            <div class="input-group border-radius-0 border-0" style="position: sticky; height:29px">
+
+              <!-- <ng-container *ngIf="column.data_type ==='datetime' ||column.data_type == 'date' ; else elseTemplate">
+                <input matInput [matDatepicker]="picker" [(ngModel)]="filter[index].value"
+                  class="form-control border-radius-0 border-0 tallint-table-search my-auto" readonly>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+
+              </ng-container>
+              <ng-template #elseTemplate> -->
+              <input (keyup.enter)="filterEntries(false)" type="text"
+                class="form-control border-0 tallint-table-search px-1 h-100" [(ngModel)]="filter[index].value"
+                style="position: sticky;">
+
+
+              <div (click)="filterEntries(false)" class="input-group-append border-0 cursor-pointer">
+                <span class="input-group-text border-0 bg-white my-auto h-100">
+                  <i class="fa fa-search"></i>
+                </span>
+              </div>
+            </div>
+          </th>
+        </ng-container>
+
+      </tr>
+      <!-- <tr style="position: absolute;" [ngStyle]="{'top': (footer_position)+'px'}">
+        <td *ngFor="let column of tallint_table_columns; let index=index;">
+          <div [title]="column.title" *ngIf="column.visible != false" class="tallint-th"
+            (click)="sortColumn(column)" [ngClass]="{'text-right':column.data_type=='int'}">
+            <div
+              style="cursor: col-resize !important; border-right: 3px solid transparent; z-index: 1000;display: inline-block;"
+              (mousedown)="resizeTable($event,column)" [ngStyle]="{'width':column.width?column.width+'px':'100px'}"
+              [ngClass]="{'text-right':column.data_type=='int'}">
+              <i class="fa fa-arrow-up" *ngIf="column.sort == true"></i>
+              <i class="fa fa-arrow-down" *ngIf="column.sort == false"></i>
+             
+              <span class="pointer d-inline-block" style="width: 90%;overflow: hidden;">
+                <span *ngIf="column.title; else label_code">
+                  <span class="margin">
+                    <span [innerHTML]='column.title'>
+                    </span>
+                  </span>
+                </span>
+                <ng-template #label_code>
+                  <span class="margin">
+                    <span [innerHTML]='column.label_code | translate'></span>
+                  </span>
+                </ng-template>
+              </span>
+            </div>
+          </div>
+        </td>
+      </tr> -->
+      <ng-container *cdkVirtualFor="let row of table_records;let i=index;">
+        <ng-container *ngTemplateOutlet="tr; context: {row: row}"></ng-container>
+        <!-- <ng-container *ngTemplateOutlet="tr_fixed; context: {row: row}"></ng-container> -->
+
+
+        <!-- <tr *ngIf="!fetching_entries" table-row [nested]="nested" [rowSelected]="rowSelected.bind(this)" [index]="i"
+            [row]="row.processed_data || row" [tallint_table_columns]="tallint_table_columns"
+            [multi_select]="multi_select" [edit]="edit" [cellClick]="cellClick.bind(this)" [form_fields]="form_fields"
+            [form_masters]="form_masters" [formatted_row]="row.processed_data ? true : false">
+          </tr> -->
+
+
+
+        <ng-container *ngFor="let sub_row of row.records">
+          <tr table-row [nested]="nested" [padding_exp]="10" *ngIf="row.nested_flag"
+            [rowSelected]="rowSelected.bind(this)" [row]="sub_row" [tallint_table_columns]="tallint_table_columns"
+            [multi_select]="multi_select" [edit]="edit" [cellClick]="cellClick.bind(this)">
+          </tr>
+          <ng-container *ngFor="let sub_row_1 of sub_row.records">
+            <tr table-row [nested]="nested" [padding_exp]="15" *ngIf="sub_row && sub_row.nested_flag && row.nested_flag"
+              [rowSelected]="rowSelected.bind(this)" [row]="sub_row_1" [tallint_table_columns]="tallint_table_columns"
+              [multi_select]="multi_select" [edit]="edit" [cellClick]="cellClick.bind(this)">
+            </tr>
+            <ng-container *ngFor="let sub_row_2 of sub_row_1.records">
+              <tr table-row [nested]="nested" [padding_exp]="20"
+                *ngIf="sub_row_1 && sub_row_1.nested_flag && sub_row.nested_flag && row.nested_flag"
+                [rowSelected]="rowSelected.bind(this)" [row]="sub_row_2" [tallint_table_columns]="tallint_table_columns"
+                [multi_select]="multi_select" [edit]="edit" [cellClick]="cellClick.bind(this)">
+              </tr>
+              <ng-container *ngFor="let sub_row_3 of sub_row_2.records">
+                <tr table-row [nested]="nested" [padding_exp]="25"
+                  *ngIf="sub_row_2 && sub_row_2.nested_flag && sub_row_1.nested_flag && sub_row.nested_flag && row.nested_flag"
+                  [rowSelected]="rowSelected.bind(this)" [row]="sub_row_3"
+                  [tallint_table_columns]="tallint_table_columns" [multi_select]="multi_select" [edit]="edit"
+                  [cellClick]="cellClick.bind(this)">
+                </tr>
+                <ng-container *ngFor="let sub_row_4 of sub_row_3.records">
+                  <tr table-row [nested]="nested" [padding_exp]="30"
+                    *ngIf="sub_row_3 && sub_row_3.nested_flag && sub_row_2.nested_flag && sub_row_1.nested_flag && sub_row.nested_flag && row.nested_flag"
+                    [rowSelected]="rowSelected.bind(this)" [row]="sub_row_4"
+                    [tallint_table_columns]="tallint_table_columns" [multi_select]="multi_select" [edit]="edit"
+                    [cellClick]="cellClick.bind(this)">
+                  </tr>
+                  <ng-container *ngFor="let sub_row_5 of sub_row_4.records">
+                    <tr table-row [nested]="nested" [padding_exp]="35"
+                      *ngIf="sub_row_4 && sub_row_4.nested_flag  && sub_row_3.nested_flag && sub_row_2.nested_flag && sub_row_1.nested_flag && sub_row.nested_flag && row.nested_flag"
+                      [rowSelected]="rowSelected.bind(this)" [row]="sub_row_5"
+                      [tallint_table_columns]="tallint_table_columns" [multi_select]="multi_select" [edit]="edit"
+                      [cellClick]="cellClick.bind(this)">
+                    </tr>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+
+
+      <!-- <tr [style.height.px]="footer-position" *ngIf="enable_summary">  </tr> -->
+      <!-- <ng-container *ngFor="let row of summary">
+        <ng-container *ngTemplateOutlet="tr; context: {row: row}"></ng-container>
+      </ng-container> -->
+
+    </table>
+    <div class="text-center no-records-found" *ngIf="!fetching_entries && !(table_records && table_records.length)">
+      No data found!
+    </div>
+    <!-- </label>
+            </td>
+            <td class="tallint-td" *ngFor="let col of table_columns">
+              {{row[col.property]}}
+            </td>
+            <td class="tallint-td my-auto" *ngIf="edit">
+              <i class="fa fa-pencil pointer"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table> -->
+    <!-- <table class="table skeleton" *ngIf="fetching_entries && sort_flag">
+            <tbody>
+                <tr *ngFor="let a of [1,2,3,4,5,6,7,8,9,10,11,12,13,14]; let i=index;" style="width: 100%;">
+                    <th *ngFor="let bs of [1,2,3,4,5,6,7,8,9,10]; let j = index ;" class="skeleton-th">
+                        <div [style.width]="(random_width && random_width[i][j])?random_width[i][j] : 'auto' " class="horizontal-bar"></div>
+                    </th>
+                </tr>
+            </tbody>
+        </table> -->
+  </cdk-virtual-scroll-viewport>
+
+
+  <ng-template #tr let-display_row="row" let-i="index">
+    <tr>
+      <td class="tallint-td" *ngIf="nested==true" (click)="cellClick('display', display_row)">
+        <i class="fa" *ngIf="display_row.records_flag==1"
+          [ngClass]="{'fa-minus-square': display_row.nested_flag ,'fa-plus-square': !display_row.nested_flag}">
+        </i>
+      </td>
+      <!-- <td class="tallint-td" [style]="style" *ngIf="nested==true" (click)="cellClick('openEntityTab', display_row)">
+  <a class="btn btn-success btn-sm">View</a>
+</td> -->
+      <td class="p-0 pl-2 pr-2 text-center" style="padding:0 !important;" *ngIf="multi_select">
+        <i style="color:#196ca5 !important;font-size:16px;" class="fa fa-square-o pointer mt-1" type="checkbox"
+          (click)="rowSelected(display_row)" *ngIf="!display_row['row_selected']"></i>
+        <i style="color:#196ca5 !important;font-size:16px;" class="fa fa-check-square-o pointer mt-1"
+          (click)="rowSelected(display_row)" *ngIf="display_row['row_selected']"></i>
+      </td>
+
+      <td class="tallint-td my-auto" (click)="triggerCellClick('edit', display_row)" *ngIf="edit">
+        <div class="text-center" style="width: 30px;">
+          <i class="fa fa-pencil pointer"></i>
+        </div>
+      </td>
+      <!--'font-weight-bold': nested==true && display_row.records_flag==0-->
+      <ng-container *ngFor="let column of tallint_table_columns; let index=index;">
+        <td *ngIf="column.visible" class="tallint-td link" [ngClass]="{'text-right':column.data_type=='int'}" [ngStyle]="{'color': (column.function_name && column.function_name!='') ? '#428bca' : '',
+  'text-decoration': (column.function_name && column.function_name!='') ? '' : 'none'}">
+          <div [ngStyle]="{'width': column.width > 20 ? column.width+'px' : '100px'}"
+            [ngClass]="{'text-right float-right':column.data_type=='int'}"
+            style="border-right: 3px solid transparent;overflow: hidden;" [class]="column.cell_class">
+            <ng-container *ngIf="!(column.conditions && column.conditions.length)">
+              <ng-container *ngTemplateOutlet="tr_data; context: {display_row: display_row, column: column}">
+              </ng-container>
+            </ng-container>
+
+            <ng-container
+              *ngIf="column.conditions && column.conditions.length && (column.cell_template && column.conditions |CheckGridConditions:display_row)">
+              <ng-container *ngTemplateOutlet="tr_data; context: {display_row: display_row, column: column}">
+              </ng-container>
+            </ng-container>
+
+            <ng-container *ngIf="column.child_columns && column.child_columns.length">
+              <ng-container *ngFor="let child of column.child_columns">
+                <ng-container *ngIf="!(child && child.conditions && child.conditions.length)">
+                  <ng-container *ngTemplateOutlet="tr_data; context: {display_row: display_row, column: child}">
+                  </ng-container>
+                </ng-container>
+
+                <ng-container
+                  *ngIf="child && child.conditions && child.conditions.length && (child.cell_template && child.conditions |CheckGridConditions:display_row)">
+                  <ng-container *ngTemplateOutlet="tr_data; context: {display_row: display_row, column: child}">
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </div>
+        </td>
+      </ng-container>
+    </tr>
+  </ng-template>
+
+  <ng-template #tr_data let-display_row="display_row" let-column="column">
+    <ng-container *ngIf="column">
+      <ng-container *ngIf="!(column && column.cell_template)">
+        <ng-container *ngIf="column.data_type ==='date'">
+          <span (click)="triggerCellClick(column.function_name, display_row, column)"
+            [title]="(display_row.processed_data ? display_row.processed_data[column.property] : display_row[column.property]) | UtcToLocalTime | date: 'd-MMM-yyyy'">
+            {{(display_row.processed_data ? display_row.processed_data[column.property] : display_row[column.property]) | UtcToLocalTime | date: 'd-MMM-yyyy'}}
+          </span>
+        </ng-container>
+        <ng-container *ngIf="column.data_type ==='datetime'">
+          <span (click)="triggerCellClick(column.function_name, display_row, column)"
+            [title]="(display_row.processed_data ? display_row.processed_data[column.property] : display_row[column.property])  | UtcToLocalTime | date: 'd-MMM-yyyy h:mm a'">
+            {{(display_row.processed_data ? display_row.processed_data[column.property] : display_row[column.property])  | UtcToLocalTime | date: 'd-MMM-yyyy h:mm a'}}
+          </span>
+        </ng-container>
+
+        <ng-container *ngIf="column.data_type =='nvarchar'">
+
+          <span class="margin">
+            <span (click)="triggerCellClick(column.function_name, display_row, column)"
+              [innerHTML]='(display_row.processed_data ? display_row.processed_data[column.property] : display_row[column.property])| HTMLFormatter'>
+            </span>
+          </span>
+        </ng-container>
+
+        <ng-container *ngIf="column.data_type =='varbinary'">
+          <span (click)="triggerCellClick(column.function_name, display_row, column)"
+            [title]="(display_row.processed_data ? display_row.processed_data[column.property] : display_row[column.property]) | DynamicFilesTitlePipe">
+            {{(display_row.processed_data ? display_row.processed_data[column.property] : display_row[column.property]) | DynamicFilesTitlePipe}}
+          </span>
+        </ng-container>
+
+        <ng-container
+          *ngIf="column.data_type !='date' && column.data_type !='datetime' && column.data_type !='nvarchar' && column.data_type !='varbinary'">
+          <span (click)="triggerCellClick(column.function_name, display_row, column)"
+            [title]="(display_row.processed_data ? display_row.processed_data[column.property] : display_row[column.property])">
+            {{(display_row.processed_data ? display_row.processed_data[column.property] : display_row[column.property])}}
+          </span>
+        </ng-container>
+      </ng-container>
+      <span (click)="triggerCellClick(column.function_name, display_row, column)" [ngClass]="column.cell_class"
+        *ngIf="column.cell_template" [innerHTML]="column.cell_template | HTMLFormatter">
+      </span>
+    </ng-container>
+  </ng-template>
+
+  <ng-template #tr_fixed let-display_row="row" let-i="index">
+    <tr *ngIf="i == 0">
+      <td class="tallint-td" *ngIf="nested==true" (click)="cellClick('display', display_row)">
+        <i class="fa" *ngIf="display_row.records_flag==1"
+          [ngClass]="{'fa-minus-square': display_row.nested_flag ,'fa-plus-square': !display_row.nested_flag}">
+        </i>
+      </td>
+      <!-- <td class="tallint-td" [style]="style" *ngIf="nested==true" (click)="cellClick('openEntityTab', display_row)">
+  <a class="btn btn-success btn-sm">View</a>
+</td> -->
+      <td class="p-0 pl-2 pr-2 text-center" *ngIf="multi_select">
+
+        <i style="color:#196ca5 !important;font-size:16px;" class="fa fa-square-o pointer" type="checkbox"
+          (click)="rowSelected(display_row)" *ngIf="!display_row['row_selected']"></i>
+        <i style="color:#196ca5 !important;font-size:16px;" class="fa fa-check-square-o pointer"
+          (click)="rowSelected(display_row)" *ngIf="display_row['row_selected']"></i>
+      </td>
+
+      <td class="tallint-td my-auto" (click)="triggerCellClick('edit', display_row)" *ngIf="edit">
+        <div class="text-center" style="width: 30px;">
+          <i class="fa fa-pencil pointer"></i>
+        </div>
+      </td>
+      <!--'font-weight-bold': nested==true && display_row.records_flag==0-->
+      <ng-container *ngFor="let column of tallint_table_columns; let index=index;">
+        <td *ngIf="column.visible != false" (click)="triggerCellClick(column.function_name, display_row, column)"
+          class="tallint-td link" [ngClass]="{'text-right':column.data_type=='int'}" [ngStyle]="{'color': (column.function_name && column.function_name!='') ? '#428bca' : '',
+  'text-decoration': (column.function_name && column.function_name!='') ? '' : 'none'}">
+          <div [ngStyle]="{'width': column.width > 20 ? column.width+'px' : '100px'}"
+            [ngClass]="{'text-right float-right':column.data_type=='int'}">
+            <ng-container *ngIf="!(column.conditions && column.conditions.length)">
+              <ng-container *ngIf="!column.cell_template">
+                <ng-container *ngIf="column.data_type ==='date'">
+                  <span
+                    [title]="(display_row.processed_data ? display_row.processed_data[column.property] : display_row[column.property])| UtcToLocalTime | date: 'd-MMM-yyyy'">
+                    {{(display_row.processed_data ? display_row.processed_data[column.property] : display_row[column.property])| UtcToLocalTime | date: 'd-MMM-yyyy'}}
+                  </span>
+                </ng-container>
+                <ng-container *ngIf="column.data_type ==='datetime'">
+                  <span
+                    [title]="(display_row.processed_data ? display_row.processed_data[column.property] : display_row[column.property]) | UtcToLocalTime | date: 'd-MMM-yyyy h:mm a'">
+                    {{(display_row.processed_data ? display_row.processed_data[column.property] : display_row[column.property])  | UtcToLocalTime | date: 'd-MMM-yyyy h:mm a'}}
+                  </span>
+                </ng-container>
+
+                <ng-container *ngIf="column.data_type =='nvarchar'">
+
+                  <span class="margin">
+                    <span
+                      [innerHTML]='(display_row.processed_data ? display_row.processed_data[column.property] : display_row[column.property]) | HTMLFormatter'>
+                    </span>
+                  </span>
+                </ng-container>
+
+                <ng-container *ngIf="column.data_type =='varbinary'">
+                  <span
+                    [title]="(display_row.processed_data ? display_row.processed_data[column.property] : display_row[column.property]) | DynamicFilesTitlePipe">
+                    {{(display_row.processed_data ? display_row.processed_data[column.property] : display_row[column.property]) | DynamicFilesTitlePipe}}
+                  </span>
+                </ng-container>
+
+                <ng-container
+                  *ngIf="column.data_type !='date' && column.data_type !='datetime' && column.data_type !='nvarchar' && column.data_type !='varbinary'">
+                  <span
+                    [title]="(display_row.processed_data ? display_row.processed_data[column.property] : display_row[column.property])">
+                    {{(display_row.processed_data ? display_row.processed_data[column.property] : display_row[column.property])}}
+                  </span>
+                </ng-container>
+              </ng-container>
+              <div [ngClass]="column.cell_class" *ngIf="column.cell_template"
+                [innerHTML]="column.cell_template | HTMLFormatter">
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="column.conditions && column.conditions.length">
+              <div [ngClass]="column.cell_class"
+                *ngIf="column.cell_template && column.conditions|CheckGridConditions:display_row"
+                [innerHTML]="column.cell_template | HTMLFormatter">
+
+              </div>
+            </ng-container>
+          </div>
+        </td>
+      </ng-container>
+    </tr>
+  </ng-template>
+</div>

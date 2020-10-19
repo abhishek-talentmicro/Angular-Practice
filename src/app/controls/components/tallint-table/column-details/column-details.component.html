@@ -1,0 +1,70 @@
+<h2 mat-dialog-title id="title">
+  Grid Details
+  <a (click)="close()"><i class="fa fa-times pointer pt-2 pr-3 float-right"></i></a>
+</h2>
+<mat-dialog-content>
+  <!-- <div class="row">
+    <div class="col-md-6">
+      <h6>Hidden Columns (Click to add)</h6>
+      <mat-list>
+        <ng-container *ngFor="let item of backup_cols || [] ; let i=index">
+          <mat-list-item class="md-form border rounded visible pointer" *ngIf="!item['visible']"
+            (click)="setVisible(item)">
+            {{item['title'] ||'' }}
+          </mat-list-item>
+        </ng-container>
+      </mat-list>
+
+    </div>
+    <div class="col-md-6">
+      <h6>Visible Columns</h6>
+      <mat-list>
+        <ng-container *ngFor="let item of backup_cols || []">
+          <mat-list-item class="border rounded  pointer" *ngIf="item['visible']">
+            {{item['title']||'' }} &nbsp; &nbsp; <span *ngIf="item['sequence']"> ({{item['sequence']}}) </span>
+            <input *ngIf="item.edit" mdbInput type="number" placeholder="Sequence" style="width: 30%;height: 25px !important;" id="form2"
+              [(ngModel)]="item['sequence']" class="form-control ml-auto float-right ">
+            <i class="fa fa-pencil ml-auto" *ngIf="!item.edit" (click)="item.edit = 1"></i>
+            <i matTooltip="Click to hide" class="fa fa-save  pl-1 pr-1" *ngIf="item.edit" title="Save"
+              (click)=" setVisible(item); item.edit = 0"></i>
+            <i class="fa fa-trash ml-2 float-right" (click)="removeVisible(item)" style="color: red;"></i>
+          </mat-list-item>
+        </ng-container>
+      </mat-list>
+      <mat-list>
+
+
+      </mat-list>
+    </div>
+  </div> -->
+  <div class="row">
+    <div class="col-md-6">
+      <h6>Hidden Columns</h6>
+      <div cdkDropList #hidden="cdkDropList" [cdkDropListData]="hidden_cols" [cdkDropListConnectedTo]="[visible]"
+        class="list" (cdkDropListDropped)="dropToHide($event)">
+        <div class="box" *ngFor="let item of hidden_cols" cdkDrag>{{item ['title'] }}</div>
+        <div *ngIf="!hidden_cols.length" id="drop-zone">
+          Drag Here to hide 
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-md-6">
+      <h6>Visibile Columns</h6>
+      <div cdkDropList #visible="cdkDropList" [cdkDropListData]="visible_cols" [cdkDropListConnectedTo]="[hidden]"
+        class="list" (cdkDropListDropped)="dropToVisible($event)">
+        <div class="box" *ngFor="let item of visible_cols" cdkDrag>{{item ['title']}} &nbsp; &nbsp;
+          ({{item['sequence']}}) </div>
+          <div *ngIf="!visible_cols.length" id="drop-zone1">
+            Drag Here to Display a column 
+          </div>
+      </div>
+    </div>
+  </div>
+
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button class="btn cancel-btn btn-sm" (click)="close()">Close</button>
+  <button class="btn save-btn btn-sm ml-2" (click)="saveColumnDetails()">Save</button>
+</mat-dialog-actions>

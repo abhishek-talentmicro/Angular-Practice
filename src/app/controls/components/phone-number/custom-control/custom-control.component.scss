@@ -1,0 +1,49 @@
+.example-tel-input-container {
+    display: flex;
+    background: transparent;
+}
+
+.example-tel-input-element {
+    border: none;
+    background: transparent;
+    padding: 0;
+    outline: none;
+    font: inherit;
+    // text-align: center;
+    font-size: 13px;
+}
+
+.example-tel-input-spacer {
+    opacity: 0;
+    position: absolute;
+    transition: opacity 200ms;
+    margin-left: -13px;
+    top: 8px;
+}
+
+:host.example-floating .example-tel-input-spacer {
+    opacity: 1;
+}
+
+::placeholder {
+    color: #999999;
+}
+
+:-ms-input-placeholder {
+    /* Internet Explorer 10-11 */
+    color: #999999;
+}
+
+::-ms-input-placeholder {
+    /* Microsoft Edge */
+    color: #999999;
+}
+.disabled_inp {
+    position: absolute;
+    border: none;
+    z-index: -1000;
+    font-size: 13px;
+    width: 100%;
+    background: transparent;
+    padding-left: 0;
+}

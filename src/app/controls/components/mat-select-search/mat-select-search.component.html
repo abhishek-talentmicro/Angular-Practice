@@ -1,0 +1,20 @@
+<form #form [formGroup]="form_group" (focusin)="showList()" (keydown)="downArrow($event)" (change)="change(0)">
+  <!-- (focusout)="hideList($event , 1)" -->
+  <mat-form-field style="margin-bottom : 0px;" appearance="standard">
+    <mat-label>
+      {{place_holder_name}}
+    </mat-label>
+    <input type="text" autocomplete="off" [placeholder]="place_holder_name" aria-label="Number" matInput
+      [formControlName]="form_control_name" [required]="is_required" />
+    <mat-icon style="font-size: 100%;" matSuffix class="pointer" (click)="showList()">
+      expand_more
+    </mat-icon>
+  </mat-form-field>
+  <cdk-virtual-scroll-viewport *ngIf="search_valid" itemSize="50" class="viewport select-menu" [style.top.px]="top"
+    [style.left.px]="left" >
+    <span class="select-options" *cdkVirtualFor="let input of filtered_input | async; let i = index;"
+      (click)="sendCountryDetails($event, input)" [class.active]="i==arrow_key_location">
+      {{ input[title_property_name] }}
+    </span>
+  </cdk-virtual-scroll-viewport>
+</form>

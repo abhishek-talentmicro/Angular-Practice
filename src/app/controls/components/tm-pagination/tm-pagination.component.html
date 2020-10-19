@@ -1,0 +1,99 @@
+<!-- <nav class="tm-pagination">
+    <ul class="pagination justify-content-center">
+
+        <li class="page-item" (click)="prevBatch()" *ngIf="active_page_group_start_index">
+            <a class="page-link">&laquo;</a>
+        </li>
+
+        <li class="page-item disabled" *ngIf="!active_page_group_start_index">
+            <a class="page-link">&laquo;</a>
+        </li>
+
+        <li class="page-item" *ngIf="active_page_group_start_index" [ngClass]="{'active' : total_pages[0] == page}"
+            (click)="selectedPage(total_pages[0],0,1)">
+            <a class="page-link">{{total_pages[0]}}</a>
+        </li>
+
+        <li class="page-item" *ngIf="active_page_group_start_index">
+            <a class="page-link">...</a>
+        </li>
+
+
+        <li class="page-item" [ngClass]="{'active' : page_no == page}" (click)="selectedPage(page_no)"
+            *ngFor="let page_no of (total_pages| slice : active_page_group_start_index  : (active_page_group_start_index + page_group_size_copy))">
+            <a class="page-link">
+                {{page_no}}
+            </a>
+        </li>
+
+        <li class="page-item">
+            <a class="page-link"
+                *ngIf="!(total_pages| slice : active_page_group_start_index  : (active_page_group_start_index + page_group_size_copy)).includes(total_pages[total_pages.length-1])">...</a>
+        </li>
+        <li class="page-item" [ngClass]="{'active' : total_pages[total_pages.length-1] == page}" (click)="selectedPage(total_pages[total_pages.length-1],1,0)"
+            *ngIf="!(total_pages| slice : active_page_group_start_index  : (active_page_group_start_index + page_group_size_copy)).includes(total_pages[total_pages.length-1])">
+            <a class="page-link">{{total_pages[total_pages.length-1]}}</a>
+        </li>
+
+        <li class="page-item disabled"
+            *ngIf="(total_pages| slice : active_page_group_start_index  : (active_page_group_start_index + page_group_size_copy)).includes(total_pages[total_pages.length-1])">
+            <a class="page-link">&raquo;</a>
+        </li>
+
+
+        <li class="page-item" (click)="nextBatch()"
+            *ngIf="!(total_pages| slice : active_page_group_start_index  : (active_page_group_start_index + page_group_size_copy)).includes(total_pages[total_pages.length-1])">
+            <a class="page-link">&raquo;</a>
+        </li>
+    </ul>
+</nav> -->
+
+<nav class="tm-pagination" *ngIf="collectionSize">
+    <ul class="pagination justify-content-center">
+
+
+        <li class="page-item" (click)="(active_page_group_start_number - maxSize ) > 0 ?prevBatch() :''">
+            <a class="page-link">&laquo;</a>
+        </li>
+
+        <ng-container *ngIf="collectionSize != pageSize">
+            <li class="page-item" (click)="selectedPage(1,1)" [ngClass]="{'active' : 1 == page}">
+                <a class="page-link">{{'1'}}</a>
+            </li>
+            <ng-container *ngIf="(active_page_group_start_number - maxSize ) >= 0">
+                <li class="page-item">
+                    <a class="page-link">...</a>
+                </li>
+            </ng-container>
+            <ng-container *ngFor="let item of page_group_size_arr">
+                <li class="page-item" [ngClass]="{'active' : (active_page_group_start_number + item) == page}"
+                    (click)="selectedPage(active_page_group_start_number + item)"
+                    *ngIf="(active_page_group_start_number + item) > 1  && (active_page_group_start_number + item) < total_pages">
+                    <a class="page-link">
+                        {{active_page_group_start_number + item}}
+                    </a>
+                </li>
+            </ng-container>
+            <ng-container *ngIf="(active_page_group_start_number+maxSize ) <= total_pages">
+                <li class="page-item">
+                    <a class="page-link">...</a>
+                </li>
+            </ng-container>
+
+            <li class="page-item" (click)="selectedPage(total_pages,1)" [ngClass]="{'active' : (total_pages) == page}">
+                <a class="page-link">{{total_pages}}</a>
+            </li>
+        </ng-container>
+
+        <ng-container *ngIf="collectionSize == pageSize">
+            <li class="page-item" [ngClass]="{'active' : 1 == page}">
+                <a class="page-link">{{'1'}}</a>
+            </li>
+        </ng-container>
+
+        <li class="page-item" (click)="(active_page_group_start_number+maxSize ) < total_pages ? nextBatch():''">
+            <a class="page-link">&raquo;</a>
+        </li>
+
+    </ul>
+</nav>

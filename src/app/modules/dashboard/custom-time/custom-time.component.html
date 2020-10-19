@@ -1,0 +1,29 @@
+<h2 mat-dialog-title>
+    Custom Time <span class="float-right"><i class="fa fa-times pointer" (click)="close()"></i></span>
+</h2>
+<div>
+    <mat-dialog-content>
+        <form [formGroup]="custom_time_form">
+            <div class="row">
+                <div class="col-md-6">
+                    <tm-date-picker [placeholder]="'From'" [form]="custom_time_form" [controlName]="'from'"
+                        [label]="'From'" [required]="1" (onChange)="onChange($event)" [minValue]="''" [maxValue]="''">
+                    </tm-date-picker>
+                </div>
+                <div class="col-md-6">
+                    <tm-date-picker [placeholder]="'To'" [form]="custom_time_form" [controlName]="'to'" [label]="'To'"
+                        [required]="1" (onChange)="onChange($event)" [minValue]="''" [maxValue]="''">
+                    </tm-date-picker>
+                </div>
+            </div>
+        </form>
+
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button type="button" class="btn btn-sm cancel-btn ml-auto mr-1" (click)=" close(false)">Close</button>
+        <button type="button" class="btn btn-sm save-btn float-right" *ngIf="!tag_flag" (click)="close(true)">
+            <i class="fa fa-spin fa-spinner" *ngIf="loading"></i>
+            Confirm
+        </button>
+    </mat-dialog-actions>
+</div>

@@ -1,0 +1,60 @@
+<app-header></app-header>
+<section class="overlape">
+    <div class="block no-padding">
+        <div class="parallax scrolly-invisible no-parallax"
+            style="background:url('assets/mslider3.jpg') repeat scroll 50% 422.28px transparent;position: absolute;">
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12 p-0">
+                    <div class="inner-header">
+                        <h3>
+                            <!-- <span style="border-bottom: 2px solid white;
+                            display: inline-block; cursor: pointer;" (click)="navigateToHome()">{{'Login' | translate}}
+                            </span> -->
+                            {{'Vendor Registration'|translate}}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="container-fluid bg-white"
+    style="margin-top: 2.5rem !important;min-height: calc(100vh + 70px) !important; height: auto !important;">
+    <div class="row">
+        <div class="col-md-10 offset-1 bg-white mt-4 mb-2" *ngIf="!_registration_successful">
+            <tm-dynamic-form *ngIf="section_data || section_data.length" [section_list]="section_data"
+                [masters]="registration.masters" [display_type]="display_type" [dynamic_form]="registration_form"
+                [t_id]="registration.t_id" [dataSaved]="dataSavedRef" [is_new_tab]="is_new_tab"
+                [other_data]="other_data" [hide_cancel_btn]="1">
+            </tm-dynamic-form>
+        </div>
+        <div class="col-md-12 mt-3" *ngIf="_registration_successful">
+
+            <div class="swal2-icon swal2-success swal2-animate-success-icon" style="display: flex;">
+                <div class="swal2-success-circular-line-left" style="background-color: rgb(255, 255, 255);">
+                </div>
+                <span class="swal2-success-line-tip"></span>
+                <span class="swal2-success-line-long"></span>
+                <div class="swal2-success-ring"></div>
+                <div class="swal2-success-fix" style="background-color: rgb(255, 255, 255);"></div>
+                <div class="swal2-success-circular-line-right" style="background-color: rgb(255, 255, 255);">
+                </div>
+            </div>
+            <h1 style="text-align: center;color: #28a745">{{'Registration is successful' | translate}}
+            </h1>
+
+            <h5 style="text-align: center;
+                margin-top: 20px;">
+                {{'We will get back to you shortly' | translate}}</h5>
+            <div class="col-md-12 mx-auto mt-4">
+                <div class="text-center">
+                    <button class="btn btn-lg btn-info" [routerLink]="['/login']" (click)="navigateToHome()">
+                        {{'Login' | translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

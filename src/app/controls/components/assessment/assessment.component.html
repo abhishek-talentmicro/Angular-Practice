@@ -1,0 +1,122 @@
+<div class="p-2 assessments" *ngIf="modal_view">
+
+    <p class="p-0 m-0 " style="font-size: 14px;">
+        <!--applicant_summary.assessments-->
+        <span (click)="showAssessment(assessment.assessment_id)" matTooltip="View Questionnaire" class="template">
+            <strong>{{assessment.template_title}}</strong>
+        </span>
+
+        <span class="float-right" *ngIf="assessment.stage_title" matTooltip="Stage - Status">
+            {{assessment.stage_title}}
+            <span *ngIf="assessment.status_title">
+                ({{assessment.status_title}})
+            </span>
+        </span>
+    </p>
+
+    <div *ngIf="assessment.req_title" class="w-100">
+        <div class="icon">
+            <i class="fa fa-briefcase"></i>
+        </div>
+        <div class="icon-details" matTooltip="Requirement Title">
+            {{assessment.req_title}}
+            <span *ngIf="assessment.req_no">
+                ({{assessment.req_no}})
+            </span>
+        </div>
+    </div>
+
+    <p style="font-size: 14px;font-style: italic;">
+        <span matTooltip="Updated by">
+            <div class="icon">
+                <i class="fa fa-user"></i>
+            </div>
+            <div class="icon-details">
+                {{assessment.updated_by }}
+            </div>
+        </span>
+
+        <span class="float-right " matTooltip="Updated on">
+            {{assessment.updated_on | UtcToLocalTime | date: 'd-MMM-yyyy h:mm a'}}
+        </span>
+    </p>
+</div>
+
+
+<div class="container" *ngIf="!modal_view">
+    <div class="row message">
+        <!-- <div class="col-md-12 p-0 " style="display: flex;" (click)="viewForm(assessment)"> -->
+        <!-- <div style="display: grid;width: 100%;margin-left: 6px;"> 
+                <div class="row">-->
+        <div class="col-md-12" style="padding: 10px 0 0 6px;">
+            <span style="font-size: 14px;display: grid;">
+                <span (click)="viewForm(assessment)" class="template-title">
+                    <strong>{{assessment.template_title}} </strong>
+                </span>
+
+                <span style="font-size: 14px;font-style: italic;">
+                    <span *ngIf="assessment.stage_title" matTooltip="Stage - Status">
+                        <div class="icon">
+                            <i class="fa fa-sliders" aria-hidden="true"></i>
+                        </div>
+                        <div class="icon-details">
+                            {{assessment.stage_title}}
+                            <span *ngIf="assessment.status_title">
+                                ({{assessment.status_title}})
+                            </span>
+                        </div>
+                    </span>
+                </span>
+
+                <span *ngIf="assessment.score >=0 && assessment.max_Score" style="font-size: 14px;">
+                    <div class="icon">
+                        <i class="fa fa-certificate"></i>
+                    </div>
+                    <div class="icon-details">
+                        {{assessment.score + '/' + assessment.max_Score}}
+                    </div>
+                </span>
+
+                <span style="font-size: 14px;font-style: italic;">
+                    <span matTooltip="Updated by">
+                        <div class="icon">
+                            <i class="fa fa-user"></i>
+                        </div>
+                        <div class="icon-details">
+                            {{assessment.updated_by }}
+                        </div>
+                    </span>
+                </span>
+                <span style="font-size: 14px;">
+                    <span matTooltip="Updated on">
+                        <div class="icon">
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                        </div>
+                        <div class="icon-details">
+                            {{assessment.updated_on | UtcToLocalTime | date: 'd-MMM-yyyy h:mm a'}}
+                        </div>
+                    </span>
+                </span>
+            </span>
+        </div>
+        <!-- <div class="col-md-4 pr-0 py-0">
+            <div [id]="assessment.assessment_id" style="width: 100%;height: 150px;"></div>
+        </div> -->
+
+
+        <!-- </div>
+           </div> -->
+        <!-- </div> -->
+        <div class="col-md-12 mt-1">
+            <div [@toggleBox]="on_view_click ? 'open' : 'closed'" *ngIf="assessment.form">
+                <div class="message-view">
+                    <tm-dynamic-form *ngIf="assessment.form.masters && assessment.form.section_data"
+                        [section_list]="assessment.form.section_data" [masters]="assessment.form.masters"
+                        [display_type]="assessment.form.display_type" [dynamic_form]="assessment.form.form_group"
+                        [t_id]="assessment.assessment_id">
+                    </tm-dynamic-form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,74 @@
+thead,
+tbody {
+    display: block;
+}
+
+.td-data {
+    height: 121px;
+    display: inline-block;
+    overflow-y: auto;
+}
+
+#or {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    color: #aaa;
+}
+
+#or::before {
+    position: absolute;
+    width: 40%;
+    height: 1px;
+    top: 24px;
+    background-color: #aaa;
+    content: "";
+    left: 0;
+}
+
+#or::after {
+    right: 0 !important;
+    position: absolute;
+    width: 40%;
+    height: 1px;
+    top: 24px;
+    background-color: #aaa;
+    content: "";
+}
+
+.folder-input {
+    border: 1px solid #ced4da;
+    text-align: inherit;
+}
+
+// .table-responsive {
+//     width: 100%;
+//     overflow-x: auto;
+//     display: block;
+// }
+.table td, .table th {
+    padding-left: 3px;
+    padding-right: 13px;
+    font-size: 12px;
+    padding: 5px !important;
+    vertical-align: none !important;
+}
+.vertical-nav {
+    width: 100%;
+  }
+
+  .position-sticky{
+    position: sticky !important;
+  }
+
+.link {
+    color: #007bff !important;
+    cursor: pointer;
+  }
+.link:hover {
+    text-decoration: underline !important;
+    color: #007bff !important;
+    cursor: pointer;
+  }

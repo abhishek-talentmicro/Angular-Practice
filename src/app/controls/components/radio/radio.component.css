@@ -1,0 +1,16 @@
+.mat-border-none .mat-form-field-underline {
+  display: none;
+}
+
+.mat-border-none .mat-form-field-wrapper {
+  padding-bottom: 10px;
+}
+
+.error {
+  font-size: 10px;
+  color: red;
+}
+
+/* ::ng-deep mat-label p{
+  display: inline !important;
+} */

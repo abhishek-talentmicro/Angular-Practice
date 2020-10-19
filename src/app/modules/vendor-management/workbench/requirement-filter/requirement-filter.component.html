@@ -1,0 +1,7 @@
+<!-- <mat-dialog-title>
+  <h5 class="form-heading" id="requirement-header">Requirement Filter Template<a class="ml-auto" (click)="onCancel()"
+      style="float: right;"><i class="fa fa-times"></i></a></h5>
+</mat-dialog-title> -->
+<tm-dynamic-form *ngIf=" section_data" [section_list]="section_data" [masters]="masters" [display_type]="display_type"
+  [dynamic_form]="form_group">
+</tm-dynamic-form>

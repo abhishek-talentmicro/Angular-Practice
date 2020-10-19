@@ -1,0 +1,25 @@
+.prev-icon {
+    line-height: 1px !important;
+    font-size: 26px !important;
+    margin-left: 2rem !important;
+    margin-right: 1rem !important;
+    vertical-align: middle !important;
+    color: #ff7112 !important;
+}
+.prev-icon:hover {
+    transition: all 0.3s;
+    transform: scale(1.3);
+}
+
+.next-icon {
+    line-height: 1px !important;
+    font-size: 26px !important;
+    margin-left: 1rem !important;
+    // margin-right: 2rem !important;
+    vertical-align: middle !important;
+    color: #ff7112 !important;
+}
+.next-icon:hover {
+    transition: all 0.3s;
+    transform: scale(1.3);
+}

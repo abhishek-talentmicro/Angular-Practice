@@ -1,0 +1,21 @@
+[
+    {
+        "module_code": 1000,
+        "title": "TA",
+        "title1":"Career Portal",
+        "title2":"Background Verification",
+        "title3":"Customer Relationship Portal",
+        "title4":"Employee referral Portal",
+        "title5":"Customer Relationship Portal", 
+        "sub_modules": [
+            {
+                "sub_module_code": 101,
+                "title": "Resume"
+            },
+            {
+                "sub_module_code": 102,
+                "title": "Requirement"
+            }
+        ]
+    }
+]

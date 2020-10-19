@@ -1,0 +1,56 @@
+.workbench .mat-tab-body-wrapper {
+  height: 100%;
+}
+
+.workbench .requirement-view .tab-content,
+.workbench .applicant-view .tab-content {
+  height: 85%;
+  border: 1px solid gainsboro;
+  border-top: none;
+}
+
+.workbench .tab-content {
+  border: 1px solid gainsboro;
+  border-top: none;
+  padding: 5px 5px;
+  height: calc(100vh - 104px);
+  overflow: auto;
+}
+
+.workbench .requirement-view .mat-tab-body-wrapper {
+  height: 100%;
+}
+
+.workbench .applicant-view .mat-tab-body-wrapper {
+  height: 100%;
+}
+
+.workbench .mat-tab-label {
+  height: 33px;
+}
+
+.workbench .mat-tab-header {
+  width: 98%;
+}
+
+.workbench .mat-tab-group {
+  height: 100%;
+}
+
+.workbench .tab-pane.active {
+  height: 100%;
+}
+
+.workbench {
+  height: calc(100vh - 72px) !important;
+}
+
+.tab-item {
+  overflow-y: auto;
+  height: calc(100vh - 115px);
+  // padding:;
+}
+
+.box-shadow {
+  box-shadow: 0 0 5px 0 gainsboro;
+}

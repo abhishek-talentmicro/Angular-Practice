@@ -1,0 +1,62 @@
+<!-- <tr style="height: 25.33px;"> -->
+<td class="tallint-td" [style]="style" *ngIf="nested==true" (click)="triggerCellClick('display')">
+  <i class="fa" *ngIf="display_row.records_flag==1"
+    [ngClass]="{'fa-minus-square': display_row.nested_flag ,'fa-plus-square': !display_row.nested_flag}"
+    [ngStyle]="{'padding-left.px': padding_exp}">
+  </i>
+</td>
+<!-- <td class="tallint-td" [style]="style" *ngIf="nested==true" (click)="cellClick('openEntityTab', display_row)">
+    <a class="btn btn-success btn-sm">View</a>
+  </td> -->
+<td class="p-0 pl-2 pr-2 text-center" *ngIf="multi_select">
+  <i style="color:#196ca5 !important;font-size:16px;" class="fa fa-square-o pointer" type="checkbox"
+    (click)="rowSelected(display_row)" *ngIf="!display_row['row_selected']"></i>
+  <i style="color:#196ca5 !important;font-size:16px;" class="fa fa-check-square-o pointer"
+    (click)="rowSelected(display_row)" *ngIf="display_row['row_selected']"></i>
+</td>
+
+<td class="tallint-td my-auto" (click)="triggerCellClick('edit', column)" *ngIf="edit">
+  <i class="fa fa-pencil pointer"></i>
+</td>
+<!-- [ngClass]="{'font-weight-bold': nested==true && display_row.records_flag==0}"-->
+<ng-container *ngFor="let column of tallint_table_columns; let index=index;">
+  <td *ngIf="column.visible != false" (click)="triggerCellClick(column.function_name,column)" class="tallint-td link"
+    [ngStyle]="{'color': (column.function_name && column.function_name!='') ? '#428bca' : '',
+    'text-decoration': (column.function_name && column.function_name!='') ? '' : 'none'}">
+    <div [style.width.px]="column.width && column.width > 80 ? column.width :80">
+      <ng-container *ngIf="!column.cell_template">
+        <ng-container *ngIf="column.data_type ==='date'">
+          {{display_row[column.property] | date: 'd-MMM-yyyy'}}
+        </ng-container>
+        <ng-container *ngIf="column.data_type ==='datetime'">
+          {{display_row[column.property]  | UtcToLocalTime | date: 'd-MMM-yyyy h:mm a'}}
+        </ng-container>
+
+        <ng-container *ngIf="column.data_type =='nvarchar'">
+
+          <span class="margin">
+            <span [innerHTML]='display_row[column.property] | HTMLFormatter'>
+            </span>
+          </span>
+        </ng-container>
+
+        <ng-container *ngIf="column.data_type =='varbinary'">
+          {{display_row[column.property] | DynamicFilesTitlePipe }}
+        </ng-container>
+
+        <ng-container
+          *ngIf="column.data_type !='date' && column.data_type !='datetime' && column.data_type !='nvarchar' && column.data_type !='varbinary'">
+          {{display_row[column.property]}}
+        </ng-container>
+      </ng-container>
+      <div [ngClass]="column.cell_class" *ngIf="column.cell_template" [innerHTML]="column.cell_template | HTMLFormatter">
+
+        <!-- {{column.cell_template}} -->
+      </div>
+    </div>
+  </td>
+</ng-container>
+
+<!-- </tr> -->
+
+<!-- </tr> -->

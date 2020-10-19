@@ -1,0 +1,42 @@
+{
+    "data": {
+        "Table": [
+            {
+                "status_id": 1,
+                "status_title": "suchi",
+                "lng_id": 2,
+                "tn_id": 1,
+                "status_code": 1000,
+                "stage_code": 1,
+                "color_code": "Blue",
+                "status_type": "successfull",
+                "status": 1,
+                "cr_date": "2019-06-26T17:40:48.14",
+                "cr_user_id": 1,
+                "lu_date": "2019-06-26T17:40:48.14",
+                "lu_user_id": 1,
+                "default_title": "ravi"
+            },
+            {
+                "status_id": 2,
+                "status_title": "ramcharan",
+                "lng_id": 3,
+                "tn_id": 1,
+                "status_code": 1000,
+                "stage_code": 1,
+                "color_code": "Blue",
+                "status_type": "successfull",
+                "status": 1,
+                "cr_date": "2019-06-26T17:40:48.143",
+                "cr_user_id": 1,
+                "lu_date": "2019-06-26T17:40:48.143",
+                "lu_user_id": 1,
+                "default_title": "ravi"
+            }
+        ]
+    },
+    "error": null,
+    "message": "data get successfully",
+    "status": true,
+    "code": 200
+}

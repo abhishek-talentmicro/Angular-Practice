@@ -1,0 +1,174 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-18 pr-1">
+      <div class="tab-item p-1">
+        <div class="vertical-nav box-shadow bg-white" *ngIf="section_data && section_data.length">
+          <ul class="nav flex-column bg-white mb-0">
+            <li class="text-center nav-heading"
+              style="background: linear-gradient(to right, #2873b4, #03628f); width: 100%;color:white;">
+              Action
+            </li>
+            <ng-container *ngFor="let section of section_data; let i = index;">
+              <li *ngIf="(requirement_form.value | DynamicSectionConditionCheckPipe : section.conditions)"
+                class="nav-item pointer" (click)="setSectionVerticleNavbar(i,section)"
+                [ngClass]="{'active': section.active_section}">
+                {{section.section_title}}
+              </li>
+            </ng-container>
+          </ul>
+        </div>
+        <div class="vertical-nav box-shadow bg-white mt-1" *ngIf="requirement_details">
+          <div class="nav-heading text-center"
+            style="box-shadow: 0 1px 0px 0 gainsboro;background: linear-gradient(to right, #2873b4, #03628f); width: 100%;color:white;">
+            Summary
+          </div>
+          <div class="summary">
+            <div class="summary-item" *ngIf="requirement_details.job_title">
+
+              <div class="summary-item-icon">
+                <i class="fa fa-briefcase"></i>
+              </div>
+              <div class="summary-item-details">
+                {{requirement_details.job_title}}
+              </div>
+            </div>
+            <div class="mt-2 summary-item" *ngIf="requirement_details.job_code">
+              <div class="summary-item-icon">
+                <i class="fa fa-ticket"></i>
+              </div>
+              <div class="summary-item-details">
+                {{requirement_details.job_code}}
+              </div>
+            </div>
+
+            <div class="mt-2 summary-item" *ngIf="requirement_details.req_status">
+              <div class="summary-item-icon">
+                <i class="fa fa-info-circle"></i>
+              </div>
+              <div class="summary-item-details">
+                {{requirement_details.req_status}}
+              </div>
+            </div>
+
+            <div class="mt-1 summary-item" *ngIf="requirement_details && requirement_details.org_node">
+              <div class="summary-item-icon">
+                <i class="fa fa-building-o" aria-hidden="true"></i>
+              </div>
+              <div class="summary-item-details ">
+                {{requirement_details.org_node}}
+              </div>
+            </div>
+
+            <div *ngIf="requirement_details.created_user" class="mt-2" style="font-size: 10px;">
+              Created
+              <span *ngIf="requirement_details.created_user">
+                by {{requirement_details.created_user}}
+              </span>
+              <span *ngIf="requirement_details.cr_date">
+                on {{requirement_details.cr_date | UtcToLocalTime | date: 'd-MMM-yyyy h:mm a'}}
+              </span>
+            </div>
+
+            <div *ngIf="requirement_details.updated_user" class="mt-2" style="font-size: 10px;">
+              Updated
+              <span *ngIf="requirement_details.updated_user">
+                by {{requirement_details.updated_user}}
+              </span>
+              <span *ngIf="requirement_details.lu_date">
+                on {{requirement_details.lu_date | UtcToLocalTime | date: 'd-MMM-yyyy h:mm a'}}
+              </span>
+            </div>
+
+            <div *ngIf="requirement_details.posted_by" class="mt-2" style="font-size: 10px;">
+              Posted
+              <span *ngIf="requirement_details.posted_by">
+                by {{requirement_details.posted_by}}
+              </span>
+              <span *ngIf="requirement_details.posted_on">
+                on {{requirement_details.posted_on | UtcToLocalTime | date: 'd-MMM-yyyy h:mm a'}}
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-item p-1" [ngStyle]="{'flex': !applicant_details ? '0 0 82%' : '0 0 62%'}" style="max-width: 100%;">
+      <div class="pb-2 box-shadow">
+        <div *ngFor="let section of section_data; let i = index">
+          <ng-container *ngIf="section.active_section">
+            <h6 class="section_title mb-1" *ngIf="section">
+              {{section.section_title}}
+              <!-- <span *ngIf="t_id && i == 0" matTooltip="Resume Search"
+                class="pointer mt-1 float-right summary-item-details" (click)="searchResume()">
+                <i class="fa fa-search summary-item-action-icon"></i>
+                Search
+              </span> -->
+              <span
+                *ngIf="t_id && i == 0 && access_rights && access_rights['1'] && access_rights['1']['sub_modules'] &&  access_rights['1']['sub_modules']['200'] && access_rights['1']['sub_modules']['200']['forms'] && access_rights['1']['sub_modules']['200']['forms']['1515'] && access_rights['1']['sub_modules']['200']['forms']['1515']['enable'] && access_rights['1']['sub_modules']['200']['forms']['1515']['my_write']"
+                matTooltip="
+                Add a resume" class="pointer mt-1 float-right summary-item-details" (click)="createResume()">
+                <i class="fa fa-user-plus summary-item-action-icon"></i>
+                Resume
+              </span>
+              <div *ngIf="t_id && i == 0" matTooltip="Add/View notes" (click)="openNotesModal()"
+                class="pointer mt-1 float-right summary-item-details position-relative req-notes">
+                <i class="fa fa-sticky-note-o summary-item-action-icon" [attr.data-content]="notes_count||0"></i>
+                Notes
+              </div>
+            </h6>
+            <tm-dynamic-form
+              *ngIf="!hide_form && masters && section && section.field_details && section.field_details.length"
+              [section_list]="[(section|JSONParser)]" [masters]="masters" [display_type]="0"
+              [dynamic_form]="requirement_form" [t_id]="t_id" [dataSaved]="dataSavedRef"
+              [parent_form]="requirement_form">
+            </tm-dynamic-form>
+
+            <tm-dynamic-form *ngIf="!hide_form && masters && section && section.sections && section.sections.length"
+              [section_list]="section.sections|JSONParser" [masters]="masters"
+              [display_type]="section.sub_section_display_type"
+              [dynamic_form]="section.multiple ? requirement_form : requirement_form.get([section.section_id])"
+              [t_id]="t_id" [dataSaved]="dataSavedRef" [parent_form]="requirement_form">
+            </tm-dynamic-form>
+
+            <div class="col-md-12 mx-auto mt-3"
+              *ngIf="((t_id && section.enable_save && section.edit_flag) || (!t_id && section.enable_save && !section.multiple) || (section.multiple && section.edit_flag && section.enable_save)) && !section.multiple">
+              <div class="text-center">
+                <button class="btn btn-sm cancel-btn mr-2" *ngIf="masters && section_data"
+                  (click)="cancel(section, section.multiple ? section.multiple_form : requirement_form.get([section.section_id]))">
+                  Cancel
+                </button>
+                <button class="btn btn-sm save-btn"
+                  (click)="dynamicFormSave(section, section.multiple ? section.multiple_form : requirement_form.get([section.section_id]))">
+                  <span *ngIf="!section.multiple">
+                    Save
+                  </span>
+                  <span *ngIf="section.multiple">
+                    Add
+                  </span>
+                </button>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <div class="col-20 pl-1" *ngIf="t_id && applicant_details">
+      <div class="p-1 tab-item">
+        <div class="vertical-nav"
+          style="box-shadow: 0px 0px 5px 0px gainsboro;padding:0 !important;overflow-y: auto;width:100%;">
+          <p class="text-center nav-heading">Applicant Status</p>
+          <div class="" style="height: 146px;">
+          </div>
+          <div id="chartdiv" style="max-height:50%;" class="applicant-details-div">
+          </div>
+          <div [style.height.px]="(27 *applicant_details.length + 27)" style="max-height: 310px;">
+            <app-tallint-table (cellClicked)="cellClicked($event)" [table_records]="applicant_details"
+              [total_count]="applicant_details ? applicant_details.length : 0" [table_columns]="applicant_status_grid">
+            </app-tallint-table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

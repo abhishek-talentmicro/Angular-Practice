@@ -1,0 +1,60 @@
+<div mat-dialog-title>
+    Attachments
+</div>
+<div mat-dialog-content>
+    <div id="drop-zone" (dragover)="active=1;" (dragleave)="active=0;" (drop)="active=0;" [ngClass]="{'active':active}">
+        <label for="input-file{{id}}" class="m-0 py-2" style="color: #666;">
+            Drop
+            <span *ngIf="multiple">
+                files
+            </span>
+            <span *ngIf="!multiple">
+                a file
+            </span>
+            here or click to upload
+        </label>
+    </div>
+    <input [(ngModel)]="file" (change)="fileInputChanged($event.target.files)" id="input-file{{id}}" type="file"
+        [multiple]="multiple" style="display:none;" [accept]="file_type_title">
+
+    <div class="result" *ngIf="active_files.length">
+        <ng-container *ngFor="let x of active_files;let i=index;">
+            <div class="row mb-1">
+                <div class="col-md-9">
+                    <div class=" title w-100">
+                        {{x.file_title}}
+                    </div>
+                </div>
+                <div class="col-md-3 p-0 d-flex align-items-center justify-content-between"
+                    style="font-size:12px;margin-left:-7px;color:#555">
+
+                    <a class="download">
+                        <i (click)="viewDocument(active_files,x)" class="fa fa-external-link pointer"
+                            matTooltip="View"></i>
+                    </a>
+                    <a class="download"
+                        [attr.href]="x && x['content'] ? ((x['content']) | SafeFilePipe):(x['file_path'] && x['file_path'] != '' ? x['file_path']+'?original_type=1' : '')"
+                        [attr.download]="x['file_title']" matTooltip="Download">
+                        <i class="fa fa-download" aria-hidden="true"></i>
+                    </a>
+
+                    <!-- <a *ngIf="data && data.verification_required &&x.attachment_id" class="download">
+                        <i class="fa fa-check-square" (click)="verifyDocument(x,i)" *ngIf="!(x.is_verified)"
+                            title="Verify"></i>
+                        <i class="fa fa-check-square text-success" *ngIf="x.is_verified" title="Verified"></i>
+                    </a> -->
+                    <!-- <i (click)="downLoad(x)" class="fa fa-download pointer" matTooltip="Download"></i> -->
+                    <i (click)="removeFile(x,i)" class="fa fa-trash pointer" matTooltip="Remove"></i>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>
+<div class="mat-dialog-actions">
+    <button class="btn btn-sm btn-danger" (click)="cancel()">
+        Cancel
+    </button>
+    <button class="ml-1 btn btn-sm btn-info" (click)="close()">
+        Done
+    </button>
+</div>

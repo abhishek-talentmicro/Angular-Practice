@@ -1,0 +1,34 @@
+<mat-menu #subMenu="matMenu" [overlapTrigger]="false" panelClass="nested-commands">
+    <div *ngFor="let command of child_commands">
+        <ng-container *ngIf="command && command.command_details && command.command_details != '[]' && (command.command_details).length; else elseTemplate">
+            <app-nested-commands #menu [child_commands]="command.command_details" [section]="section"
+                [dynamic_form]="dynamic_form" [parent_functions]="parent_functions" [evalFunctionRef]="evalFunctionRef"
+                [t_id]="t_id" [row_data]="row_data" [i]="i" [parent_form]="parent_form">
+            </app-nested-commands>
+
+            <ng-container *ngIf="menu && menu.subMenu">
+                <a [class]="command.class" [style]="command.style | SanitizePipe :'style'"
+                    *ngIf="(command.conditions | evalPipe : t_id : section : row_data : i : row_data : parent_form)"
+                    (click)="evalFunction(section,dynamic_form,command.click_func_name,parent_form,command,parent_functions)"
+                    [matMenuTriggerFor]="menu.subMenu" mat-menu-item>
+                    <span [innerHtml]="command.icon | SanitizePipe :'html'"></span>
+                    <span class="margin-left-5">
+                        {{command && command.label_code ? ((command.module_code+'_'+command.sub_module_code+'_'+command.form_code+'_'+command.label_code) | translate) :''}}
+                    </span>
+                </a>
+            </ng-container>
+            <!---->
+        </ng-container>
+        <ng-template #elseTemplate>
+            <a [class]="command.class" [style]="command.style | SanitizePipe :'style'"
+                (click)="evalFunction(section,dynamic_form,command.click_func_name,parent_form,command,parent_functions)"
+                *ngIf="(command.conditions | evalPipe : t_id : section : row_data : i : row_data : parent_form)"
+                mat-menu-item>
+                <span [innerHtml]="command.icon | SanitizePipe :'html'"></span>
+                <span class="margin-left-5">
+                    {{command && command.label_code ? ((command.module_code+'_'+command.sub_module_code+'_'+command.form_code+'_'+command.label_code) | translate) :''}}
+                </span>
+            </a>
+        </ng-template>
+    </div>
+</mat-menu>

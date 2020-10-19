@@ -1,0 +1,76 @@
+<!-- <label (click)="openModal()">
+    <i class="fa fa-paperclip"></i>
+    <span *ngIf="result && result.length">
+        {{result.length}}
+        <span *ngIf="result.length == 1">
+            File
+        </span>
+        <span *ngIf="result.length > 1">
+            Files
+        </span>
+    </span>
+    <span *ngIf="!(result && result.length)">
+        Select
+        <span *ngIf="multiple">
+            files
+        </span>
+        <span *ngIf="!multiple">
+            a file
+        </span>
+    </span>
+</label> -->
+<!-- -->
+<mat-label class="input-label text-nowrap" style="display: block;padding: 0;margin-top: -4px;"
+    [title]="label ? (label | HTMLFormatter : 1) : ''">
+    {{label}}
+    <span style="color:red" *ngIf="required">*</span>
+</mat-label>
+<label [title]="(result && result.length == 1) ? result[0].file_title : ''" class="m-0"
+    [style.maxWidth.px]="max_fieldwidth_px" style="display: block;cursor: pointer; font-size: 13px;height:40px;padding-top: 3px;white-space: nowrap;
+    overflow: hidden;">
+    <span (click)="disabled? '':openModal()">
+        <i class="fa fa-paperclip"></i>&nbsp;
+        <ng-container *ngIf="active_files && active_files.length; else elseTemplate">
+            <ng-container *ngIf="active_files_length == 1; else elseTemplate">
+                {{active_files[0].file_title}}
+            </ng-container>
+            <ng-template #elseTemplate>
+                {{active_files_length}} Files
+            </ng-template>
+        </ng-container>
+        <ng-template #elseTemplate>
+            Select
+            <span *ngIf="multiple">
+                files
+            </span>
+            <span *ngIf="!multiple">
+                a file
+            </span>
+        </ng-template>
+    </span>
+    <span *ngIf="!multiple && result && result.length" class="ml-1">
+        <a class="ml-1 download"
+            [attr.href]="result[0] && result[0]['content'] ? ((result[0]['content']) | SafeFilePipe):(result[0]['file_path'] && result[0]['file_path'] != '' ? result[0]['file_path']+'?original_type=1' : '')"
+            [attr.download]="result[0]['file_title']" matTooltip="Download" target='_blank'>
+            <i class="fa fa-download" aria-hidden="true"></i>
+        </a>
+        <!-- <i class="fa fa-download pointer" style="color:#555" matTooltip="Download" (click)="downLoad(result)"></i> -->
+    </span>
+    <span *ngIf="result && result.length" class="ml-1 mr-1">
+        <i class="fa fa-external-link" style="color:#555" matTooltip="View" (click)="viewDocument(result,null)"></i>
+    </span>
+    <span *ngIf="!first_upload">
+        <i class="fa fa-check-square" (click)="disabled?'':verifyAll(1)"
+            *ngIf="verification_required && !all_verified && active_files && active_files.length" title="Verify"></i>
+        <!--  -->
+        <i class="fa fa-check-square text-success"
+            *ngIf="verification_required && all_verified && active_files && active_files.length" title="Verified"></i>
+
+
+        <i class="fa  fa-times-rectangle ml-1" (click)="disabled?'':verifyAll(2)"
+            *ngIf="verification_required && !all_verified && active_files && active_files.length" title="Decline"></i>
+        <!--  -->
+        <i class="fa  fa-times-rectangle text-danger"
+            *ngIf="verification_required && all_declined && active_files && active_files.length" title="Declined"></i>
+    </span>
+</label>

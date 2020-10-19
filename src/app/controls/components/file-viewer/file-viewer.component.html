@@ -1,0 +1,46 @@
+<h2 mat-dialog-title>
+    Attachments
+    <span class="ml-auto" (click)="close()" style="float: right;cursor:pointer">
+        <i class="fa fa-times" aria-hidden="true"></i>
+    </span>
+</h2>
+
+
+<h6 class="section_title mb-1">
+    {{all_files[index].file_title}}
+    <span class="float-right" *ngIf="all_files.length > 1">
+        <i class="fa fa-angle-double-left  prev-icon pointer" matTooltip="Previos"
+            [ngClass]="{'out-of-index' : negative_index }" (click)="previousFile()" *ngIf="index != 0">
+        </i>
+
+        <i class="fa fa-angle-double-right next-icon pointer" matTooltip=" Next"
+            [ngClass]="{'out-of-bound' : index_outof_bound }" (click)="nextFile()" *ngIf="index != all_files.length -1">
+        </i>
+    </span>
+</h6>
+
+
+<ng-container>
+    <ng-container
+        *ngIf="all_files[index] && all_files[index].file_path && all_files[index].file_path.indexOf('http') > -1 && all_files[index].file_path.split('.'); else elseTemplate">
+        <div class="" style="padding : 0 10px !important;height: 75%;"
+            *ngIf="reset_object_tag && all_files[index].is_preview;else noPreview">
+            <embed id="resumeViewer" frameborder="0" style="width: 100%;height: 100%;"
+                [src]="all_files[index].file_path | SafeFilePipe" [title]="all_files[index].file_title || ''">
+        </div>
+    </ng-container>
+    <ng-template #elseTemplate>
+        <div class="" style="padding : 0 10px !important;height: 75%;"
+            *ngIf="reset_embed_tag && all_files[index].is_preview;else noPreview">
+            <embed id="resumeViewer" frameborder="0" style="width: 100%;height: 100%;"
+                [src]="all_files[index].content | SafeFilePipe" [type]="all_files[index].mime_type"
+                [title]="all_files[index].file_title || ''">
+        </div>
+    </ng-template>
+
+    <ng-template #noPreview>
+        <div class="d-flex justify-content-center h-75">
+            <span class="align-self-center">No Preview Available</span></div>
+    </ng-template>
+
+</ng-container>

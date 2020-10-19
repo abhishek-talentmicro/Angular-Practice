@@ -1,0 +1,13 @@
+<div [formGroup]="form_group">
+  <label *ngIf="label_block" class="m-0 html-label" [innerHtml]="label | HTMLFormatter"
+    [title]="label ? (label | HTMLFormatter : 1) : ''"></label>
+  <mat-form-field appearance="standard" floatLabel="always" [title]="label ? (label | HTMLFormatter : 1) : ''">
+    <mat-label *ngIf=" !label_block" [innerHtml]="label | HTMLFormatter">
+    </mat-label>
+    <input class="custom-input__input" [matDatepicker]="myDatePicker" [formControlName]="control_name" matInput
+      placeholder="{{placeholder}}" name="{{control_name}}">
+    <mat-datepicker-toggle matSuffix [for]="myDatePicker">
+    </mat-datepicker-toggle>
+    <mat-datepicker #myDatePicker></mat-datepicker>
+  </mat-form-field>
+</div>

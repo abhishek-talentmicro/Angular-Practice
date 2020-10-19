@@ -1,0 +1,56 @@
+<div class="w-100 " *ngIf="!multiple">
+    <ng-container *ngFor="let details of all_files;let i = index; ">
+        <div>
+            <div class="flex text-center pointer"
+                [attr.title]="(row_data.description ? row_data.description: (row_data.notes ? row_data.notes :'')) +'&#13;'+
+            (row_data.cr_user_id ? 'Created by ' + row_data.cr_user_id + ' on ' +(( row_data.cr_date  | UtcToLocalTime) | date: 'd-MMM-yyyy h:mm a')+'&#13;'+
+                    'Updated by ' + row_data.lu_user_id + ' on ' +(( row_data.lu_date  | UtcToLocalTime) | date: 'd-MMM-yyyy h:mm a'):'')">
+                <div class="attachment-view" (click)="viewDocument(all_files,details)">
+                    <img src="assets/docx_icon.png" *ngIf="details.type==1" [ngClass]="size=='sm' ?'image-sm':'image'">
+                    <img src="assets/pdf_logo.png" *ngIf="details.type==2" [ngClass]="size=='sm' ?'image-sm':'image'">
+                    <img src="assets/default_resume.png" *ngIf="details.type==3" [ngClass]="size=='sm' ?'image-sm':'image'">
+                    <img src="assets/xlsx_icon.png" *ngIf="details.type==4" [ngClass]="size=='sm' ?'image-sm':'image'">
+                    <!-- <div [ngClass]="details.is_active?'overlay box-shadow':'overlay'"></div> -->
+                    <div class="link-content">
+                        <a><i class="fa fa-external-link"></i></a>
+                    </div>
+                    <p class="text-center m-auto" style="font-size: 12px;width: 100px;word-break: break-all;">
+                        <i class="fa fa-pencil pointer edit" (click)="editDocument(details,i)"></i>
+                        {{details.file_title}}
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </ng-container>
+</div>
+
+
+<div class="w-100 " *ngIf="multiple">
+    <div class="row">
+        <ng-container *ngFor="let details of all_files;let i = index; ">
+
+            <div class="col-md-2"
+                [attr.title]="(row_data.description ? row_data.description: (row_data.notes ? row_data.notes :'')) +'&#13;'+
+            (row_data.cr_user_id ? 'Created by ' + row_data.cr_user_id + ' on ' +(( row_data.cr_date  | UtcToLocalTime) | date: 'd-MMM-yyyy h:mm a')+'&#13;'+
+                    'Updated by ' + row_data.lu_user_id + ' on ' +(( row_data.lu_date  | UtcToLocalTime) | date: 'd-MMM-yyyy h:mm a'):'')">
+                <div class="attachment-view text-center" (click)="viewDocument(all_files,details)">
+                    <img src="assets/docx_icon.png" *ngIf="details.type==1" [ngClass]="size=='sm' ?'image-sm':'image'">
+                    <img src="assets/pdf_logo.png" *ngIf="details.type==2" [ngClass]="size=='sm' ?'image-sm':'image'">
+                    <img src="assets/default_resume.png" *ngIf="details.type==3" [ngClass]="size=='sm' ?'image-sm':'image'">
+                    <img src="assets/xlsx_icon.png" *ngIf="details.type==4" [ngClass]="size=='sm' ?'image-sm':'image'">
+                    <!-- <div [ngClass]="details.is_active?'overlay box-shadow':'overlay'"></div> -->
+                    <div class="link-content">
+                        <a><i class="fa fa-external-link"></i></a>
+                    </div>
+                    <p class="text-center m-auto text-content" >
+                        <i class="fa fa-pencil pointer edit" (click)="editDocument(details,i)" *ngIf="editable"></i>
+                        {{details.file_title}}
+                    </p>
+                </div>
+
+            </div>
+
+        </ng-container>
+    </div>
+</div>

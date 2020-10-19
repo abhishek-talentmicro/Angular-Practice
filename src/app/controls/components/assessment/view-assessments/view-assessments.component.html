@@ -1,0 +1,60 @@
+<ng-container *ngIf="section_data&&section_data.length&&masters">
+    <div class="feedback-print"></div>
+    <h2 mat-dialog-title>
+        Feedback
+        <span class="ml-auto" (click)="print(null, null)" style="float: right;cursor:pointer">
+            <i class="fa fa-print" aria-hidden="true"></i>
+        </span>
+    </h2>
+    <div mat-dialog-content>
+        <div id="print-content">
+            <img [src]="logo" alt="logo" width="15%">
+            <h6 style="border-bottom:1px solid gainsboro; padding:5px">Applicant Details</h6>
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <td scope="row">Applicant Name :
+                            {{candidate_details['name'] ? candidate_details['name'] :''}}
+                        </td>
+                        <td scope="row">Applicant Email : {{ 
+                            (candidate_details['email_id'] ? candidate_details['email_id'] : '')  }}</td>
+                    </tr>
+                    <tr>
+                        <td scope="row">Applicant Mobile Number : {{ (candidate_details['phone_no'] ?
+                            candidate_details['phone_no'] : '') }}</td>
+                        <td scope="row">Resume Status : {{ (candidate_details['resume_status'] ?
+                            candidate_details['resume_status'] : '') }}</td>
+                    </tr>
+
+                    <tr>
+                        <td scope="row">Requirement : {{(candidate_details['requirement_title'] ?
+                            candidate_details['requirement_title'] : '') }}
+                        </td>
+                        <td scope="row">Recruiter Name : {{ (candidate_details['recruiter_name'] ?
+                            candidate_details['recruiter_name'] : '') }}</td>
+                    </tr>
+                    <tr>
+                        <td scope="row">Stage - Status : {{ (candidate_details['screening_stage'] ?
+                            candidate_details['screening_stage'] : '') + ' (' + (candidate_details['screening_status'] ?
+                            candidate_details['screening_status'] : '') + ')' }}</td>
+                        <td scope="row">Date :
+                            {{ (candidate_details['lu_on'] ? (candidate_details['lu_on'] | date :'d-MMM-yyyy h:mm a') : '') }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td scope="row">Source : {{ candidate_details['source_name'] }}</td>
+                    </tr>
+                <tbody>
+            </table>
+
+
+            <tm-dynamic-form *ngIf="masters && section_data" [section_list]="section_data" [masters]="masters"
+                [display_type]="display_type" [dynamic_form]="form_group" [t_id]="id">
+            </tm-dynamic-form>
+        </div>
+    </div>
+    <div mat-dialog-actions>
+        <button style="float: right;" class="btn btn-sm cancel-btn mr-2 ng-star-inserted ml-auto"
+            (click)="close()">Close</button>
+    </div>
+</ng-container>

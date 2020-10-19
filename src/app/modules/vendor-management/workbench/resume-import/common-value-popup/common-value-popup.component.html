@@ -1,0 +1,107 @@
+<!-- <h2 mat-dialog-title id="title">
+  Import Details
+  <a (click)="close()"><i class="fa fa-times pointer pt-2 pr-3 float-right"></i></a>
+</h2>
+<mat-dialog-content>
+  <form [formGroup]="filter_form">
+    <div class="row">
+      <div class="col-md-12">
+        <tm-select [options]="(master_data_list?master_data_list.requirements:[])" [form_group]="filter_form"
+          [form_control]="'requirement_ids'" title_property="job_title" id_property="requirement_id"
+          [placeholder]="'< - - Select - - >'" float_label="always" [label]="'Requirement'">
+        </tm-select>
+      </div>
+      <div class="col-md-12">
+        <tm-select [options]="(master_data_list?master_data_list.source:[])" [form_group]="filter_form"
+          [form_control]="'source'" [mandatory]="data" title_property="resume_source_title"
+          id_property="resume_source_code" [placeholder]="'< - - Select - - >'" float_label="always" [label]="'Source'"
+          [mandatory]="true">
+        </tm-select>
+
+      </div>
+      <div class="col-md-12" *ngIf="filter_form.value.requirement_ids">
+        <mat-checkbox type="checkbox" name="" id="" formControlName="resume_flag">
+          <mat-label style="transform: translateY(-1.28125em) scale(0.75) perspective(100px) translateZ(1.001px);
+          font-weight: 500 !important; color: black !important;">
+            Allow save resume without tagging
+          </mat-label>
+        </mat-checkbox>
+      </div>
+    </div>
+
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+
+  <button class="btn save-btn btn-sm ml-2 float-right" (click)="saveImportDetails()">
+    <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>Save</button>
+  <button class="btn cancel-btn btn-sm float-right" (click)="cancelImportDetails()">Cancel</button>
+
+
+</mat-dialog-actions> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 mat-dialog-title id="title">
+  {{import_details.section_title}}
+  <a (click)="close()"><i class="fa fa-times pointer pt-2 pr-3 float-right"></i></a>
+</h2>
+<mat-dialog-content style="padding: 0px !important;">
+
+  <tm-dynamic-form *ngIf=" import_details.section_list && import_details.display_type"
+    [section_list]="import_details.section_list" [masters]="import_details.masters"
+    [display_type]="import_details.display_type" [dynamic_form]="import_details_form" [t_id]="t_id"
+    [dataSaved]="dataSavedRef">
+  </tm-dynamic-form>
+
+  <!-- <form [formGroup]="filter_form">
+    <div class="row">
+      <div class="col-md-12">
+
+        <tm-select [options]="(master_data_list?master_data_list.requirements:[])" [form_group]="filter_form"
+          [form_control]="'requirement_ids'" title_property="job_title" id_property="requirement_id"
+          [placeholder]="'< - - Select - - >'" float_label="always" [label]="'Requirement'">
+        </tm-select>
+      </div>
+      <div class="col-md-12">
+        <tm-select [options]="(master_data_list?master_data_list.source:[])" [form_group]="filter_form"
+          [form_control]="'source'" [mandatory]="data" title_property="resume_source_title"
+          id_property="resume_source_code" [placeholder]="'< - - Select - - >'" float_label="always" [label]="'Source'">
+        </tm-select>
+
+      </div>
+      <div class="col-md-12" *ngIf="filter_form.value.requirement_ids">
+        <mat-checkbox type="checkbox" name="" id="" formControlName="resume_flag">
+          <mat-label style="transform: translateY(-1.28125em) scale(0.75) perspective(100px) translateZ(1.001px);
+          font-weight: 500 !important; color: black !important;">
+            Allow to save resume without tagging
+          </mat-label>
+        </mat-checkbox>
+      </div>
+
+
+    </div>
+  </form> -->
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button class="btn save-btn btn-sm ml-2 float-right" (click)="saveDynamicImport()">
+    <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>Save</button>
+  <button class="btn cancel-btn btn-sm float-right" (click)="cancelImportDetails()">Cancel</button>
+
+
+</mat-dialog-actions>

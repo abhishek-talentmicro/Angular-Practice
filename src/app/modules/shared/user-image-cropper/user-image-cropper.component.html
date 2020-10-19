@@ -1,0 +1,30 @@
+<!-- 
+  Created by:Upendram Reddy Tanuja
+  Created on: 06-Aug-2019 03:50 PM
+  Purpose: image Cropper component
+-->
+
+<div class="modal-header">
+    <h4 *ngIf="crop_flag" class="modal-title">Crop</h4>
+    <h4 *ngIf="!crop_flag" class="modal-title">Preview</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div *ngIf="crop_flag" class="container-fluid">
+    <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="aspectRatio" [resizeToWidth]="300"
+      onlyScaleDown="true" format="png" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()" (cropperReady)="cropperReady()"
+      (loadImageFailed)="loadImageFailed()"></image-cropper>
+    <img [src]="croppedImage" />
+  </div>
+  <div style="text-align: center;" *ngIf="!crop_flag" class="container-fluid">
+    <img src="{{img}}" alt="" *ngFor="let img of image_src;">
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-danger" type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+      Close
+    </button>
+    <button *ngIf="crop_flag" class="btn btn-info" type="button" class="close" aria-label="Close" (click)="activeModal.close(croppedImage)">
+      Save
+    </button>
+  </div>

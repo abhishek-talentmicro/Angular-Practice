@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>
+    Confirmation <span class="float-right"><i class="fa fa-times pointer" (click)="close()"></i></span>
+</h2>
+<div>
+    <mat-dialog-content>
+        <mat-radio-group class="mt-1" aria-label="Select an option" [(ngModel)]="export_flag">
+            <mat-radio-button value="1">Export all</mat-radio-button>
+            <mat-radio-button value="2">Export selected entries</mat-radio-button>
+        </mat-radio-group>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button type="button" class="btn btn-sm cancel-btn ml-auto mr-1" (click)=" close(false)">Close</button>
+        <button type="button" class="btn btn-sm save-btn float-right" (click)="close(true)">
+            Confirm
+        </button>
+    </mat-dialog-actions>
+</div>

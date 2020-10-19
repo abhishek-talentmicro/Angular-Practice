@@ -1,0 +1,228 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-18 pr-1">
+      <div class="tab-item p-1">
+        <div class="vertical-nav box-shadow bg-white">
+          <ul class="nav flex-column bg-white mb-0">
+            <li class="text-center nav-heading"
+              style="background: linear-gradient(to right, #2873b4, #03628f); width: 100%;color:white;">
+              Action
+            </li>
+            <li class="pr-2 pl-2 pt-3">
+              <mat-form-field floatLabel='always'>
+                <mat-label>Import From</mat-label>
+                <mat-select (valueChange)=" fileTypeChanges()  " [(value)]="selected_option"
+                  placeholder="< - - Select - - >">
+                  <mat-option [value]="0">Excel</mat-option>
+                  <mat-option [value]="1">Folder</mat-option>
+                  <!-- <mat-option [value]="2">Portal</mat-option> -->
+                  <!-- <mat-option [value]="2">Job Portal</mat-option> -->
+                </mat-select>
+              </mat-form-field>
+              <a *ngIf="!selected_option" style="font-size: 11px;position: absolute; left: 26px; margin-top: 45px;"
+                href="assets/import-resume-sample-excel/Sample.xlsx" download>
+                Download sample excel file
+              </a>
+            </li>
+            <li class="pl-2 pr-2 " [ngStyle]="{'padding-top':selected_option ==0? '.5rem': '0px'}">
+              <app-files *ngIf="!selected_option" [result]="result_xl_file" [multiple]="0" [flag]="1"
+                [form]="action_form" [controlName]="'xl_files'" [required]="false" [label]="'Select Excel'"
+                (returnFiles)="incomingfile($event)" [max_fieldwidth_px]="208">
+              </app-files>
+              <app-files *ngIf="selected_option == 1" [result]="files" [multiple]="1" [flag]="1" [form]="action_form"
+                [controlName]="'files'" [required]="false" [label]="'Select Folder'"
+                (returnFiles)="saveFileResult($event)" [max_fieldwidth_px]="208">
+              </app-files>
+              <tm-select *ngIf="selected_option == 2" [options]="job_portal" [form_group]="action_form"
+                form_control="job_portal" title_property="job_portal_title" [mandatory]="1"
+                (selected_obj)="loadJobPortalCredential($event)" id_property="job_portal_code"
+                placeholder="< - - Select - - >" float_label="always" label="Job Portal">
+              </tm-select>
+              <tm-select *ngIf="selected_option == 2" [options]="job_portal_credential" [form_group]="action_form"
+                form_control="credential" title_property="user_name" id_property="credential_id"
+                placeholder="< - - Select - - >" float_label="always" label="Job Portal Credential">
+              </tm-select>
+              <!-- <app-files-duplicate *ngIf="!selected_option" [flag]="1" id="files" [multiple]="0" [file_types]="'any'"
+                (returnFiles)="incomingfile($event)" [result]="xl_files">
+              </app-files-duplicate> -->
+              <!-- <app-files-duplicate *ngIf="selected_option" [flag]="1" id="files" [multiple]="1" [file_types]="'any'"
+                (returnFiles)="saveFileResult($event)" [result]="files">
+              </app-files-duplicate> -->
+
+            </li>
+            <li class="pl-2 pr-2 pb-2 ">
+              <button type="submit" *ngIf="selected_option !=2" (click)=" selected_option? uploadFiles() :uploadXl() "
+                class="btn save-btn btn-sm float-right w-100">
+                <!-- <i class="fa fa-spinner fa-spin" *ngIf="loading"></i> -->
+                Import
+                <!-- <i class="fa fa-upload"></i> -->
+              </button>
+              <button type="submit" *ngIf="selected_option ==2" (click)="eventPortal() "
+                class="btn save-btn btn-sm float-right w-100">
+                <!-- <i class="fa fa-spinner fa-spin" *ngIf="loading"></i> -->
+                Import
+                <!-- <i class="fa fa-upload"></i> -->
+              </button>
+              <!-- <button type="submit" *ngIf="selected_option == 2" (click)="eventPortal()" class="btn save-btn btn-sm float-right w-100">
+                Import
+              </button> -->
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="tab-item p-1" [ngStyle]="{'flex':  '0 0 82%' }" style="max-width: 100%;">
+      <div class="pb-2 box-shadow bg-white" style="height: calc(100vh - 130px); overflow: auto; min-height: 260px;">
+        <div>
+          <h6 class="section_title mb-1">
+            Import Summary
+          </h6>
+        </div>
+        <div class="col-md-12">
+          <cdk-virtual-scroll-viewport #virtual_scroll itemSize="20" width="100%"
+            style="height: calc(100vh - 225px); overflow: auto; min-height: 260px;">
+            <div class="table-responsive">
+              <table #table class="table overflow-auto">
+                <tr>
+                  <th *ngIf="!import_details.valid_row_edit && !import_details.valid_status" class="position-sticky">
+                    Edit
+                  </th>
+                  <th colspan="2" *ngIf="import_details.valid_row_edit " class="position-sticky">Update
+                  </th>
+                  <th *ngIf="import_details.valid_status  " class="position-sticky">
+                    {{'CV Import Status'}}
+                  </th>
+                  <th *ngIf="import_details.valid_tagging_status " class="position-sticky">
+                    {{'Tagging Status'}}
+                  </th>
+                  <th *ngFor="let item of title_data?title_data :[]" class="position-sticky">
+                    <ng-container *ngIf="item.visibility">
+                      {{item['title']}}
+                    </ng-container>
+                  </th>
+
+                </tr>
+                <tr *cdkVirtualFor="let row of resume_data_list; let i = index" #row_data>
+                  <td class="p-1" *ngIf="!import_details.valid_row_edit && !import_details.valid_status">
+                    <span class="ml-1 mr-1 hgs-icon pointer" matTooltip="Edit" (click)=" rowEdit(i,row)"
+                      *ngIf="current_row !=i">
+                      <i class="fa fa-pencil"></i>
+                    </span>
+                    <!-- <span class="btn btn-outline-info btn-sm ml-1 mr-1" *ngIf="current_row ==i">
+                                          <i class="fa fa-undo" (click)="undoChanges(i,form)"  ></i>
+                                        </span> -->
+                    <!-- <span class="btn btn-outline-info btn-sm ml-1 mr-1" *ngIf="current_row ==i" (click)="updateTableRow(form)">
+                                        Update
+                                      </span> -->
+                  </td>
+                  <td class="p-1"
+                    *ngIf="import_details.valid_row_edit && current_row !=i && !import_details.valid_status"
+                    colspan="2">
+                    <span class="ml-1 mr-1 hgs-icon pointer" matTooltip="Edit" (click)=" rowEdit(i,row)"
+                      *ngIf="current_row !=i">
+                      <i class="fa fa-pencil"></i>
+                    </span>
+                    <!-- <span class="btn btn-outline-info btn-sm ml-1 mr-1" *ngIf="current_row ==i">
+                                          <i class="fa fa-undo" (click)="undoChanges(i,form)"  ></i>
+                                        </span> -->
+                    <!-- <span class="btn btn-outline-info btn-sm ml-1 mr-1" *ngIf="current_row ==i" (click)="updateTableRow(form)">
+                                        Update   
+                                      </span> -->
+                  </td>
+                  <ng-container *ngIf="import_details.valid_row_edit && current_row ==i">
+                    <td *ngIf="current_row ==i && !import_details.valid_status" colspan="2">
+                      <span class="ml-1 mr-1 hgs-icon pointer" matTooltip="Undo Changes" (click)="undoChanges(i)">
+                        <i class="fa fa-undo" title="Undo changes"></i>
+                      </span>
+                      <span class=" ml-1 mr-1 hgs-icon pointer" matTooltip="Update" (click)="updateTableRow()">
+                        <i class="fa fa-pencil-square-o"></i>
+                      </span>
+                    </td>
+                    <td *ngIf="current_row !=i && !import_details.valid_status" colspan="2">
+                      <span class="ml-1 mr-1 hgs-icon pointer" matTooltip="Edit" (click)=" rowEdit(i,row)"
+                        *ngIf="current_row !=i">
+                        <i class="fa fa-pencil"></i>
+                      </span>
+                    </td>
+                    <td class="p-1" *ngIf="import_details.valid_status " class="text-center">
+                      <!-- <div style="max-height: 180px; display: inline-block; overflow-y: auto; color: white !important;"
+                        [style.background]="row.cv_import_status.color_code">
+                        {{row.cv_import_status.status_title}}
+                      </div> -->
+                      <span class="d-block text-center" style="border-radius: 3px;padding: 1px 3px;color:white;"
+                        [ngStyle]="{'background': row.cv_import_status &&row.cv_import_status.color_code}">
+                        {{ row.cv_import_status && row.cv_import_status.status_title || ''}}
+                      </span>
+                    </td>
+                    <td class="p-1" *ngIf="import_details.valid_tagging_status " class="text-center">
+                      <!-- <div style=" max-height: 180px; display: inline-block; overflow-y: auto; color: white !important;"
+                        [style.background]="row.tagging_status.color_code">
+                        {{row.tagging_status.status_title}}
+                      </div> -->
+                      <span class="d-block text-center" style="border-radius: 3px;padding: 1px 3px;color:white;"
+                        [ngStyle]="{'background': row.tagging_status && row.tagging_status.color_code}">
+                        {{ row.tagging_status && row.tagging_status.status_title || ''}}
+                      </span>
+                    </td>
+                    <td *ngFor="let head of title_data ; let j=index">
+                      <form #form="ngForm">
+                        <ng-container *ngIf="head.visibility">
+                          <input [(ngModel)]="row[head['from']]" [ngModelOptions]="{standalone: true}">
+                        </ng-container>
+                      </form>
+                    </td>
+                  </ng-container>
+
+                  <ng-container *ngIf="current_row != i">
+                    <td class="p-1" *ngIf="import_details.valid_status " class="text-center">
+                      <!-- <div style="max-height: 180px; display: inline-block; overflow-y: auto; color: white !important;"
+                        [style.background]="row.cv_import_status.color_code">
+                        {{row.cv_import_status.status_title}}
+                      </div> -->
+                      <span class="d-block text-center" style="border-radius: 3px;padding: 1px 3px;color:white;"
+                        [ngStyle]="{'background': row.cv_import_status && row.cv_import_status.color_code}">
+                        {{ row.cv_import_status &&row.cv_import_status.status_title || ''}}
+                      </span>
+                    </td>
+                    <td class="p-1" *ngIf="import_details.valid_tagging_status" class="text-center">
+                      <!-- <div style=" max-height: 180px; display: inline-block; overflow-y: auto; color: white !important;"
+                        [style.background]="row.tagging_status.color_code">
+                        {{row.tagging_status.status_title}}
+                      </div> -->
+                      <span class="d-block text-center" style="border-radius: 3px;padding: 1px 3px;color:white;"
+                        [ngStyle]="{'background': row.tagging_status && row.tagging_status.color_code}">
+                        {{ row.tagging_status && row.tagging_status.status_title || ''}}
+                      </span>
+                    </td>
+                    <td [id]="j" class="p-1" *ngFor="let head of title_data ; let j=index">
+                      <div *ngIf="head.visibility" id=" scrollbar"
+                        (click)="import_details. valid_resume_id && import_details.valid_status?head.cell_click(row):''"
+                        [ngClass]="{'link': import_details.valid_status &&import_details.valid_resume_id && head.cell_click }"
+                        style="max-height: 180px; display: block; overflow-y: auto;cursor: pointer;">
+                        {{row[head['from']]}}
+                      </div>
+                    </td>
+
+                  </ng-container>
+                </tr>
+
+                <tr *ngIf="resume_data_list?resume_data_list.length==0 : false">
+                  <td colspan="12">
+                    <h6 style="opacity: .5;" class="text-center">No Data
+                    </h6>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </cdk-virtual-scroll-viewport>
+          <button type="submit" class="btn save-btn btn-sm float-right"
+            *ngIf="resume_data_list?resume_data_list.length>0 && !import_details.valid_status : false"
+            [disabled]="import_details.imp_loading" (click)="saveImportFile()">
+            <i class="fa fa-spin fa-spinner" *ngIf="import_details.imp_loading"></i>
+            Save
+          </button>
+        </div>
+      </div>    
+    </div>
+  </div>
+</div>

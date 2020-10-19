@@ -1,0 +1,467 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-18 pr-1">
+            <div class="tab-item p-1">
+                <div class="vertical-nav bg-white d-inline-block" *ngIf="section_data && section_data.length">
+                    <ul class="nav flex-column bg-white mb-0">
+                        <li class="text-center nav-heading">
+                            <span>Action </span>
+                        </li>
+
+                        <ng-container *ngFor="let section of section_data; let i = index;">
+                            <li *ngIf="(resume_form.value | DynamicSectionConditionCheckPipe : section.conditions)"
+                                class="nav-item pointer" (click)="setSectionVerticleNavbar(i,section)"
+                                [ngClass]="{'active': section.active_section}">
+                                {{section.section_title}}
+                                <span class="btn-circle" *ngIf="t_id && section.editable && section.active_section"
+                                    (click)="enableSave(section)">
+                                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                                </span>
+                            </li>
+                        </ng-container>
+                    </ul>
+                </div>
+                <div *ngIf="t_id && resume_details" class="vertical-nav bg-white mt-1"
+                    style="box-shadow: 0 0 5px 0 gainsboro;">
+                    <div>
+                        <div class="nav-heading text-center">
+                            Resume Summary
+                        </div>
+                        <div class="summary">
+                            <div class="d-table w-100">
+                                <div class="summary-item" *ngIf="resume_details.name">
+                                    <div class="summary-item-icon">
+                                        <i class="fa fa-user"></i>
+                                    </div>
+                                    <div class="summary-item-details  pointer">
+                                        {{resume_details.name}}
+                                    </div>
+                                </div>
+                                <div class="summary-item" *ngIf="resume_details.candidate_no">
+                                    <div class="summary-item-icon">
+                                        <i class="fa fa-ticket"></i>
+                                    </div>
+                                    <div class="summary-item-details">
+                                        {{resume_details.candidate_no}}
+                                    </div>
+                                </div>
+                                <div class="summary-item" *ngIf="resume_details.email_id">
+                                    <div class="summary-item-icon">
+                                        <i class="fa fa-envelope"></i>
+                                    </div>
+                                    <div class="summary-item-details requirement-tab-link pointer"
+                                        (click)="openMailer()">
+                                        {{resume_details.email_id}}
+                                    </div>
+                                </div>
+
+                                <div class="summary-item" *ngIf="resume_details.phone_no">
+                                    <div class="summary-item-icon">
+                                        <i class="fa fa-phone"></i>
+                                    </div>
+                                    <div class="summary-item-details">
+                                        {{resume_details.phone_no | PhoneNumberPipe}}
+                                    </div>
+                                </div>
+                                <div class="summary-item" *ngIf="resume_details.resume_status">
+                                    <div class="summary-item-icon">
+                                        <i class="fa fa-info-circle"></i>
+                                    </div>
+                                    <div class="summary-item-details">
+                                        {{resume_details.resume_status}}
+                                    </div>
+                                </div>
+
+                                <div class="summary-item" *ngIf="resume_details.resume_status">
+                                    <div class="summary-item-icon">
+                                        <i class="fa fa-bookmark"></i>
+                                    </div>
+                                    <div class="summary-item-details">
+                                        {{resume_details.resume_source}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-1" style="font-size: 10px;">
+                                Created
+                                <span *ngIf="resume_details.created_by">
+                                    by
+                                    {{resume_details.created_by}}
+                                </span>
+                                <span *ngIf="resume_details.created_date">
+                                    on
+                                    {{resume_details.created_date  | UtcToLocalTime | date: 'd-MMM-yyyy h:mm a'}}
+                                </span>
+                            </div>
+                            <div class="mt-1" style="font-size: 10px;">
+                                Updated
+                                <span *ngIf="resume_details.lu_by">
+                                    by
+                                    {{resume_details.lu_by}}
+                                </span>
+                                <span *ngIf="resume_details.lu_on">
+                                    on
+                                    {{resume_details.lu_on  | UtcToLocalTime | date: 'd-MMM-yyyy h:mm a'}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div class="vertical-nav bg-white" *ngIf="!t_id">
+                    <div class="mt-1 resume-filter-box-header2 mb-2 shadow-sm ">
+                        <div class="col-md-12 text-center">
+                            <div class="row">
+                                <div class="col-md-12" style="color: black;">
+                                    <form [formGroup]="resume_file_form" class="pt-3"
+                                        style="padding-bottom: 0px !important;">
+                                        <app-files ngClass="global_lang" [multiple]="0" [flag]="1"
+                                            [form]="resume_file_form" controlName="resume_file_document"
+                                            label="Resume Document" (returnFiles)="resumeUploaded($event)">
+                                        </app-files>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+
+                <div class="nav-element vertical-nav bg-white mt-1" style="box-shadow: 0 0 5px 0 gainsboro;"
+                    *ngIf="requirement_details">
+                    <div style="font-size:13px;">
+                        <div class="nav-heading text-center">
+                            Requirement Summary
+                        </div>
+                        <div class="summary">
+                            <div class="d-table w-100">
+                                <div class="summary-item" *ngIf="requirement_details.job_title">
+                                    <!-- <mat-label class="label text-nowrap" style="overflow: hidden;font-weight: 700;">
+                                                          Name
+                                                      </mat-label> -->
+                                    <div class="summary-item-icon">
+                                        <i class="fa fa-briefcase"></i>
+                                    </div>
+                                    <div class="summary-item-details requirement-tab-link pointer"
+                                        (click)="openRequirementTab(requirement_details)">
+                                        {{requirement_details.job_title}}
+                                    </div>
+                                </div>
+                                <div class="summary-item" *ngIf="requirement_details.job_code">
+                                    <div class="summary-item-icon">
+                                        <i class="fa fa-ticket"></i>
+                                    </div>
+                                    <div class="summary-item-details requirement-tab-link pointer"
+                                        (click)="openRequirementTab(requirement_details)">
+                                        {{requirement_details.job_code}}
+                                        <!-- <span matTooltip="Search and Add" class="pointer ml-1 mr-1 float-right" style="color: #002257;">
+                                          <i class="fa fa-search" (click)="searchResume()"></i>
+                                        </span>
+                                        <span matTooltip="Add New Resume" class="pointer ml-1 mr-1 float-right" style="color: #002257;">
+                                          <i class="fa fa-user-plus" (click)="createResume()"> </i>
+                                        </span> -->
+                                    </div>
+                                </div>
+
+                                <div class="summary-item" *ngIf="requirement_details.req_status">
+                                    <div class="summary-item-icon">
+                                        <i class="fa fa-info-circle"></i>
+                                    </div>
+                                    <div class="summary-item-details">
+                                        {{requirement_details.req_status}}
+                                    </div>
+                                </div>
+
+
+                                <div class="summary-item" *ngIf="requirement_details.org_node">
+                                    <div class="summary-item-icon">
+                                        <i class="fa fa-building-o" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="summary-item-details">
+                                        <!--requirement-tab-link pointer"
+                                        (click)="navigateToBusiness(requirement_details,1,1005,4)"-->
+                                        {{requirement_details.org_node}}
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div *ngIf="requirement_details.created_user || requirement_details.cr_date" class="mt-1"
+                                style="font-size: 10px;">
+                                Created
+                                <span *ngIf="requirement_details.created_user">
+                                    by
+                                    {{requirement_details.created_user}}
+                                </span>
+                                <span *ngIf="requirement_details.cr_date">
+                                    on
+                                    {{requirement_details.cr_date  | UtcToLocalTime | date: 'd-MMM-yyyy h:mm a'}}
+                                </span>
+                            </div>
+                            <div *ngIf="requirement_details.updated_user || requirement_details.lu_date" class="mt-1"
+                                style="font-size: 10px;">
+                                Updated
+                                <span *ngIf="requirement_details.updated_user">
+                                    by
+                                    {{requirement_details.updated_user}}
+                                </span>
+                                <span *ngIf="requirement_details.lu_date">
+                                    on
+                                    {{requirement_details.lu_date  | UtcToLocalTime | date: 'd-MMM-yyyy h:mm a'}}
+                                </span>
+                            </div>
+
+                            <div *ngIf="requirement_details.posted_by || requirement_details.posted_on" class="mt-1"
+                                style="font-size: 10px;">
+                                Posted
+                                <span *ngIf="requirement_details.posted_by">
+                                    by {{requirement_details.posted_by}}
+                                </span>
+                                <span *ngIf="requirement_details.posted_on">
+                                    on {{requirement_details.posted_on | UtcToLocalTime | date: 'd-MMM-yyyy h:mm a'}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-item p-1"
+            [ngStyle]="{'flex': !(transaction_history&&transaction_history.length) ? '0 0 81.7%' : '0 0 61.7%'}"
+            style="max-width: 100%;">
+            <div class="pb-2 box-shadow">
+                <div style="padding-bottom: 1px;" *ngFor="let section of section_data; let i = index">
+                    <ng-container *ngIf="section.active_section">
+                        <h6 class="section_title mb-1" *ngIf="section">
+                            {{section.section_title}}
+                            <i class="	fa fa-angle-double-left  prev-icon pointer" matTooltip="Previos Resume"
+                                [ngClass]="{'out-of-index' : negative_index }"
+                                (click)="resumeChanged(row_data['current_index'],0)"
+                                *ngIf="row_data && row_data.data && row_data.data.resume_list"></i>
+                            <span *ngIf="row_data && row_data.data && row_data.data.resume_list"
+                                style="font-size: 14px; font-style: italic;">
+                                {{ (row_data.data['current_index'] + 1)}} / {{row_data.data['resume_list'].length}}
+                            </span>
+
+                            <i class="fa fa-angle-double-right next-icon pointer" matTooltip=" Next Resume"
+                                [ngClass]="{'out-of-bound' : index_outofbound }"
+                                (click)="resumeChanged(row_data['current_index'],1)"
+                                *ngIf="row_data && row_data.data && row_data.data.resume_list"></i>
+                            <span matTooltip="Add Candidate to Requirement" class="pointer mt-1 summary-item-details"
+                                style="display: inline;"
+                                *ngIf=" row_data && row_data.data && (row_data.data.tagResume && row_data.data.requirement_id )  "
+                                (click)=" tagResume()">
+                                <i class="fa fa-user-plus summary-item-action-icon"></i>
+                                Tag to requirement
+                            </span>
+                            <span matTooltip="Edit" class="pointer mt-1 float-right summary-item-details"
+                                *ngIf="section.editable && !section.edit_flag" (click)="enableSave(section)">
+                                <i class="fa fa-pencil summary-item-action-icon"></i>
+                                Edit
+                            </span>
+
+                            <span matTooltip="Cancel" class="pointer mt-1 float-right summary-item-details"
+                                *ngIf="section.editable && section.edit_flag && t_id" (click)="cancel(section)">
+                                <i class="fa fa-times summary-item-action-icon"></i>
+                                Cancel
+                            </span>
+
+                            <div *ngIf="t_id && i == 0" matTooltip="Add/View notes" (click)="openNotesModal()"
+                                class="pointer mt-1 float-right summary-item-details position-relative req-notes">
+                                <i class="fa fa-sticky-note-o summary-item-action-icon"
+                                    [attr.data-content]="notes_count||0"></i>
+                                Notes
+                            </div>
+                            <!-- <div *ngIf="t_id && i == 0 && requirement_details && requirement_details.req_res_id"
+                                matTooltip="Update applicant status" (click)="updateApplicantStatus()"
+                                class="pointer mt-1 float-right summary-item-details position-relative">
+                                <i class="fa fa-info-circle summary-item-action-icon"></i>
+                                Summary
+                            </div> -->
+
+                            <!-- <div *ngIf="t_id && i == 0 && requirement_details && requirement_details.req_res_id"
+                                matTooltip="Move applicant" (click)="moveApplicant()"
+                                class="pointer mt-1 float-right summary-item-details position-relative">
+                                <i class="fa fa-arrows summary-item-action-icon" aria-hidden="true"></i>
+                                Move
+                            </div> -->
+
+
+                            <div *ngIf="t_id && i == 0 && requirement_details && requirement_details.req_res_id && (requirement_details.enable_interview || requirement_details.enable_offer)"
+                                class="pointer mt-1 float-right summary-item-details position-relative "
+                                [matMenuTriggerFor]="menu">
+                                <i class="fa fa-tasks summary-item-action-icon"></i>
+                                Managers
+                            </div>
+                            <mat-menu #menu="matMenu">
+                                <a mat-menu-item (click)="openInterviewManager()" class=" pointer"
+                                    *ngIf="t_id && i == 0 && requirement_details && requirement_details.req_res_id && requirement_details.enable_interview">
+                                    <img class="action-icons" src="assets/workbench-action-icons/interview-manager.svg"
+                                        alt="">
+                                    Interview Manager
+                                </a>
+                                <a mat-menu-item (click)="openOfferManager()" class=" pointer"
+                                    *ngIf="t_id && i == 0 && requirement_details && requirement_details.req_res_id && requirement_details.enable_offer">
+                                    <img class="action-icons" src="assets/workbench-action-icons/offer-manager.svg"
+                                        alt="">
+                                    Offer Manager
+                                </a>
+                                <!-- <a mat-menu-item (click)="openTaskManager()" class=" pointer"
+                                    *ngIf="access_rights && access_rights['1'] && access_rights['1']['sub_modules'] &&  access_rights['1']['sub_modules']['150'] && access_rights['1']['sub_modules']['150'].enable">
+                                    <img class="action-icons" src="assets/easy-navigation/create_task.svg" alt="">
+                                    New Task
+                                </a> -->
+                            </mat-menu>
+
+
+                            <!-- <span matTooltip="Add Candidates to Requirement" class="pointer  mt-1 "
+                                style="float: right;color: #002257 " (click)="tagResume()">
+                                <i class="fa fa-user-plus summary-item-action-icon"></i>
+                                Resume
+                            </span> -->
+
+                        </h6>
+
+                        <tm-dynamic-form
+                            *ngIf="masters && section && section.field_details && section.field_details.length"
+                            [section_list]="[(section|JSONParser)]" [masters]="masters"
+                            [display_type]="section.sub_section_display_type" [dynamic_form]="resume_form" [t_id]="t_id"
+                            [dataSaved]="dataSavedRef" [parentCellClicked]="CellClicked" [other_data]="other_data"
+                            [openMailer]="newTab" [parent_form]="resume_form" [is_new_tab]="is_new_tab"
+                            [callback_func]="callbackFuncRef" [row_data]="row_data.data">
+                        </tm-dynamic-form>
+
+                        <tm-dynamic-form *ngIf="masters && section && section.sections && section.sections.length"
+                            [section_list]="section.sections|JSONParser" [masters]="masters"
+                            [display_type]="section.sub_section_display_type"
+                            [dynamic_form]="section.multiple ? resume_form : resume_form.get([section.section_id])"
+                            [t_id]="t_id" [dataSaved]="dataSavedRef" [parentCellClicked]="CellClicked"
+                            [other_data]="other_data" [openMailer]="newTab" [parent_form]="resume_form"
+                            [is_new_tab]="is_new_tab" [callback_func]="callbackFuncRef" [row_data]="row_data.data">
+                        </tm-dynamic-form>
+
+                    </ng-container>
+                </div>
+                <div class="pl-4 pr-4"
+                    *ngIf="t_id && resume_file_path && resume_file_path.file_path && resume_file_path.file_path.indexOf('http') > -1 && resume_file_path.file_path.split('.') && section_data && section_data[0].active_section">
+                    <object id="resumeViewer" frameborder="0" style="width: 100%;height: 500px;"
+                        [data]="resume_file_path.file_path | SafeFilePipe"></object>
+                </div>
+            </div>
+            <div class="pt-2 pb-2 box-shadow mt-2"
+                *ngIf="duplicate_resume_grid && duplicate_resume_grid.duplicate_resume">
+                <div style="overflow: auto;" #duplicate_manager class="col-md-12"
+                    [style.height.px]="(duplicate_resume_grid && duplicate_resume_grid.duplicate_resume && duplicate_resume_grid.duplicate_resume != '[]' && duplicate_resume_grid.duplicate_resume.length != 0) ? (duplicate_resume_grid.duplicate_resume.length > 9 ? '230' : (duplicate_resume_grid.duplicate_resume.length * 24) + 65): ('50')">
+
+                    <h6 class="section_title mb-1"> Duplicate Manager</h6>
+                    <div class="pl-4 pr-4 h-100">
+                        <app-tallint-table (cellClicked)="cellClicked($event)"
+                            [table_records]="duplicate_resume_grid.duplicate_resume ? duplicate_resume_grid.duplicate_resume : []"
+                            [total_count]="duplicate_resume_grid.duplicate_resume && duplicate_resume_grid.duplicate_resume != '[]' ? duplicate_resume_grid.duplicate_resume.length : 0"
+                            [table_columns]="duplicate_resume_grid && (duplicate_resume_grid.grid_layout) && (duplicate_resume_grid.grid_layout).grid_definition ? (duplicate_resume_grid.grid_layout.grid_definition) : (duplicate_resume_grid.field_details | FetchColumnsFromFields)"
+                            [enable_sort]="duplicate_resume_grid && duplicate_resume_grid.grid_layout && duplicate_resume_grid.grid_layout.enable_order ? duplicate_resume_grid.grid_layout.enable_order : 0"
+                            [edit]="duplicate_resume_grid && duplicate_resume_grid.grid_layout&&duplicate_resume_grid.grid_layout.editable_flag ? duplicate_resume_grid.grid_layout.editable_flag :0">
+                        </app-tallint-table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-20 pl-1" *ngIf="t_id && transaction_history && transaction_history.length">
+            <div class="p-1 tab-item">
+                <div class="vertical-nav"
+                    style="box-shadow: 0px 0px 5px 0px gainsboro;padding:0 !important;overflow-y: auto;width:100%;">
+                    <p class="text-center nav-heading m-0">Requirement History</p>
+                    <ng-container *ngFor="let transaction of transaction_history">
+                        <div *ngIf="(requirement_details && requirement_details.req_id == (transaction && transaction.req_id) )"
+                            style="box-shadow: 0 1px 0px 0 gainsboro;"
+                            [ngStyle]="{'background': requirement_details.req_id == transaction.req_id?'aliceblue':null}"
+                            class="p-2">
+                            <ng-container
+                                *ngTemplateOutlet="transaction_history_temp; context: {transaction: transaction}">
+                            </ng-container>
+                        </div>
+                        <div *ngIf="(!requirement_details || (requirement_details && requirement_details.req_id != transaction.req_id))"
+                            style="box-shadow: 0 1px 0px 0 gainsboro;" class="p-2">
+                            <ng-container
+                                *ngTemplateOutlet="transaction_history_temp; context: {transaction: transaction}">
+                            </ng-container>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #transaction_history_temp let-transaction="transaction">
+    <div class="d-table w-100">
+        <div class="summary-item">
+            <div class="summary-item-icon">
+                <i class="fa fa-briefcase"></i>
+            </div>
+            <div class="summary-item-details requirement-tab-link pointer " (click)="openRequirementTab(transaction)">
+                {{transaction.job_title}}
+            </div>
+        </div>
+        <div class="mt-1 summary-item">
+            <div class="summary-item-icon">
+                <i class="fa fa-ticket"></i>
+            </div>
+            <div class="summary-item-details requirement-tab-link pointer " (click)="openRequirementTab(transaction)">
+                {{transaction.job_code}}
+            </div>
+        </div>
+
+        <div class="summary-item">
+            <div class="summary-item-icon">
+                <i class="fa fa-info-circle"></i>
+            </div>
+            <div class="summary-item-details">
+                <div class="d-flex">
+                    <div [ngStyle]="{'flex': req_id != transaction.requirement_id ? '0 0 70%' : '0 0 100%'}">
+                        <span *ngIf="transaction.stage_title && transaction.stage_title != ''">
+                            {{transaction.stage_title}}
+                        </span>
+                        <span *ngIf="transaction.status_title && transaction.status_title != ''">
+                            ({{transaction.status_title}})
+                        </span>
+                    </div>
+                    <div *ngIf="(req_id != transaction.requirement_id && requirement_details && requirement_details.req_res_id) || !(requirement_details && requirement_details.req_res_id)"
+                        class="m-auto text-center" style="flex: 0 0 30%;">
+                        <span class="switch-transaction" (click)="updateResumeManager(transaction)">
+                            View
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-1 summary-item" *ngIf="transaction && transaction.org_node">
+            <div class="summary-item-icon">
+                <i class="fa fa-building-o" aria-hidden="true"></i>
+            </div>
+            <div class="summary-item-details ">
+                {{transaction.org_node}}
+            </div>
+        </div>
+    </div>
+    <div *ngIf="transaction.created_by || transaction.cr_date" class="mt-1" style="font-size: 10px;">
+        Created
+        <span *ngIf="transaction.created_by">
+            by
+            {{transaction.created_by}}
+        </span>
+        <span *ngIf="transaction.cr_date">
+            on
+            {{transaction.cr_date  | UtcToLocalTime | date: 'd-MMM-yyyy h:mm a'}}
+        </span>
+    </div>
+    <div *ngIf="transaction.updated_by || transaction.lu_date" class="mt-1" style="font-size: 10px;">
+        Updated
+        <span *ngIf="transaction.updated_by">
+            by
+            {{transaction.updated_by}}
+        </span>
+        <span *ngIf="transaction.lu_date">
+            on
+            {{transaction.lu_date  | UtcToLocalTime | date: 'd-MMM-yyyy h:mm a'}}
+        </span>
+    </div>
+</ng-template>

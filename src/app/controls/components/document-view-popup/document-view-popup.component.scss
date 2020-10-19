@@ -1,0 +1,124 @@
+.prev-icon {
+  line-height: 1px !important;
+  font-size: 26px !important;
+  // margin-left: 2rem !important;
+  margin-right: 1rem !important;
+  vertical-align: middle !important;
+  color: #ff7112 !important;
+}
+.prev-icon:hover {
+  transition: all 0.3s;
+  transform: scale(1.3);
+}
+
+.next-icon {
+  line-height: 1px !important;
+  font-size: 26px !important;
+  margin-left: 1rem !important;
+  // margin-right: 2rem !important;
+  vertical-align: middle !important;
+  color: #ff7112 !important;
+}
+.next-icon:hover {
+  transition: all 0.3s;
+  transform: scale(1.3);
+}
+
+.wandering-cubes {
+  position: relative;
+}
+
+.cube {
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-animation: cubemove 1.8s infinite ease-in-out;
+  animation: cubemove 1.8s infinite ease-in-out;
+}
+
+.loader {
+  position: relative;
+  bottom: 350px;
+  right: 10px;
+}
+.loader-cube1 {
+  background-color: #ff6600;
+}
+
+.loader-cube2 {
+  animation-delay: -0.45s;
+  background-color: #00b0f0;
+}
+
+.loader-cube3 {
+  animation-delay: -0.9s;
+  background-color: #ff6699;
+}
+
+.loader-cube4 {
+  animation-delay: -1.35s;
+  background-color: #00b050;
+}
+
+@keyframes cubemove {
+  25% {
+    transform: translateX(42px) rotate(-90deg) scale(0.5);
+    -webkit-transform: translateX(42px) rotate(-90deg) scale(0.5);
+  }
+
+  50% {
+    transform: translateX(42px) translateY(42px) rotate(-179deg);
+    -webkit-transform: translateX(42px) translateY(42px) rotate(-179deg);
+  }
+
+  50.1% {
+    transform: translateX(42px) translateY(42px) rotate(-180deg);
+    -webkit-transform: translateX(42px) translateY(42px) rotate(-180deg);
+  }
+
+  75% {
+    transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5);
+    -webkit-transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5);
+  }
+
+  100% {
+    transform: rotate(-360deg);
+    -webkit-transform: rotate(-360deg);
+  }
+}
+
+.mat-action {
+  overflow: auto;
+  height: 52px;
+}
+
+.desc {
+  font-size: 12px;
+  display: block;
+}
+.cr-date {
+  font-size: 10px;
+  display: block;
+}
+.lu-date {
+  font-size: 10px;
+  display: block;
+}
+.height {
+  height: 85%;
+}
+
+.contain {
+  object-fit: contain;
+}
+.download {
+  cursor: pointer;
+  font-size: 16px;
+  color: white;
+}
+.count {
+  font-size: 14px;
+  font-weight: 400;
+}

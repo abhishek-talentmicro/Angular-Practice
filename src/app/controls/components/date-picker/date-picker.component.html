@@ -1,0 +1,38 @@
+<form [formGroup]="form">
+
+    <mat-form-field floatLabel="always">
+        <label *ngIf="label_block" class="m-0 html-label" [ngClass]="{'req': required}"
+            [innerHtml]="label | HTMLFormatter"></label>
+        <mat-label *ngIf="!label_block" [ngClass]="{'req': required}" [innerHtml]="label | HTMLFormatter"></mat-label>
+        <input matInput [matDatepicker]="picker" [min]="minValue" [max]="maxValue" [formControl]="date"
+            [placeholder]="placeholder" (dateInput)="addEvent($event)" (dateChange)="addEvent($event)"
+            (click)="openPicker(1)" readonly>
+        <span class="pointer" *ngIf="form.get(controlName).value && !required && !disabled"
+            style="position: absolute; right: 0;" (click)="removeDate($event)">
+            <i class="fa fa-times"></i>
+        </span>
+        <mat-datepicker-toggle matSuffix [for]="picker" [hidden]="disabled"></mat-datepicker-toggle>
+        <mat-datepicker #picker [hidden]="disabled"></mat-datepicker>
+
+        <mat-error *ngIf="date.hasError('required');else maxvalue">
+            Field is mandatory
+            <!-- <span [innerHTML]="label + ' is mandatory'"></span> -->
+        </mat-error>
+        <ng-template #maxvalue>
+            <mat-error *ngIf="date.hasError('matDatepickerMax');else minvalue">
+                Value must be lesser than {{maxValue | UtcToLocalTime | date: 'd-MMM-yyyy h:mm a'}}
+            </mat-error>
+        </ng-template>
+        <ng-template #minvalue>
+            <mat-error *ngIf="date.hasError('matDatepickerMin')">
+                Value must be greater than {{minValue | UtcToLocalTime | date: 'd-MMM-yyyy h:mm a'}}
+            </mat-error>
+        </ng-template>
+    </mat-form-field>
+    <!-- <mat-form-field floatLabel='always'>
+    <mat-label>{{label}}</mat-label> -->
+    <!-- <input type="date" [formControlName]="controlName" [placeholder]="placeholder" value="form.get('controlName').value"> -->
+    <!-- <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field> -->
+</form>

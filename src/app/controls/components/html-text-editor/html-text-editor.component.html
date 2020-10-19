@@ -1,0 +1,49 @@
+<!-- <form [formGroup]="form">
+    <mat-form-field>
+        <mat-label>{{label}}</mat-label>
+        <textarea  matInput [placeholder]="placeholder" [value]="value" type="text" [id]="id" [style]="style"
+            [formControlName]="controlName" [required]="required">
+            </textarea>
+        <mat-hint>{{hint}}</mat-hint>
+        <mat-error>
+            {{error_msg}}
+        </mat-error>
+    </mat-form-field>
+</form> -->
+<!-- <ckeditor data="<p>Hello, world!</p>"></ckeditor> -->
+<!-- <mat-label class="label text-nowrap" style="overflow: hidden;font-weight: 700;font-size: 12.5px;
+color: rgba(0, 0, 0, 0.53);
+display: block;" [title]="label">
+    {{label}}
+</mat-label> -->
+<label class="label text-nowrap html-textarea-label html-label" style="display: block;padding-bottom: 0px !important;"
+    [title]="label ? (label | HTMLFormatter : 1) : ''" *ngIf="label_block" [innerHtml]="label | HTMLFormatter : 1"></label>
+
+<mat-label *ngIf="!label_block&&required" class="label req text-nowrap html-textarea-label"
+    style="display: block;padding-bottom: 0px !important;" [title]="label ? (label | HTMLFormatter : 1) : ''"
+    [innerHtml]="label| HTMLFormatter : 1">
+</mat-label>
+<mat-label *ngIf="!label_block&&!required" [innerHtml]="label | HTMLFormatter" class="html-textarea-label"></mat-label>
+<div class="form-group html-textarea" style="box-shadow: 0 0 1px 1px gainsboro; overflow:hidden;">
+    <form [formGroup]="form_group" *ngIf="form">
+        <!-- <ckeditor [formControlName]="controlName" [editor]="Editor" (ready)="onReady($event)" placeholder="Content"
+            style="box-shadow: none !important;">
+        </ckeditor> -->
+        <angular-editor *ngIf="controlName" (contextmenu)="clickListner($event)" [id]="random_id"
+            [formControlName]="'control_name'" (change)="onChangeListner($event)" [config]="editorConfig">
+        </angular-editor>
+        <angular-editor *ngIf="ngModel" (contextmenu)="clickListner($event)" (change)="onChangeListner($event)"
+            [id]="random_id" [(ngModel)]="ngModel" [config]="editorConfig">
+        </angular-editor>
+
+    </form>
+    <form [formGroup]="form" *ngIf="!form">
+        <angular-editor *ngIf="controlName" (contextmenu)="clickListner($event)" [id]="random_id"
+            [formControlName]="controlName" [config]="editorConfig">
+        </angular-editor>
+        <angular-editor *ngIf="ngModel" (contextmenu)="clickListner($event)" [id]="random_id" [(ngModel)]="ngModel"
+            [config]="editorConfig">
+        </angular-editor>
+
+    </form>
+</div>

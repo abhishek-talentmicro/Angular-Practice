@@ -1,0 +1,55 @@
+<h2 mat-dialog-title style="line-height: normal;">
+  <span *ngIf="crop_flag">
+    Crop
+  </span>
+  <span *ngIf="!crop_flag">
+    Preview
+  </span>
+  <div *ngIf="images_copy && images_copy.length>1" style="display:inline-block;margin-left:20px;">
+    <span (click)="changeIndex(-1)" class="fa fa-angle-left"></span>
+    {{index+1}} of {{images_copy.length}}
+    <span (click)="changeIndex(1)" class="fa fa-angle-right"></span>
+  </div>
+
+</h2>
+<div mat-dialog-content>
+  <div *ngIf="crop_flag && images_copy" class="container-fluid">
+    <div class="h-50">
+      <image-cropper [imageBase64]="images_copy[index].base64" [maintainAspectRatio]="false" [aspectRatio]="aspectRatio"
+        [resizeToWidth]="500" onlyScaleDown="true" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
+        (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()">
+      </image-cropper>
+    </div>
+    <!-- <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="aspectRatio"
+      [resizeToWidth]="600" onlyScaleDown="true" format="png" (imageCropped)="imageCropped($event, 1)"
+      (imageLoaded)="imageLoaded()" (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()"></image-cropper> -->
+    <img [src]="images_copy[index].content" *ngIf="display_cropped_image" class="h-50" />
+    <!-- <img [src]="ipadCroppedImage" /> -->
+  </div>
+  <div style="text-align: center;" *ngIf="!crop_flag && images_copy" class="container-fluid">
+    <img style="max-width:100%;" *ngIf="!prepend_path" [src]="images_copy[index]" />
+    <img style="max-width:100%;" *ngIf="prepend_path" [src]="images_copy[index].file_path" />
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <div class="inline-block mr-auto">
+    <a *ngIf="!prepend_path && images_copy" [href]="images_copy[index]" download="image_{{index}}">
+      <button *ngIf="!crop_flag" class="btn btn-default mr-auto">
+        <i class="fa fa-download"></i>
+      </button>
+    </a>
+
+    <button *ngIf="images_copy && images_copy.length > 1" (click)="removeImage()" class="btn btn-default">
+      <i class="fa fa-trash"></i>
+    </button>
+  </div>
+
+  <button type="button" class="btn btn-sm cancel-btn mr-2" (click)="closeModal(image_src)">
+    Close
+  </button>
+  <button *ngIf="crop_flag" class="btn btn-sm save-btn" (click)="closeModal(images_copy)">
+    Save
+  </button>
+
+</div>

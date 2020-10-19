@@ -1,8 +1,0 @@
-<input type="text" [(ngModel)]="servername" class="form-control"><br>
-<!-- <input type="text" (input)="onInput($event)" class="form-control"><br> -->
-<button class="btn btn-primary" [disabled]="!keyForActivation" (click)="onServerCreate()">Add Server</button><br><br>
-<div *ngIf="addInDom;else noAddInDom">A new Server is created and server name is : {{ servername }}</div>
-<ng-template #noAddInDom> 
-    <p>No server was created</p>
-</ng-template>
-<server-component *ngFor="let server of servers"></server-component>

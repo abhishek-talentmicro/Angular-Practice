@@ -1,0 +1,113 @@
+.navbar {
+  padding: 0rem 1rem !important;
+  padding-right: 0 !important;
+  box-shadow: 0px 0px 3px 0px;
+  z-index: 999;
+  height: 50px;
+}
+
+nav .nav-item:not(:nth-child(0)) {
+  margin-right: 5px;
+}
+
+.nav-link {
+  font-size: 100%;
+}
+
+.divider {
+  border-right: 1px solid;
+}
+
+.nav-item {
+  font-size: 14px;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  max-height: 200px;
+  overflow: auto;
+}
+
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+.nav-title {
+  font-size: 14px;
+}
+// ::ng-deep .mat-menu-panel {
+//   max-width: none !important;
+//   padding: 0px !important;
+// }
+
+// ::ng-deep .mat-menu-content {
+//   padding: 0px !important;
+// }
+// .dashboard-icon{
+//   font-size: 12pt;
+
+//   text-align: center;
+// }
+// .dashboard-icon-block{
+//   display: block;
+// }
+.nav-btn {
+  line-height: 250% !important;
+}
+
+.notifications-item {
+  text-align: left;
+  padding: 10px 20px;
+  border-bottom: 1px solid #f4f4f4;
+  cursor: pointer;
+}
+// .notifications-item :hover { 
+//   box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
+// }
+
+.notifications-window {
+  text-align: left;
+  border: 1px solid #eee;
+  border-radius: 2px;
+  background: #fff;
+  -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+  min-width: 500px;
+  overflow-y: auto;
+  max-width: 600px;
+}
+.empty-state {
+  text-align: center;
+  padding: 20px 40px;
+}
+
+.abc {
+  max-width: none !important;
+  padding: 0px !important;
+}
+.message {
+  // white-space: nowrap;
+  // overflow: hidden;
+  // text-overflow: ellipsis;
+}
+
+// .item :hover {
+//   box-shadow: 1px 0 0 #dadce0, -1px 0 0 #dadce0, 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+// }

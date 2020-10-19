@@ -1,0 +1,65 @@
+<h2 mat-dialog-title id="title">
+    Communication Details
+    <a (click)="close()"><i class="fa fa-times pointer pt-2 float-right"></i></a>
+</h2>
+<mat-dialog-content>
+    <div class="row message ">
+        <div class="col-md-12 p-0 " style="display: flex;">
+            <span class="message-pic">
+                <img [src]="inbox.img_path && inbox.img_path != '' ? inbox.img_path : 'assets/default_dp.png'"
+                    alt="No Image" height="40px" width="40px">
+            </span>
+            <div style="display: grid;width: 100%;margin-left: 6px;">
+                <span style="font-size: 14px;display: grid;">
+                    <span>
+                        <strong>{{inbox.from_name}} </strong>
+                        <span class="message-time float-right">
+                            {{inbox.mail_sent_date | date: 'd-MMM-yyyy h:mm a'}}<span *ngIf=" inbox.is_sent"><i
+                                    class="fa fa-check fa-fw" aria-hidden="true"></i></span>
+                        </span>
+                    </span>
+                    <span style="font-size: 11px;">
+                        to {{inbox.to_name}}
+                    </span>
+                    <span *ngIf="inbox.stage_title" matTooltip="Stage - Status" style="font-size: 11px;">
+                        {{inbox.stage_title}}
+                        <span *ngIf="inbox.status_title">
+                            ({{inbox.status_title}})
+                        </span>
+                    </span>
+                </span>
+                <!-- <div class="message-content">
+                    <p class="m-0" style="display: flex;height: 20px !important;"
+                        [innerHtml]="inbox.subject+'-'+inbox.mail_body">
+                    </p>
+                </div> -->
+            </div>
+        </div>
+        <div class="col-md-12 mt-1">
+            <div class="message-view" *ngIf="inbox.is_mail>=0">
+                <i matTooltip="E-Mail" class="fa fa-envelope m-1 pointer" style="font-size: 9pt;"
+                    [ngStyle]="{'color':inbox.is_mail == 1 ? '#ff7112' :'#555' }"></i>
+                <p class="m-0 pb-3" [innerHtml]="inbox.subject | HTMLFormatter">
+                </p>
+                <p class="m-0 message-body" [innerHtml]="inbox.mail_body | HTMLFormatter">
+                </p>
+            </div>
+        </div>
+
+
+        <div class="col-md-12 mt-1" *ngIf="inbox.is_sms >=0">
+            <i matTooltip="SMS" class="fa fa-comments m-1 pointer" style="font-size: 9pt;"
+                [ngStyle]="{'color':inbox.is_sms == 1 ? '#ff7112' :'#555' }"></i>
+            <div class="message-view">
+                <p class="m-0 pb-3" [innerHtml]="inbox.subject | HTMLFormatter">
+                </p>
+                <p class="m-0 message-body" [innerHtml]="inbox.sms_body | HTMLFormatter">
+                </p>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>
+<!-- <mat-dialog-actions>
+    <button class="btn cancel-btn btn-sm" (click)="close()">Close</button>
+    <button class="btn save-btn btn-sm ml-auto" (click)="saveColumnDetails()">Save</button>
+</mat-dialog-actions> -->

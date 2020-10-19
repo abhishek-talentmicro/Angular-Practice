@@ -1,0 +1,13 @@
+/* 
+::ng-deep mat-label p{
+    display: inline !important;
+  } */
+  
+label{
+  padding: 0px !important;
+}
+
+::ng-deep app-textarea .angular-editor-placeholder{
+  font-size: 13px !important;
+  padding-left: 13px !important;
+}

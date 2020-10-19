@@ -1,0 +1,131 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="tab-item p-1 tab-item" style="flex : 0 0 18%">
+      <div class="row m-0">
+        <div class="col-md-12 text-center header-action">
+          <h6 class="text-center m-0 header-text">Summary</h6>
+        </div>
+      </div>
+      <div class="vertical-nav bg-white" *ngIf="section_data && section_data.length">
+        <tm-dynamic-form *ngIf="section_data" [section_list]="section_data" [masters]="masters"
+          [display_type]="display_type" [dynamic_form]="applicant_detail_form" [t_id]="t_id"
+          [openMailer]="new_tab_callback" [row_data]="row_data">
+        </tm-dynamic-form>
+      </div>
+    </div>
+
+    <div class="tab-item p-1" style="max-width: 100%; flex: 0 0 61.7%;">
+      <div class="pb-2 box-shadow">
+        <div class="row pt-4">
+          <div class="col-md-12">
+            <div *ngIf="is_questionnarie&&this.masters&&section_data_questions&&display_type_questions">
+              <tm-dynamic-form *ngIf="section_data_questions&&this.masters" [other_data]="other_data"
+                [section_list]="section_data_questions" [masters]="masters" [display_type]="display_type_questions"
+                [dynamic_form]="questionnaire_form">
+              </tm-dynamic-form>
+            </div>
+          </div>
+        </div>
+        <div class="row pt-2">
+          <div class="col-md-6 offset-4 m-auto " style="box-shadow: 0 0 5px 0 gainsboro;">
+            <form *ngIf="stage_status" [formGroup]="stage_status">
+              <div class="row">
+                <div class="col-md-12 header-action  text-center">
+                  <h6 class="text-center m-0 header-text">Action</h6>
+                </div>
+                <div class="col-md-12 pt-3">
+                  <tm-select [options]="stage" [form_group]="stage_status" form_control="stage_code"
+                    [mandatory]="'true'" title_property="stage_title" id_property="stage_code"
+                    [placeholder]="'< - - Select - - >'" float_label="always" [label]="'Stage'"
+                    (selected_obj)="stageclk($event)">
+                  </tm-select>
+                </div>
+                <div class="col-md-12">
+                  <tm-select [options]="status" [form_group]="stage_status" form_control="status_code"
+                    [mandatory]="'true'" title_property="status_title" id_property="status_code"
+                    [placeholder]="'< - - Select - - >'" float_label="always" [label]="'Status'"
+                    (selected_obj)="setMandatory($event)">
+                  </tm-select>
+                </div>
+                <div class="col-md-12" *ngIf="enable_reason">
+                  <tm-select [options]="reason_list" [form_group]="stage_status" [mandatory]="is_reason_mandatory"
+                    [form_control]="'reason_ids'" title_property="reason_title" id_property="reason_code"
+                    [placeholder]="'< - - Select - - >'" float_label="always" [label]="'Reason'">
+                  </tm-select>
+                </div>
+                <div class="col-md-12" *ngIf="enable_notes">
+                  <mat-form-field floatLabel="always">
+                    <mat-label>Notes</mat-label>
+                    <input matInput placeholder="Notes" [required]="is_notes_mandatory" formControlName="notes"
+                      [required]="notes">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-12 pb-2">
+                  <button *ngIf="!is_questionnarie" class="btn w-100 btn-sm save-btn float-right ml-2"
+                    [disabled]="stage_status.invalid" (click)="updateStageStatus(0)">
+                    Update
+                  </button>
+                  <button *ngIf="is_questionnarie" class="btn w-100 btn-sm save-btn float-right ml-2"
+                    [disabled]="questionnaire_form.invalid || stage_status.invalid" (click)="updateStageStatus(1)">
+                    Update
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-1 tab-item" style="flex : 0 0 20%">
+      <div class="vertical-nav" style="padding:0 !important;overflow-y: auto;width:100%;">
+        <div class="pt-0 position-fixed" style="height: calc(100vh - 125px);overflow:auto">
+          <div style="overflow: hidden;">
+            <div class="col-md-12 text-center header-action ">
+              <!-- <h6 class="text-center m-0">Summary</h6> -->
+              <h6 class="text-center m-0 header-text overflow-wrap">
+                Activity History
+                <span *ngIf="applicant_name">
+                  of {{applicant_name}}
+                </span>
+              </h6>
+            </div>
+
+            <div class="pt-2 p-2 counter" style="width: 100%;">
+              <div class="activity-history" *ngFor="let act of activity_history;let i=index">
+                <div class="activity-date-time" style="--line-num: 1;" data-content="i"
+                  style="border-right: 1px solid rgb(222, 226, 230);font-size: 10pt;">
+                  <div>
+                    <p class="p-0 m-0 text-center">
+                      {{act.created_on | date: 'd-MMM-yyyy'}}</p>
+                    <hr class="m-0">
+                    <p class="p-0 m-0 text-center">
+                      {{act.created_on | date: 'h:mm a'}}</p>
+                  </div>
+                </div>
+                <div class="activity-user">
+                  <div class="pl-4">
+                    <span *ngIf="act.stage && act.stage != '';else no_record">
+                      {{act.stage}}
+                      <span *ngIf="act.status && act.status != ''">
+                        ({{act.status}})
+                      </span>
+                      <span *ngIf="act.created_by && act.created_by != ''"> by
+                        {{act.created_by}}</span>
+                    </span>
+                    <ng-template #no_record>
+                      <div style="visibility: hidden;min-height: 35px;">1</div>
+                    </ng-template>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <ng-template *ngIf="activity_history && !activity_history.length">
+              No data found!
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

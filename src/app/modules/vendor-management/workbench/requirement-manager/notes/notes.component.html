@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>
+    Notes <span class="float-right"><i class="fa fa-times" (click)="close()"></i></span>
+</h2>
+<div style="padding:20px 25px;">
+    <mat-dialog-content>
+        <form [formGroup]="notes_form">
+            <div class="row">
+                <div class="col-md-12">
+                    <app-textarea [form]="notes_form" controlName="notes" [label_block]="true" label="Notes"
+                        [required]="1">
+                    </app-textarea>
+                </div>
+                <div class="col-md-12 text-center">
+                    <button class="btn cancel-btn btn-sm" (click)="close()">Close</button>
+                    <button class="btn save-btn ml-3 btn-sm" (click)="addNotes()">Add</button>
+                </div>
+            </div>
+        </form>
+
+        <div *ngIf="display_table" class="col-md-12 pt-3">
+            <app-timeline [timeline]="notes_section.data"></app-timeline>
+            <!-- <app-tallint-table [table_records]="(notes_section.data)"
+                [total_count]="notes_section.data && notes_section.data != '[]' ? notes_section.data.length : 0"
+                [table_columns]="(notes_section.grid_layout) && (notes_section.grid_layout).grid_definition ? (notes_section.grid_layout).grid_definition : ''"
+                [enable_sort]="notes_section.grid_layout && notes_section.grid_layout.enable_order ? notes_section.grid_layout.enable_order : 0"
+                [edit]="notes_section.grid_layout && notes_section.grid_layout.editable_flag ? notes_section.grid_layout.editable_flag :0">
+            </app-tallint-table> -->
+        </div>
+    </mat-dialog-content>
+</div>

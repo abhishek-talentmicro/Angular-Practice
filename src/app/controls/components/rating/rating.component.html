@@ -1,0 +1,33 @@
+<ng-container *ngIf="!readonly">
+    <label *ngIf="label_block && label" class="m-0 html-label d-block" [ngClass]="{'req':required}"
+        [innerHtml]="label|HTMLFormatter" [title]="label | HTMLFormatter : 1"></label>
+    <mat-label *ngIf="!label_block && label" class="d-block" [ngClass]="{'req': required}" [innerHtml]="label | HTMLFormatter"
+        [title]="label | HTMLFormatter : 1">
+    </mat-label>
+    <button mat-icon-button [color]="color" *ngFor="let ratingId of ratingArr;index as i" [id]="'star_'+i"
+        (click)="onClick(i+1)" [matTooltip]="ratingId+1" matTooltipPosition="above">
+        <mat-icon>
+            {{showIcon(i)}}
+        </mat-icon>
+    </button>
+    <mat-error *ngIf="form_control && form_control.touched&& form_control.value == null && required">
+        Field is mandatory
+    </mat-error>
+</ng-container>
+
+
+
+
+<ng-container *ngIf="readonly">
+    <label *ngIf="label_block && label" class="m-0 html-label d-block" [ngClass]="{'req':required}"
+        [innerHtml]="label|HTMLFormatter" [title]="label | HTMLFormatter : 1"></label>
+    <mat-label *ngIf="!label_block && label" class="d-block" [ngClass]="{'req': required}" [innerHtml]="label | HTMLFormatter"
+        [title]="label | HTMLFormatter : 1">
+    </mat-label>
+    <button mat-icon-button [color]="color" *ngFor="let ratingId of ratingArr;index as i" [id]="'star_'+i"
+        [matTooltip]="ratingId+1" matTooltipPosition="above">
+        <mat-icon>
+            {{edit(i)}}
+        </mat-icon>
+    </button>
+</ng-container>

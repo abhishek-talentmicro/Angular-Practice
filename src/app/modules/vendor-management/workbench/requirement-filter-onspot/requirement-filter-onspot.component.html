@@ -1,0 +1,18 @@
+<div>
+    <tm-dynamic-form *ngIf="masters && section_data" [section_list]="section_data" [masters]="masters"
+        [display_type]="display_type" [dynamic_form]="form_group">
+    </tm-dynamic-form>
+
+</div>
+<div class="col-md-12 mx-auto">
+    <div class="text-center">
+        <button class="btn btn-sm cancel-btn mr-2" style="width:48%" (click)="onCancel()">
+            Close
+        </button>
+        <button class="btn btn-sm save-btn" style="width:48%" (click)="sendData()">
+            <span>
+                Filter
+            </span>
+        </button>
+    </div>
+</div>

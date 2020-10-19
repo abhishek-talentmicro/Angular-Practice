@@ -1,0 +1,119 @@
+<nav *ngIf="  vendor_registration_flag || (session && session.access_token) "
+    class="navbar fixed-top navbar-expand-sm navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">
+        <img src="/assets/tallint-original.png" alt="" style="height:100%;">
+    </a>
+
+    <span style="font-weight: 500;color: #283989;font-size: 17px;">
+        Vendor Management System
+    </span>
+
+    <ul class="navbar-nav ml-auto abc">
+        <li class="nav-item"
+            *ngIf="access_rights && access_rights['1'] && access_rights['1']['sub_modules'] && access_rights['1']['sub_modules']['3001'] && access_rights['1']['sub_modules']['3001']['enable']">
+            <a routerLink="/dashboard" [routerLinkActive]="'active'" class="nav-link pl-3 pr-3">
+                <i class="fa fa-tachometer dashboard-icon"></i> Dashboard
+            </a>
+        </li>
+        <!-- <li class="nav-item"
+            *ngIf="access_rights && access_rights['1'] && access_rights['1']['sub_modules'] &&  access_rights['1']['sub_modules']['150'] && access_rights['1']['sub_modules']['150'].enable">
+            <a routerLink="/planner" [routerLinkActive]="'active'" class="nav-link pl-3 pr-3">
+                <i class="fa fa-calendar dashboard-icon"></i> Planner
+            </a>
+        </li> -->
+        <li class="nav-item divider"
+            *ngIf="access_rights && access_rights['1'] &&  access_rights['1']['sub_modules'] && access_rights['1']['sub_modules']['200'] &&  access_rights['1']['sub_modules']['200']['enable']">
+            <a routerLink="/workbench" [routerLinkActive]="'active'" class="nav-link pl-3 pr-3">
+                <i class="fa fa-users dashboard-icon"></i> Workbench
+            </a>
+        </li>
+        <li class="nav-item divider" *ngIf="vendor_registration_flag">
+            <a routerLink="/login" [routerLinkActive]="'active'" class="nav-link pl-3 pr-3">
+                <i class="fa fa-user dashboard-icon"></i> Login
+            </a>
+        </li>
+
+        <li class="nav-item divider" [matMenuTriggerFor]="menu" *ngIf="session && session.access_token">
+            <!--*ngIf="access_rights && access_rights['1'] &&  access_rights['1']['sub_modules'] &&  access_rights['1']['sub_modules']['7896'] && access_rights['1']['sub_modules']['7896']['enable']"-->
+            <a class="nav-link pl-3 pr-3">
+                <i class="fa fa-bell dashboard-icon"></i>
+            </a>
+        </li>
+
+        <mat-menu #menu="matMenu" xPosition="before" class="header">
+            <div class="notifications-window">
+                <div class="empty-state" *ngIf="!(notifications && notifications.length)">
+                    <div>
+                        You don't have any notifications
+                    </div>
+                </div>
+
+                <div class="notifications-item" *ngFor="let item of notifications; let i = index"
+                    (click)="openTabs(item)">
+                    <div class="item">
+                        <span class="message" [title]="item.message"> {{item.message}}</span>
+                        <span class="d-block text-right" style="font-size: 12px;"
+                            [title]="item.lu_date | UtcToLocalTime | date: 'd-MMM-yyyy h:mm a'">
+                            <i class="fa fa-clock-o" aria-hidden="true"></i>
+                            {{item.lu_date | timeAgo }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+        </mat-menu>
+        <li class="nav-item dropdown hide-dropdown-arrow divider"
+            *ngIf="access_rights && access_rights['1'] &&  access_rights['1']['sub_modules'] &&  access_rights['1']['sub_modules']['7895'] && access_rights['1']['sub_modules']['7895']['enable']">
+            <a class="nav-link pl-3 pr-3 dropdown-toggle pointer" data-toggle="dropdown">
+                <i class="fa fa-globe dashboard-icon" style="font-size: 18px;"></i>
+                <span *ngIf="current_language && languages_list">
+                    {{current_language.lng_title}}
+                </span>
+                <i class="fa fa-angle-down"></i>
+            </a>
+
+            <div class="dropdown-content " style="right: 0!important">
+                <a class="dropdown-item pointer" (click)="changeLanguage(language)"
+                    *ngFor="let language of languages_list;"
+                    [ngClass]="{'rtl':language.rtl, 'active':current_language==language.lng_id}">
+                    {{language.lng_title}}</a>
+            </div>
+        </li>
+        <li *ngIf="session && session.access_token" class="nav-item dropdown hide-dropdown-arrow">
+            <a class="nav-link pl-3 pr-3 dropdown-toggle pointer" data-toggle="dropdown">
+                <i class="fa fa-user dashboard-icon" style="font-size: 18px;"></i>
+                <span>
+                    {{session.userName}}
+                </span>
+                <i class="fa fa-angle-down"></i>
+            </a>
+            <div class="dropdown-content " style="right: 0!important">
+                <a class="dropdown-item pointer" (click)="getChangePassword()">Change Password</a>
+
+                <a class="dropdown-item pointer" (click)="getProfileSettings()">
+                    View Profile
+                </a>
+
+                <a class="dropdown-item pointer" (click)="logout()">
+                    Logout
+                </a>
+            </div>
+        </li>
+        <!-- <li class="nav-item dropdown">
+      <a class="nav-link pl-3 pr-3 dropdown-toggle pointer" data-toggle="dropdown">
+        <i class="fa fa-user"></i>
+        Sundar
+      </a>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" (click)="getChangePassword(change_password_form)">Change Password</a>
+        <a class="dropdown-item" href="#">Link 3</a>
+        <a class="dropdown-item">
+          Logout
+          <i class="fa fa-power-off"></i>
+        </a>
+        <a class="dropdown-item" (click)="getProfileSettings(profile_settings)">My Settings</a>
+      </div>
+    </li> -->
+    </ul>
+</nav>
+<div *ngIf="session && session.access_token" style="height:50.5px;"></div>

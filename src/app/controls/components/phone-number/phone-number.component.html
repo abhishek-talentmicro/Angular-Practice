@@ -1,0 +1,44 @@
+<form [formGroup]="form">
+    <label *ngIf="label_block" class="m-0 html-label" [ngClass]="{'req':required}"
+        [innerHtml]="label | HTMLFormatter"></label>
+    <mat-form-field floatLabel="always" appearance="standard">
+        <mat-label *ngIf="!label_block&&required" class="req" [innerHtml]="label| HTMLFormatter"></mat-label>
+        <mat-label *ngIf="!label_block&&!required" [innerHtml]="label | HTMLFormatter"></mat-label>
+
+        <app-custom-control [placeholder]="placeholder" type="text" [id]="id" [style]="style" [disabled_flag]="disabled"
+            [formControl]="new_formControl" [splits]="splits" [max_length]="maxlength" [inp_pattern]="inp_pattern">
+        </app-custom-control>
+
+        <input style="display: none;" matInput [placeholder]="placeholder" type="text"
+            [formControl]="form.get([controlName])">
+        <!-- <input matInput [placeholder]="placeholder" type="text" [id]="id" [style]="style" [formControl]="new_formControl" [readonly]="disabled ? true : false" (keyup)="displayPhoneNumber($event);" (keydown)="inputNumber($event)" (keydown)="displayPhoneNumber($event);"
+            [maxlength]="maxLength"> -->
+        <mat-hint class="err" *ngIf="form.get([controlName]).touched && form.get([controlName]).hasError('required');else maxlength">
+            Field is mandatory
+        </mat-hint>
+        <ng-template #maxlength>
+            <mat-hint class="err" *ngIf="form.get([controlName]).hasError('maxlength');else minlength">
+                Maximum length ({{maxLength}}) has exceeded
+            </mat-hint>
+        </ng-template>
+        <ng-template #minlength>
+            <mat-hint class="err" *ngIf="form.get([controlName]).hasError('minlength'); else pattern">
+                Minimum length must be ({{minLength}})
+            </mat-hint>
+        </ng-template>
+        <ng-template #pattern>
+            <mat-hint class="err" *ngIf="form.get([controlName]).hasError('pattern')">
+                {{pattern_desc || 'Invalid input'}}
+            </mat-hint>
+        </ng-template>
+    </mat-form-field>
+</form>
+
+<!-- {{new_formControl.value |json }} -->
+
+<!-- <div [formGroup]="form">
+    <mat-form-field appearance="standard">
+        <mat-label>Phone number</mat-label>
+        <app-custom-control formControlName="tel" required  [split_index_arr]="split_index_array" [max_length]="length"></app-custom-control>
+    </mat-form-field>
+</div> -->

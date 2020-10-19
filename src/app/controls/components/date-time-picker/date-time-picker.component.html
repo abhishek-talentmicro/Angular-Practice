@@ -1,0 +1,43 @@
+<form [formGroup]="form">
+    <mat-form-field floatLabel="always">
+        <mat-label *ngIf="!required" [innerHtml]="label| HTMLFormatter"></mat-label>
+        <mat-label *ngIf="required" class="req" [innerHtml]="label| HTMLFormatter"></mat-label>
+        <input matInput [matDatetimepicker]="picker" [formControl]="date" [min]="minValue" [max]="maxValue"
+            [placeholder]="placeholder" autocomplete="false" (dateChange)="addEvent($event)" [readonly]="disabled">
+        <span class="pointer"
+            *ngIf="form && form.get(controlName) && form.get(controlName).value && !required && !disabled"
+            style="position: absolute; right: 0;" (click)="removeDate($event)">
+            <i class="fa fa-times"></i>
+        </span>
+        <mat-error *ngIf="date.hasError('required');else maxvalue">
+            Field is mandatory
+            <!-- <span [innerHTML]="label + ' is mandatory'"></span> -->
+        </mat-error>
+        <ng-template #maxvalue>
+            <mat-error *ngIf="date.hasError('matDatepickerMax');else minvalue">
+                Value must be lesser than {{maxValue | date: 'd-MMM-yyyy h:mm a'}}
+            </mat-error>
+        </ng-template>
+        <ng-template #minvalue>
+            <mat-error *ngIf="date.hasError('matDatepickerMin')">
+                Value must be greater than {{minValue | date: 'd-MMM-yyyy h:mm a'}}
+            </mat-error>
+        </ng-template>
+        <mat-datetimepicker-toggle matSuffix [for]="picker" [hidden]="disabled"></mat-datetimepicker-toggle>
+        <mat-datetimepicker #picker type="datetime" timeInterval="5" mode="portrait" disabled="false"
+            [hidden]="disabled">
+        </mat-datetimepicker>
+
+    </mat-form-field>
+</form>
+
+
+
+<!-- <form [formGroup]="group">
+  <mat-form-field>
+    <mat-label>Start DateTime</mat-label>
+    <mat-datetimepicker-toggle [for]="datetimePicker" matSuffix></mat-datetimepicker-toggle>
+    <mat-datetimepicker #datetimePicker type="datetime" openOnFocus="true" timeInterval="5" mode="portrait"></mat-datetimepicker>
+    <input matInput formControlName="datetimeCtrl" [matDatetimepicker]="datetimePicker" required autocomplete="false">
+  </mat-form-field>
+</form> -->

@@ -1,0 +1,10 @@
+.check {
+    word-break: break-all !important;
+    white-space: normal !important;
+    display: inline-block !important;
+    /* width: 92% !important; */
+}
+
+/* ::ng-deep .mat-checkbox-layout .mat-checkbox-label {
+    display: inline-flex;
+} */

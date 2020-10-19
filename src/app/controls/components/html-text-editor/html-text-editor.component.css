@@ -1,0 +1,45 @@
+/* ::ng-deep mat-label p {
+  display: inline !important;
+} */
+
+.html-textarea-label {
+  font-weight: 500 !important;
+  font-size: 11.3px;
+  color: black !important;
+  line-height: 1.125;
+  font-family: Roboto, "Helvetica Neue", sans-serif !important;
+  padding-left: 0;
+  background: transparent;
+  margin-bottom: 5px;
+}
+
+::ng-deep .ck-list {
+  z-index: 3000 !important;
+}
+
+::ng-deep app-html-text-editor {
+  overflow: hidden;
+}
+
+::ng-deep app-html-text-editor p {
+  margin: 0 !important;
+}
+
+::ng-deep app-html-text-editor .ck.ck-dropdown__panel {
+  max-height: 200px !important;
+  overflow-y: auto !important;
+  z-index: 999 !important;
+}
+::ng-deep app-html-text-editor .ck-editor__editable {
+  min-height: 200px !important;
+}
+
+/* ::ng-deep .ck.ck-reset.ck-dropdown__panel.ck-dropdown__panel_se.ck-dropdown__panel-visible {
+  right: 0 !important;
+  left: auto !important;
+} */
+::ng-deep app-html-text-editor .ae-font.ae-expanded .ae-picker-options {
+  height: 96px !important;
+  overflow-y: auto;
+  overflow-x: hidden;
+}

@@ -1,0 +1,14 @@
+<!-- <mat-dialog-title>
+  <span (click)="onCancel()" class="pointer" style="float: right;"><i class="fa fa-times"></i></span>
+</mat-dialog-title> -->
+
+
+<div>
+  <tm-dynamic-form *ngIf="masters && section_data" [other_data]="other_data" [section_list]="section_data"
+    [masters]="masters" [display_type]="display_type" [dynamic_form]="form_group" [t_id]="t_id" (onClose)="onCancel()"
+    [dataSaved]="dataSavedFn">
+  </tm-dynamic-form>
+</div>
+<div class="col-md-12 mx-auto form-group">
+ 
+</div>

@@ -1,0 +1,37 @@
+<div class="container-fluid p-0 pb-2">
+    <h4>
+        Share
+        <i class="fa fa-times float-right" (click)="dialogRef.close()"></i>
+    </h4>
+    <div class="row p-2">
+        <p style="text-align:center;font-style: italic;margin-bottom: 0;
+            font-size: 14px;
+            color: #939393;width:100%;">
+            Via
+        </p>
+        <div (click)="share(item.portal_id)" class="col-6 p-1 social-media-share" *ngFor="let item of portals; let index=index;">
+            <div class="row">
+                <div class="col-4 text-center">
+                    <!-- <img class="social-media-icon" src="{{item.portal_logo}}" alt=""> -->
+                    <img class="social-media-icon" src="{{item.file_path}}" alt="">
+                </div>
+                <div class="col-8" style="font-size: 22px;">
+                    {{item.portal_title}}
+                </div>
+            </div>
+        </div>
+        <div id="or">OR</div>
+        <p style="text-align:center;font-style: italic;margin-bottom: 0;
+        font-size: 14px;
+        color: #939393;width:100%;">
+            Click on link to copy
+        </p>
+        <div class="input-group">
+            <input (click)="copyLink(share_link)" id="share_link_input" style="cursor: pointer;background:white;box-shadow: none !important;"
+                type="text" value="{{share_link}}" class="form-control" readonly>
+            <div (click)="copyLink(share_link)" class="input-group-append">
+                <i class="fa fa-copy input-group-text" style="cursor: pointer;line-height: 1.5;"></i>
+            </div>
+        </div>
+    </div>
+</div>

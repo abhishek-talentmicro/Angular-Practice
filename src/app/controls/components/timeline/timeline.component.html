@@ -1,0 +1,148 @@
+<!-- <div class="container">
+    <h6 class="heading text-center nav-heading">{{title}}</h6>
+    <div class="row counter">
+        <div class="activity-history" *ngFor="let item of timeline;let i=index">
+            <div class="activity-date-time" style="--line-num: 1;" data-content="i">
+                <div>
+                    <p class="p-0 m-0 text-center">
+                        {{item.cr_date | date: 'd-MMM-yyyy'}}</p>
+                    <hr class="m-0">
+                    <p class="p-0 m-0 text-center">
+                        {{item.cr_date | date: 'h:mm a'}}</p>
+                </div>
+            </div>
+
+            <div class="activity-user">
+                <div class="pl-4">
+                    <span *ngIf="item.notes && item.notes != '';else no_record">
+                        <span class="item" [innerHTML]="item.notes"></span>
+
+                        <span *ngIf="item.cr_name && item.cr_name != ''"> <em> by
+                                {{item.cr_name}}</em>
+                        </span>
+
+                        <span *ngIf="item.description && item.description != ''">
+                            {{item.description}}
+                        </span>
+                    </span>
+                    <ng-template #no_record>
+                        <div style="visibility: hidden;min-height: 35px;">1</div>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+<div class="container" *ngIf="!req_history">
+    <h6 class="heading text-center nav-heading">{{title}}</h6>
+    <div class="row counter">
+        <div class="activity-history" *ngFor="let item of timeline;let i=index">
+            <div class="activity-date-time" style="--line-num: 1;" data-content="i">
+                <div>
+                    <p class="p-0 m-0 text-right" style="font-style: italic; font-size: 12px;">
+                        {{item.cr_date | date: 'd-MMM-yyyy'}} {{item.cr_date | date: 'h:mm a'}}</p>
+                    <hr class="m-0">
+                    <p>
+
+                    </p>
+                    <div class="activity-user " style="padding-left: 1.5rem;">
+                        <div class=" ">
+                            <span *ngIf="item.notes && item.notes != '';else no_record">
+                                <span class="item" [innerHTML]="item.notes  | HTMLFormatter"></span>
+
+                                <span *ngIf="item.cr_name && item.cr_name != ''"> by
+                                    {{item.cr_name}}
+                                </span>
+
+                                <span *ngIf="item.description && item.description != ''">
+                                    {{item.description}}
+                                </span>
+                            </span>
+                            <ng-template #no_record>
+                                <div style="visibility: hidden;min-height: 35px;">1</div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="activity-user ">
+                <div class="pl-4">
+                    <span *ngIf="item.notes && item.notes != '';else no_record">
+                        <span class="item pl-5" [innerHTML]="item.notes"></span>
+
+                        <span *ngIf="item.cr_name && item.cr_name != ''"> by
+                            {{item.cr_name}}
+                        </span>
+
+                        <span *ngIf="item.description && item.description != ''">
+                            {{item.description}}
+                        </span>
+                    </span>
+                    <ng-template #no_record>
+                        <div style="visibility: hidden;min-height: 35px;">1</div>
+                    </ng-template>
+                </div>
+            </div> -->
+
+        </div>
+
+    </div>
+</div>
+
+
+<div class="container" *ngIf="req_history">
+    <h6 class="heading text-center nav-heading" *ngIf="title">{{title}}</h6>
+    <div class="row counter">
+        <div class="activity-history" *ngFor="let item of timeline;let i=index">
+            <!-- <h6 class="heading text-center nav-heading">{{item.reqstatus}}</h6> -->
+
+            <div class="activity-date-time" style="--line-num: 1;" data-content="i">
+                <div>
+                    <span style="padding-left: 1.5rem;">
+                        {{item.reqstatus}}
+                    </span>
+                    <span class="p-0 m-0 float-right" style="font-style: italic; font-size: 12px;">
+                        {{item.lu_date | date: 'd-MMM-yyyy'}}</span>
+                    <hr class="m-0">
+                    <p class="mb-2">
+
+                    </p>
+                    <!-- <h6 class="" style="padding-left: 1.5em;">{{item.reqstatus}}</h6> -->
+                    <div class="activity-user " style="padding-left: 1.5rem;">
+                        <div style="font-size:13px">
+                            <span>
+                                <span *ngIf="item.lu_name && item.lu_name != ''">Updated by
+                                    {{item.lu_name}} on {{item.lu_date | date: 'd-MMM-yyyy'}}
+                                </span>
+
+                                <span *ngIf="item.description && item.description != ''">
+                                    {{item.description}}
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="activity-user ">
+                <div class="pl-4">
+                    <span *ngIf="item.notes && item.notes != '';else no_record">
+                        <span class="item pl-5" [innerHTML]="item.notes"></span>
+
+                        <span *ngIf="item.cr_name && item.cr_name != ''"> by
+                            {{item.cr_name}}
+                        </span>
+
+                        <span *ngIf="item.description && item.description != ''">
+                            {{item.description}}
+                        </span>
+                    </span>
+                    <ng-template #no_record>
+                        <div style="visibility: hidden;min-height: 35px;">1</div>
+                    </ng-template>
+                </div>
+            </div> -->
+
+        </div>
+
+    </div>
+</div>

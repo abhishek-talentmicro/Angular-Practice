@@ -1,0 +1,13 @@
+[
+    {
+        "action_period_id":0,
+        "action_period_type":"Minuts"
+    },{
+        "action_period_id":1,
+        "action_period_type":"Hours"
+    },
+    {
+        "action_period_id":2,
+        "action_period_type":"Days"
+    }
+]

@@ -1,0 +1,112 @@
+<form class="full-size-block" [formGroup]="form_group">
+    <label *ngIf="label_block" class="m-0 html-label" [ngClass]="{'req':mandatory}"
+        [innerHtml]="label | HTMLFormatter"></label>
+    <mat-form-field #hidden_input id="{{random_id}}" style="margin-bottom : 0px;" floatLabel="always"
+        appearance="standard">
+        <mat-label *ngIf="!label_block&&mandatory" class="req" [innerHtml]="label | HTMLFormatter"></mat-label>
+        <mat-label *ngIf="!label_block&&!mandatory" [innerHtml]="label | HTMLFormatter">
+        </mat-label>
+        <input style="display: none;" type="text" autocomplete="off" placeholder="{{placeholder}}" matInput
+            [formControl]="form_group.get([form_control])" [readonly]="disabled ? true : false">
+
+        <input [style.width]="selected_options_title.length ? '25%' : 'calc(100% - 10px)'" #search_input
+            style="z-index: 1001;display: inline-block;" type="text" autocomplete="off" placeholder="{{placeholder}}"
+            (keydown)="checkForTab($event)" (click)="showList($event)" (focusin)="showList($event);"
+            (keyup)="searchKeyPress($event)" matInput [formControl]="search" [readonly]="disabled ? true : false">
+
+        <i style="display: inline-block;" (click)="showList($event)" class="fa fa-angle-down" *ngIf="!disabled"></i>
+        <span class="selected-items" *ngIf="selected_options_title && selected_options_title.length">
+            <span class="selected-item" *ngFor="let opt of selected_options_title; let index=index;">
+                {{opt}}
+                <i class="fa fa-times" matSuffix (click)="clearValue($event, index)"
+                    *ngIf="form_group.get(form_control).value && !disabled" style="cursor: pointer;"></i>
+            </span>
+        </span>
+        <i class="fa fa-times x" matSuffix (click)="clearAll($event)"
+            *ngIf="form_group.get(form_control).value && form_group.get(form_control).value.length && !disabled"
+            style="cursor: pointer;"></i>
+        <i class="fa fa-plus ml-2 x" matSuffix (click)="openAddMasterModal()" *ngIf="master_form_code"
+            style="cursor: pointer;"></i>
+        <mat-error *ngIf="form_group.get([form_control]).hasError('required')">
+            Field is mandatory
+            <!-- <span [innerHTML]="label + ' is mandatory'"></span> -->
+        </mat-error>
+
+        <!-- <ng-template #maxlength>
+            <mat-error *ngIf="form_group.get([form_control]).hasError('maxlength');else minlength">
+                Maximum length ({{maxLength}}) has exceeded
+            </mat-error>
+        </ng-template>
+        <ng-template #minlength>
+            <mat-error *ngIf="form_group.get([form_control]).hasError('minlength');else maxvalue">
+                Minimum length must be {{minLength}} digits
+            </mat-error>
+        </ng-template> -->
+        <!-- <ng-template #maxvalue>
+            <mat-error *ngIf="form_group.get([form_control]).hasError('max');else minvalue">
+                Value must be lesser than {{maxValue}}
+            </mat-error>
+        </ng-template>
+        <ng-template #minvalue>
+            <mat-error *ngIf="form_group.get([form_control]).hasError('min')">
+                Value must be greater than {{minValue}}
+            </mat-error>
+        </ng-template> -->
+    </mat-form-field>
+
+    <cdk-virtual-scroll-viewport #options_list_view
+        style="z-index:1001;opacity: 1; pointer-events: auto;color: black;position:fixed;background-color: white;top: 45px;"
+        *ngIf="show_list" itemSize="40" class="viewport select-menu" (scrolledIndexChange)="getNextBatch($event);"
+        [style.left.px]="left" [style.top.px]="top">
+        <ng-container *cdkVirtualFor="let option of (filtered_options); let i = index">
+            <li class="select-options" *ngIf="option" (click)="onSelect(option)"
+                [class.active]="i == arrow_key_location" [value]="option[id_property]">
+                <i class="fa"
+                    [ngClass]="{'fa-check-square-o': option['option_selected'], 'fa-square-o': !option['option_selected'] }"></i>
+                {{ option[title_property]}}
+            </li>
+        </ng-container>
+        <li *ngIf="filtered_options == null || filtered_options == undefined || filtered_options.length == 0 "
+            class="select-options"> No data found!</li>
+    </cdk-virtual-scroll-viewport>
+
+    <div id="overlay_mat_select_search" (click)="hideList()" *ngIf="display_overlay"
+        style="position: fixed;width: 100%;height: 100%;z-index: 1000;left: 0;top: 0;">
+    </div>
+</form>
+
+
+<!-- <form class="full-size-block" #form [formGroup]="form_group" (focusin)="showList($event); text.select()"
+    (focusout)="hideList($event,1)" (keydown)="downArrow($event)">
+    <mat-form-field style="margin-bottom : 0px;" floatLabel="always">
+        <mat-label *ngIf="!label_block&&mandatory" class="req" [innerHtml]="label"></mat-label>
+        <mat-label *ngIf="!label_block&&!mandatory" [innerHtml]="label">
+        </mat-label>
+        <input type="text" autocomplete="off" placeholder="{{placeholder}}" matInput [formControl]="qwe" #text
+            (keydown)="filter($event)" style="width: 25%;display: inline-block;">
+        <span class="selected-items">
+            <span class="selected-item" *ngFor="let opt of selected_options_title; let index=index;">
+                {{opt}}
+                <i class="fa fa-times" matSuffix (click)="clearValue($event, index)"
+                    *ngIf="form_group.get(form_control).value" style="cursor: pointer;"></i>
+            </span>
+        </span>
+        <i class="fa fa-angle-down" matSuffix></i>
+    </mat-form-field>
+    <cdk-virtual-scroll-viewport #view style="opacity: 1; pointer-events: auto;z-index: 1001;" *ngIf="show_list"
+        itemSize="40" class="viewport select-menu" [style.width]="dimension_width +'px'"
+        [style.position]="display_overlay ? 'fixed' : 'fixed'" [style.top.px]="top" [style.left.px]="left"
+        (scrolledIndexChange)="getNextBatch($event);">
+        <li class="select-options" *cdkVirtualFor="let input of filtered_input; let i = index"
+            (click)="optionSelected(input)" [class.active]="i == arrow_key_location">
+            <i class="fa"
+                [ngClass]="{'fa-check-square-o': input['option_selected'], 'fa-square-o': !input['option_selected'] }"></i>
+            {{ input[title_property] }}
+        </li>
+        <li *ngIf="filtered_input ==null || filtered_input == undefined || filtered_input.length == 0 "
+            class="select-options"> No Records Found</li>
+    </cdk-virtual-scroll-viewport>
+
+    <div (click)="hideList($event, 2)" id="overlay_mat_select_search" *ngIf="display_overlay"
+        style="position: fixed;width: 100%;height: 100%;z-index: 1000;left: 0;top: 0;"></div>
+</form> -->

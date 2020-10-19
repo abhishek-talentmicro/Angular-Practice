@@ -1,0 +1,11 @@
+<input [placeholder]="placeholder" class="disabled_inp" *ngIf="display_placeholder" disabled>
+<div [formGroup]="parts" class="example-tel-input-container">
+    <div *ngFor="let item of splits;let i= index">
+        <input #splitsRef class="example-tel-input-element" [formControlName]="'control'+i" [size]="item"
+            [maxLength]="item" (input)="_handleInput(parts.controls['control'+i], i)"
+            (keyup.backspace)="i == 0?'':autoFocusPrev(parts.controls['control'+i], i)" (keydown)="regexCheck($event)"
+            [readonly]="disabled_flag">
+        <span class="example-tel-input-spacer"
+            *ngIf="splits.length-1 != i &&parts.get('control'+i) && parts.get('control'+(i+1)) && parts.get('control'+(i+1)).value">&ndash;</span>
+    </div>
+</div>

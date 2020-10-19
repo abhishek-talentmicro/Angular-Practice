@@ -1,0 +1,8 @@
+/* 
+::ng-deep mat-label p{
+    display: inline !important;
+  } */
+
+  .mat-error *{
+    display: inline !important;
+  }

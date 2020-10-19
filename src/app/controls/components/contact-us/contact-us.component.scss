@@ -1,0 +1,75 @@
+
+p{
+  padding :0px !important;
+  margin:2px
+}
+::ng-deep .mat-card{
+  padding : 14px !important;
+}
+.card{
+//    background: linear-gradient(to right, #22537e, #3698c6);
+  box-shadow: 0 0 5px 0 gainsboro;
+  padding: 8px !important;
+}
+.details{
+ font-size:12px;
+ font-weight:200;
+}
+
+// 
+
+
+.front{
+    background: rgba(255,255,255,.7);
+    padding: 40px;
+    color:black;
+    transform: perspective(600px) rotateX(0deg);
+  }
+  
+  .front::before,.front::after{
+    content: "";
+    position: absolute;
+    right: 0;
+  }
+  
+  .front::before{
+    background: linear-gradient(to right, #22537e, #21b8ff);
+    width: 80px;
+    height: 94px;
+    bottom: 0;
+    clip-path:polygon(50% 100%, 100% 100%, 99% 8%);
+  }
+  
+  .front::after{
+    background: linear-gradient(to right, #7fb8eb, #1f80ad);
+    width: 100px;
+    height: 100%;
+    top: 0;
+    clip-path:polygon(52% 0, 100% 101%, 100% 0);
+  }
+  
+  .front span{
+    // background: #34495e;
+    color: black;
+    padding: 4px 10px;
+    display: inline-block;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+  
+  .front .contact-info li{
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+  }
+  .fa{
+      color:#2c87b5;
+  }
+  .fa-icon-span{
+    margin: 0 !important;
+    padding: 0px !important;
+  }
+
+  .card-box{
+    width: 235px !important;
+  }

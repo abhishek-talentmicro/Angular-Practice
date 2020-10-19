@@ -1,0 +1,70 @@
+<table>
+    <thead>
+        <tr>
+            <ng-container *ngFor="let column of tallint_table_columns; let index=index;">
+                <ng-container *ngIf="column.visible">
+                    <th title="{{column.title}}">
+                        <span class="pointer d-inline-block" style="width: 100%;overflow: hidden;">
+                            <span *ngIf="column.title; else label_code">
+                                <span class="margin">
+                                    <span [innerHTML]='column.title | HTMLFormatter'>
+                                    </span>
+                                </span>
+                            </span>
+                            <ng-template #label_code>
+                                <span class="margin">
+                                    <span [innerHTML]='(column.label_code | translate)| HTMLFormatter'></span>
+                                </span>
+                            </ng-template>
+                        </span>
+                    </th>
+                </ng-container>
+            </ng-container>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let row of table_records">
+            <ng-container *ngFor="let column of tallint_table_columns; let index=index;">
+                <td *ngIf="column.visible">
+                    <div [style.width.px]="column.width && column.width > 80 ? column.width :80"
+                        (click)="triggerCellClick(column.function_name,column,row)"
+                        [ngStyle]="{'cursor': (column.function_name && column.function_name!= '') ? 'pointer':''}"
+                        [ngClass]="{'function': column.function_name && column.function_name !=''}">
+                        <ng-container *ngIf="!column.cell_template && row[column.property]">
+                            <ng-container *ngIf="column.data_type ==='date'">
+                                {{row[column.property] | date: 'd-MMM-yyyy'}}
+                            </ng-container>
+                            <ng-container *ngIf="column.data_type ==='datetime'">
+                                {{row[column.property]  | UtcToLocalTime | date: 'd-MMM-yyyy h:mm a'}}
+                            </ng-container>
+
+                            <ng-container *ngIf="column.data_type =='nvarchar'">
+
+                                <span class="margin">
+                                    <span [innerHTML]='row[column.property] | HTMLFormatter'>
+                                    </span>
+                                </span>
+                            </ng-container>
+
+                            <ng-container *ngIf="column.data_type =='varbinary'">
+                                {{row[column.property] | DynamicFilesTitlePipe }}
+                            </ng-container>
+
+                            <ng-container
+                                *ngIf="column.data_type !='date' && column.data_type !='datetime' && column.data_type !='nvarchar' && column.data_type !='varbinary'">
+                                {{row[column.property]}}
+                            </ng-container>
+                        </ng-container>
+                        <div [ngClass]="column.cell_class" *ngIf="column.cell_template && row[column.property]"
+                            [innerHTML]="column.cell_template | HTMLFormatter">
+                        </div>
+                    </div>
+                </td>
+            </ng-container>
+        </tr>
+    </tbody>
+</table>
+
+<div class="text-center no-records-found" *ngIf="!(table_records && table_records.length)">
+    No data found!
+</div>

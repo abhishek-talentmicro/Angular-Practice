@@ -1,0 +1,78 @@
+{
+    "organization_nodes":[
+        {
+            "organization_title":"MITS",
+            "organization_node_code":1001
+        },
+        {
+            "organization_title":"Aditya",
+            "organization_node_code":1002
+        }
+
+    ],
+    "job_titles":[
+        {
+            "job_title":"Manager",
+            "job_title__code":1
+        },
+        {
+            "job_title":"Deputy Manager",
+            "job_title__code":2
+        }
+
+    ],
+    "job_skills":[
+        {
+            "skill_title":"C++",
+            "skill_id":1
+        },
+        {
+            "skill_title":"Java",
+            "skill_id":2
+        },
+        {
+            "skill_title":"Angular",
+            "skill_id":3
+        },
+        {
+            "skill_title":"My Sql",
+            "skill_id":4
+        },
+        {
+            "skill_title":"C Sharp",
+            "skill_id":5
+        }
+    ],
+    "job_education":[
+        {
+            "education_type":"BTech",
+            "education_id":1
+        },
+        {
+            "education_type":"MCA",
+            "education_id":2
+        },
+        {
+            "education_type":"UG",
+            "education_id":3
+        }
+    ],
+    "function":[
+        {
+            "function_title":"analytical",
+            "function_id":1
+        },
+        {
+            "function_title":"software",
+            "function_id":2
+        },
+        {
+            "function_title":"Hr",
+            "function_id":3
+        }
+    ]
+
+
+
+
+}

@@ -1,0 +1,11 @@
+.cdk-overlay-dark-backdrop {
+  background: none !important;
+}
+
+mat-dialog-container {
+  padding: 0px !important;
+  background: transparent !important;
+}
+::ng-deep .mat-dialog-container{
+  padding: 24px !important;
+}

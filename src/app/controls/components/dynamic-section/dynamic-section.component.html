@@ -1,0 +1,625 @@
+<form [formGroup]="form" *ngIf="fields && fields.length && form" style="padding: 0 10px;padding-bottom: 0;">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Display only when edit flag is false, when section is not multiple  -->
+            <ng-container *ngIf="(!section_details.edit_flag && !section_details.multiple)">
+
+                <!-- If verification is not required (Onboarding page), fields will be displayed as normal sections as per configured width -->
+                <ng-container *ngIf="!verification_required">
+                    <ng-container *ngFor="let item of (fields||[])">
+                        <!-- To display the next field in a new line -->
+                        <ng-container *ngIf="item.line_break">
+                            <div class="row w-100"></div>
+                        </ng-container>
+
+                        <!-- Check the field conditions and then display the fields -->
+                        <!-- Apply field width dynamically -->
+                        <!-- Apply style and class dynamically using ngstyle and ngclass -->
+                        <div [ngClass]="item.field_class" [ngStyle]="item.field_css | AddNgStylePipe : {}"
+                            style="padding-bottom: 0.5em;"
+                            [class]="item.visibility == 0  ? 'd-none':  'col-md-'+(item.field_width || 3)"
+                            *ngIf="((section_details.data | DynamicFieldConditionCheckPipe : item.conditions : (parent_form?parent_form:null) : item : form) | DynamicFieldProcessingPipe : (section_details&& section_details.data && section_details.data[0] ? section_details.data[0] : null) : item.dynamic_validation : (parent_form ? parent_form : null) : form.get([item.field_name]) : item : (section_details&& section_details.data && section_details.data[0] ? section_details.data[0] : null )) && !verification_required ">
+
+                            <!-- ng-template read_only_mode which displays the section in read only mode -->
+                            <ng-container
+                                *ngTemplateOutlet="read_only_mode; context: {item:item, section_details: section_details}">
+                            </ng-container>
+                        </div>
+                    </ng-container>
+                </ng-container>
+
+                <!-- If verification is required (Onboarding page), fields will be displayed as tables -->
+                <table class="table" *ngIf="verification_required">
+                    <tbody *ngFor="let item of (fields||[])">
+                        <tr [ngClass]="item.field_class" [ngStyle]="item.field_css | AddNgStylePipe : {}"
+                            style="padding-bottom: 0.5em;"
+                            [class]="item.visibility == 0  ? 'd-none': !verification_required ? 'col-md-12' : 'col-md-'+(item.field_width || 3)"
+                            *ngIf="((section_details.data | DynamicFieldConditionCheckPipe : item.conditions : (parent_form?parent_form:null) : item : form) | DynamicFieldProcessingPipe : (section_details&& section_details.data && section_details.data[0] ? section_details.data[0] : null) : item.dynamic_validation : (parent_form ? parent_form : null) : form.get([item.field_name]) : item : (section_details&& section_details.data && section_details.data[0] ? section_details.data[0] : null))">
+                            <td
+                                style="height: 40px;  width: 100px;background-color: white !important;padding: 10px !important;">
+                                <ng-container *ngTemplateOutlet="read_only_mode_label; context: {item:item}">
+                                </ng-container>
+                            </td>
+                            <td style="height: 40px;                            
+                        background-color: white !important;padding: 10px !important;">
+                                <ng-container
+                                    *ngTemplateOutlet="read_only_mode; context: {item:item, hide_label: true, section_details: section_details}">
+                                </ng-container>
+                            </td>
+                            <td style="height: 40px;background-color: white !important;padding: 10px !important;"
+                                *ngIf="verification_required">
+
+                                <i (click)="item.verification_status=2"
+                                    [style.color]="item.verification_status == 2 ? 'red' : null"
+                                    class="fa fa-times-rectangle pointer" style="font-size: 18px;" title="Decline"></i>
+
+                                <i (click)="item.verification_status=1"
+                                    [style.color]="item.verification_status == 1 ? 'green': null"
+                                    class="fa fa-check-square pointer ml-3" style="font-size: 18px;" title="Verify"></i>
+
+                                <i class="fa fa-commenting-o ml-3 summary-item-action-icon"
+                                    (click)="verifyAllDocuments(field)" style="font-size: 18px !important;"></i>
+
+                                <i class="fa fa-info ml-3 summary-item-action-icon"
+                                    style="font-size: 18px !important;"></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-container>
+        </div>
+        <ng-container
+            *ngIf="section_details.edit_flag && !section_details.hide_multiple_form && !enable_virtual_scroll_section">
+            <div class="row">
+                <ng-container *ngFor="let item of (fields||[])">
+                    <ng-template *ngTemplateOutlet="edit_mode_1; context: {item:item}"></ng-template>
+                </ng-container>
+            </div>
+        </ng-container>
+
+        <ng-container
+            *ngIf="section_details.edit_flag && !section_details.hide_multiple_form && enable_virtual_scroll_section">
+            <div class="row" style="margin-bottom: 15px;">
+                <div class="col-md-1">
+                    <a class="link mr-auto" (click)="DOMHandler.prev()" *ngIf="DOMHandler.show_prev">
+                        Prev
+                    </a>
+                </div>
+
+                <div class="col-md-10">
+                    <div class="text-center">
+                        <span class="page-dot" *ngFor="let item of DOMHandler.chunks; let i = index"
+                            [ngClass]="{'page-dot-active': i == DOMHandler.n}" (click)="DOMHandler.selectChunk(i)">
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <a class=" link ml-auto" (click)="DOMHandler.next()" *ngIf="DOMHandler.show_next">
+                        Next
+                    </a>
+                </div>
+            </div>
+
+            <div class="row" DOMHandler #DOMHandler="DOMHandler" [list]="fields" [size]="30"
+                [queryList]="field_elements_query_list">
+                <ng-container *ngFor="let item of DOMHandler.display">
+                    <ng-template *ngTemplateOutlet="edit_mode_1; context: {item:item}"></ng-template>
+                </ng-container>
+            </div>
+            <div class="row" style="margin-top: 15px;">
+                <div class="col-md-1">
+                    <a class="link mr-auto" (click)="DOMHandler.prev()" *ngIf="DOMHandler.show_prev">
+                        Prev
+                    </a>
+                </div>
+
+                <div class="col-md-10">
+                    <div class="text-center">
+                        <span class="page-dot" *ngFor="let item of DOMHandler.chunks; let i = index"
+                            [ngClass]="{'page-dot-active': i == DOMHandler.n}" (click)="DOMHandler.selectChunk(i)">
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <a class=" link ml-auto" (click)="DOMHandler.next()" *ngIf="DOMHandler.show_next">
+                        Next
+                    </a>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</form>
+
+<ng-template #read_only_mode_label let-item="item">
+    <!-- Label -->
+    <ng-container>
+        <!-- If field is not mandatory, * is not required next to the label -->
+        <mat-label *ngIf="!item.mandatory_flag" [class]="item.label_class ? 'label ' +item.label_class :'label'"
+            [title]="!item.label_in_line?((item.label_code && item.label_code != '') ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.label_code | translate)|HTMLFormatter):''):''"
+            [ngClass]="{'text-nowrap': !item.label_in_line}"
+            [ngStyle]="{'color': !item.label_in_line ? null : 'inherit !important'} | AddNgStylePipe : (item.label_css || null)">
+            <span *ngIf="item.label_code"
+                [innerHTML]="(item.label_code && item.label_code != '') ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.label_code | translate)|HTMLFormatter):''"></span>
+        </mat-label>
+
+        <!-- If field is mandatory, * is required next to the label -->
+        <mat-label *ngIf="item.mandatory_flag" [class]="item.label_class ? 'label ' +item.label_class :'label'"
+            [title]="!item.label_in_line?((item.label_code && item.label_code != '') ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.label_code | translate)|HTMLFormatter):''):''"
+            [ngClass]="{'text-nowrap': !item.label_in_line}"
+            [ngStyle]="{'color': !item.label_in_line ? null : 'inherit !important'} | AddNgStylePipe : (item.label_css || null)">
+
+            <span *ngIf="item.label_code" [innerHTML]="((item.label_code && item.label_code != '') ? ((item.label_code && item.label_code != '') ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.label_code | translate)|HTMLFormatter):''):'')
+    + ' *'">
+            </span>
+        </mat-label>
+    </ng-container>
+
+    <!-- If label is not present for the field, the gap of the label element must be filled for UI purpose -->
+    <mat-label class="label" [ngStyle]="(item.label_css || null) | JSONParserAssign" style="background: transparent;"
+        *ngIf="!item.label_code">
+        <span style="visibility: hidden;">
+            a
+        </span>
+    </mat-label>
+</ng-template>
+
+<ng-template #read_only_mode let-item="item" let-hide_label="hide_label" let-field_group="field_group"
+    let-section_details="section_details">
+
+    <!-- if child fields are not present 
+     *ngIf="!(item && item.child_fields && item.child_fields.length)"
+    -->
+    <ng-container>
+        <!-- ng-template read_only_mode_label for displaying the Label, hide_label flag used to hide the label when displaying the data in table view -->
+        <ng-container *ngIf="!hide_label">
+            <ng-container *ngTemplateOutlet="read_only_mode_label; context: {item:item}">
+            </ng-container>
+        </ng-container>
+
+        <!-- Value to be displayed below label -->
+        <div style="min-height: 22px;font-size:13px;padding-left: 5px;overflow:hidden;">
+            <!-- Prefix start -->
+            <span matPrefix class="prefix-readonly"
+                *ngIf="item.prefix_code">{{(item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.prefix_code) | translate}}&nbsp;</span>
+            <!-- Prefix end -->
+            <!-- Value to be displayed -->
+            <ng-container *ngIf="section_details && section_details.data && section_details.data[0]">
+                <!-- Email ID -->
+                <ng-template *ngTemplateOutlet="read_only_mode_data; context: {item: item}">
+                </ng-template>
+
+            </ng-container>
+
+            <!-- Suffix -->
+            <span matSuffix class="suffix-readonly ml-1"
+                *ngIf="item.suffix_code">&nbsp;{{(item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.suffix_code) | translate}}</span>
+
+
+            <!-- If child fields are present, display the child fields -->
+            <ng-container *ngFor="let child of item.child_fields">
+                <ng-template *ngTemplateOutlet="read_only_mode_data; context: {item: child}">
+                </ng-template>
+            </ng-container>
+        </div>
+    </ng-container>
+</ng-template>
+
+<ng-template #read_only_mode_data let-item="item">
+    <ng-container *ngIf="item.control_type_id == 5">
+        <div (click)="onEmailClick()" [ngClass]="{ 'email' : (openMailer? true : false)}">
+            {{section_details.data[0][item.field_name]}}</div>
+    </ng-container>
+
+    <!-- Date -->
+    <ng-container *ngIf="item.control_type_id == 9">
+        {{section_details.data[0][item.field_name] | UtcToLocalTime | date: 'd-MMM-yyyy'}}
+        <!-- &nbsp;{{item.time_to_be_considered ? item.time_to_be_considered : ''}} -->
+    </ng-container>
+
+    <!-- Date time -->
+    <ng-container *ngIf="item.control_type_id == 10">
+        {{section_details.data[0][item.field_name] | UtcToLocalTime | date: 'd-MMM-yyyy h:mm a'}}
+    </ng-container>
+
+
+    <!-- For single / multiselect / radio buttons -->
+    <ng-container *ngIf="item.master_prop_name">
+        {{section_details.data[0][item.field_name] | DynamicFieldMasterTitle : masters[item.master_prop_name] : masters}}
+    </ng-container>
+
+    <!-- Checkbox -->
+    <ng-container *ngIf="item.control_type_id == 12">
+        <span
+            [innerHTML]="section_details.data[0][item.field_name] ? (item.checkbox_true_label ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.checkbox_true_label | translate) |HTMLFormatter) :'Yes') : (item.checkbox_false_label ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.checkbox_false_label | translate) |HTMLFormatter) :'No')">
+        </span>
+    </ng-container>
+
+
+    <!-- For fields having control type as rating -->
+    <ng-container *ngIf="item.control_type_id == 13">
+        <app-rating [max_value]="item.max_value" [min_value]="item.min_value" [readonly]="true"
+            [value]="section_details.data[0][item.field_name]">
+        </app-rating>
+    </ng-container>
+
+    <!-- For fields having control type as html text editor -->
+    <ng-container *ngIf=" item.control_type_id==17">
+        <div [innerHtml]="section_details.data[0][item.field_name] | HTMLFormatter ">
+        </div>
+    </ng-container>
+
+    <!-- For fields having control type as documents -->
+    <ng-container *ngIf="item.control_type_id == 19 || item.control_type_id == 20 || item.control_type_id == 23">
+        {{section_details.data[0][item.field_name] | DynamicFilesTitlePipe }}
+        <span class="ml-1" *ngIf="section_details.data[0][item.field_name] && item.control_type_id == 19">
+            <a class="download"
+                [attr.href]="section_details.data[0][item.field_name][0] && section_details.data[0][item.field_name][0]['content'] ? ((section_details.data[0][item.field_name][0]['content']) | SafeFilePipe):(section_details.data[0][item.field_name][0]['file_path'] && section_details.data[0][item.field_name][0]['file_path'] != '' ? section_details.data[0][item.field_name][0]['file_path']+'?original_type=1' : '')"
+                [attr.download]="section_details.data[0][item.field_name][0]['file_title']" matTooltip="Download"
+                target='_blank'>
+                <i class="fa fa-download" aria-hidden="true"></i>
+            </a>
+        </span>
+        <span *ngIf="section_details.data[0][item.field_name]" class="ml-1"><i class="fa fa-external-link pointer"
+                matTooltip="View" style="color:#555"
+                (click)="viewDocument(section_details.data[0][item.field_name],null)"></i>
+        </span>
+
+        <div class="mt-4"
+            *ngIf="section_details.data && section_details.data[0] && section_details.data[0][item.field_name] && section_details.data[0][item.field_name][0] && section_details.data[0][item.field_name][0]['file_path'] && section_details.data[0][item.field_name][0]['file_path'].indexOf('http') > -1 && section_details.data[0][item.field_name][0]['file_path'].split('.') && item.control_type_id == 23">
+            <object id="resumeViewer" frameborder="0" style="width: 100%;height: 500px;"
+                [data]="section_details.data[0][item.field_name][0]['file_path'] | SafeFilePipe"></object>
+        </div>
+
+    </ng-container>
+
+    <!-- Phone number -->
+    <ng-container *ngIf="item.control_type_id == 21 || item.control_type_id == 26">
+        <span [ngClass]="{'a_link pointer': item.function_name && item.function_name !='' }"
+            (click)="evalFunction(item.function_name,data,form,parent_form)">
+            {{section_details.data[0][item.field_name] | PhoneNumberPipe : item.description : item.max_length}}</span>
+    </ng-container>
+
+    <!-- When control type is none of the above -->
+    <ng-container
+        *ngIf="item.control_type_id != 26 && item.control_type_id != 19 &&item.control_type_id != 10 &&item.control_type_id != 7 && item.control_type_id != 8 && item.control_type_id != 11 && item.control_type_id != 9 && item.control_type_id != 17 && item.control_type_id != 20 && item.control_type_id != 21 && item.control_type_id != 5 && item.control_type_id != 12 && item.control_type_id != 13 && item.control_type_id != 23">
+        <span *ngIf="item.field_id != 10538">
+            {{section_details.data[0][item.field_name]}}
+        </span>
+
+        <!-- Hardcoded for applicant details name click -->
+
+        <span (click)=" item.func || LabelClicked(item)" [ngClass]="{ 'email' : (openMailer? true : false)}"
+            *ngIf=" item.func || item.field_id == 10538">
+            <!-- if the func is available in field details or field id of summary is 10538 is hardcoded-->
+            {{section_details.data[0][item.field_name]}}
+        </span>
+    </ng-container>
+</ng-template>
+
+<ng-template #edit_mode_1 let-item="item">
+    <ng-container *ngIf="item.line_break">
+        <div class="row w-100"></div>
+    </ng-container>
+    <ng-container>
+        <div [ngClass]="item.field_class" [ngStyle]="item.field_css | AddNgStylePipe : {}"
+            [class]="item.visibility == 0  ? 'd-none': 'col-md-'+(item.field_width || 3)"
+            *ngIf="(form.value | DynamicFieldConditionCheckPipe : item.conditions : (parent_form?parent_form:null) : form.get([item.field_name]): item : form) | DynamicFieldProcessingPipe : form.value : item.dynamic_validation : (parent_form ? parent_form : null) : form.get([item.field_name]) : item : null : form">
+            <ng-container *ngIf="!(item && item.child_fields && item.child_fields.length)">
+                <ng-template *ngTemplateOutlet="edit_mode_1_fields; context: {item:item}"></ng-template>
+            </ng-container>
+
+            <div *ngIf="item && item.child_fields && item.child_fields.length"
+                [ngClass]="{'row':item && item.child_fields && item.child_fields.length}">
+                <div [ngClass]="item.field_class" [ngStyle]="item.field_css | AddNgStylePipe : {}"
+                    [class]="item.visibility == 0  ? 'd-none': 'col-md-'+(item.field_width || 3)"
+                    *ngIf="(form.value | DynamicFieldConditionCheckPipe : item.conditions : (parent_form?parent_form:null) : form.get([item.field_name]): item : form) | DynamicFieldProcessingPipe : form.value : item.dynamic_validation : (parent_form ? parent_form : null) : form.get([item.field_name]) : item : null : form">
+                    <ng-template *ngTemplateOutlet="edit_mode_1_fields; context: {item:item}">
+
+                    </ng-template>
+                </div>
+
+                <ng-container *ngFor="let child of item.child_fields">
+                    <div [ngClass]="item.field_class" [ngStyle]="item.field_css | AddNgStylePipe : {}"
+                        [class]="item.visibility == 0  ? 'd-none': 'col-md-'+(item.field_width || 3)"
+                        *ngIf="(form.value | DynamicFieldConditionCheckPipe : item.conditions : (parent_form?parent_form:null) : form.get([item.field_name]): item : form) | DynamicFieldProcessingPipe : form.value : item.dynamic_validation : (parent_form ? parent_form : null) : form.get([item.field_name]) : item : null : form">
+                        <ng-template *ngTemplateOutlet="edit_mode_1_fields; context: {item:child}">
+
+                        </ng-template>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </ng-container>
+</ng-template>
+
+<ng-template #edit_mode_1_fields let-item="item">
+    <ng-container [ngSwitch]="item.control_type_id">
+        <!-- Toggle -->
+        <ng-container *ngSwitchCase="1">
+            <app-toggle [form]="form" [controlName]="item.field_name" [disabled]="item.is_disable"
+                [label]="(item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.label_code) | translate "
+                [style]="item.styles" [required]="item.mandatory_flag == 1 ? true :false">
+            </app-toggle>
+        </ng-container>
+
+        <!-- text -->
+        <ng-container *ngSwitchCase="2">
+            <ng-container *ngIf="item.field_name && form.get([item.field_name])">
+                <app-text [transform]="item.transform"
+                    [placeholder]="(item.placeholder_label_code) ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.placeholder_label_code) | translate) : (item.placeholder)"
+                    [style]="item.styles" [form]="form" [controlName]="item.field_name" [disabled]="item.is_disable"
+                    [label_block]="item.label_in_line"
+                    [label]="(item.label_code && item.label_code != '') ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.label_code) | translate):''"
+                    [prefix_label]="item.prefix_code ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.prefix_code) | translate):'' "
+                    [suffix_label]="item.suffix_code?((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.suffix_code) | translate):''"
+                    [required]="item.mandatory_flag == 1 ? true :false" [data]="form.value[item.field_name]"
+                    control_type="string" [label_class]="item.label_class"
+                    [maxLength]="item.max_length ?item.max_length:''" [pattern]="item.pattern">
+                </app-text>
+            </ng-container>
+        </ng-container>
+
+        <!-- Number -->
+        <ng-container *ngSwitchCase="3">
+            <ng-container *ngIf="item.field_name && form.get([item.field_name])">
+                <app-number
+                    [placeholder]="(item.placeholder_label_code) ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.placeholder_label_code) | translate) : (item.placeholder)"
+                    [style]="item.styles" [form]="form" [controlName]="item.field_name" [disabled]="item.is_disable"
+                    [label_block]="item.label_in_line"
+                    [label]="(item.label_code && item.label_code != '') ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.label_code) | translate):''"
+                    [prefix_label]="item.prefix_code ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.prefix_code) | translate):'' "
+                    [suffix_label]="item.suffix_code?((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.suffix_code) | translate):''"
+                    [required]="item.mandatory_flag == 1 ? true :false" [maxLength]="item.max_length"
+                    [minLength]="item.min_length" [maxValue]="item.max_value" [minValue]="item.min_value"
+                    [label_class]="item.label_class">
+                </app-number>
+            </ng-container>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="4">
+            <!-- //location -->
+        </ng-container>
+
+        <!-- email -->
+        <ng-container *ngSwitchCase="5">
+            <ng-container *ngIf="item.field_name && form.get([item.field_name])">
+                <app-text
+                    [placeholder]="(item.placeholder_label_code) ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.placeholder_label_code) | translate) : (item.placeholder)"
+                    [style]="item.styles" [form]="form" [controlName]="item.field_name" [disabled]="item.is_disable"
+                    [label_block]="item.label_in_line"
+                    [label]="(item.label_code && item.label_code != '') ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.label_code) | translate):''"
+                    [required]="item.mandatory_flag == 1 ? true : false" control_type="email"
+                    [maxLength]="item.max_length ? item.max_length:''" [label_class]="item.label_class">
+                </app-text>
+            </ng-container>
+        </ng-container>
+
+        <!-- password -->
+        <ng-container *ngSwitchCase="6">
+            <app-password
+                [placeholder]="(item.placeholder_label_code) ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.placeholder_label_code) | translate) : (item.placeholder)"
+                [style]="item.styles" [form]="form" [controlName]="item.field_name" [disabled]="item.is_disable"
+                [label_block]="item.label_in_line"
+                [label]="(item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.label_code) | translate "
+                [required]="item.mandatory_flag == 1 ? true :false" [maxLength]="item.max_length ?item.max_length:''">
+            </app-password>
+        </ng-container>
+
+        <!-- Single Select -->
+        <ng-container *ngSwitchCase="7">
+            <ng-container *ngIf="item.field_name && form.get([item.field_name])">
+                <tm-select [is_required]="true" [label_block]="item.label_in_line"
+                    [master_form_code]="item.master_form_code"
+                    [options]="(masters[item.master_prop_name] && masters[item.master_prop_name].data)?masters[item.master_prop_name].data:masters[item.master_prop_name]"
+                    [form_group]="form" [form_control]="item.field_name" [disabled]="item.is_disable"
+                    title_property="title" id_property="code"
+                    [placeholder]="(item.placeholder_label_code) ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.placeholder_label_code) | translate) : (item.placeholder)"
+                    float_label="always"
+                    [prefix_label]="item.prefix_code ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.prefix_code) | translate):null "
+                    [suffix_label]="item.suffix_code?((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.suffix_code) | translate):null"
+                    [label]="(item.label_code && item.label_code != '') ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.label_code) | translate):''"
+                    (selected_obj)="selected_obj($event)" [data]="form.value[item.field_name]"
+                    [mandatory]="item.mandatory_flag == 1 ? true :false" [master_obj]="masters[item.master_prop_name]"
+                    (fetchEntries)="fetchMasterEntries($event,item)"
+                    [enable_virtual_scroll]="item.enable_virtual_scroll" [label_class]="item.label_class"
+                    [label_css]="item.label_css">
+                </tm-select>
+            </ng-container>
+        </ng-container>
+
+        <!-- Multi Select -->
+        <ng-container *ngSwitchCase="8">
+            <ng-container *ngIf="item.field_name && form.get([item.field_name])">
+                <tm-multi-select
+                    [options]="(masters[item.master_prop_name] && masters[item.master_prop_name].data)?masters[item.master_prop_name].data:masters[item.master_prop_name]"
+                    [form_group]="form" [form_control]="item.field_name" [disabled]="item.is_disable"
+                    title_property="title" id_property="code" [master_form_code]="item.master_form_code"
+                    [placeholder]="(item.placeholder_label_code) ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.placeholder_label_code) | translate) : (item.placeholder)"
+                    float_label="always" [label_block]="item.label_in_line"
+                    [label]="(item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.label_code) | translate "
+                    (selected_obj)="selected_obj($event)" [mandatory]="item.mandatory_flag == 1 ? true : false"
+                    (fetchEntries)="fetchMasterEntries($event,item)"
+                    [data]="form.value[item.field_name]|JSONParserAssign"
+                    [enable_virtual_scroll]="item.enable_virtual_scroll" [master_obj]="masters[item.master_prop_name]">
+                </tm-multi-select>
+            </ng-container>
+        </ng-container>
+
+        <!-- Date -->
+        <ng-container *ngSwitchCase="9">
+            <ng-container *ngIf="item.field_name && form.get([item.field_name])">
+                <tm-date-picker
+                    [placeholder]="(item.placeholder_label_code) ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.placeholder_label_code) | translate) : (item.placeholder)"
+                    [style]="item.styles" [form]="form" [controlName]="item.field_name" [disabled]="item.is_disable"
+                    [label]="(item.label_code && item.label_code != '') ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.label_code) | translate):''"
+                    [required]="item.mandatory_flag == 1 ? true :false" (onChange)="onChange($event, item)"
+                    [field]="item" [minValue]="item.min_value || null" [maxValue]="item.max_value || null"
+                    [time_to_be_considered]="item.time_to_be_considered">
+                </tm-date-picker>
+            </ng-container>
+        </ng-container>
+
+        <!-- Date Time -->
+        <ng-container *ngSwitchCase="10">
+            <app-date-time-picker
+                [placeholder]="(item.placeholder_label_code) ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.placeholder_label_code) | translate) : (item.placeholder)"
+                [style]="item.styles" [form]="form" [controlName]="item.field_name" [disabled]="item.is_disable"
+                [label]="(item.label_code && item.label_code != '') ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.label_code) | translate):''"
+                [required]="item.mandatory_flag == 1 ? true :false" (onChange)="onChange($event, item)"
+                [minValue]="item.min_value || null" [maxValue]="item.max_value || null">
+            </app-date-time-picker>
+        </ng-container>
+
+
+        <!-- Radio Button -->
+        <ng-container *ngSwitchCase="11">
+            <!-- <div [style.visibility]="item.visibility == 1 ? 'visible':'hidden'"> -->
+            <ng-container *ngIf="item.field_name && form.get([item.field_name])">
+                <app-radio [form]="form" [controlName]="item.field_name" [label_block]="item.label_in_line"
+                    [label]="(item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.label_code) | translate "
+                    [required]="item.mandatory_flag == 1 ? true :false"
+                    [options]="(masters[item.master_prop_name] && masters[item.master_prop_name].data)?masters[item.master_prop_name].data:masters[item.master_prop_name]">
+                </app-radio>
+            </ng-container>
+        </ng-container>
+
+        <!-- Check Box -->
+        <ng-container *ngSwitchCase="12">
+            <!-- <div [style.visibility]="item.visibility == 1 ? 'visible':'hidden'"> -->
+            <app-checkbox [form]="form" [controlName]="item.field_name" [disabled]="item.is_disable"
+                [label_block]="item.label_in_line"
+                [label]="item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.label_code | translate "
+                [required]="item.mandatory_flag == 1 ? true :false"></app-checkbox>
+        </ng-container>
+
+        <!-- Rating -->
+        <ng-container *ngSwitchCase="13">
+            <app-rating [form_control]="form.get(item.field_name)"
+                [label]="item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.label_code | translate "
+                [required]="item.mandatory_flag == 1 ? true :false" [max_value]="item.max_value"
+                [min_value]="item.min_value">
+            </app-rating>
+        </ng-container>
+
+        <!--Slider  -->
+        <ng-container *ngSwitchCase="14">
+
+        </ng-container>
+
+        <!--Slider Range -->
+        <ng-container *ngSwitchCase="15">
+
+        </ng-container>
+
+        <!--TextArea -->
+        <ng-container *ngSwitchCase="16">
+            <ng-container *ngIf="item.field_name && form.get([item.field_name])">
+                <app-textarea [form]="form" [controlName]="item.field_name" [disabled]="item.is_disable"
+                    [label_block]="item.label_in_line"
+                    [label]="(item.label_code && item.label_code != '') ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.label_code) | translate):''"
+                    [required]="item.mandatory_flag == 1 ? true :false">
+                </app-textarea>
+            </ng-container>
+        </ng-container>
+
+        <!--ckeditor -->
+        <ng-container *ngSwitchCase="17">
+            <app-html-text-editor [form]="form" [controlName]="item.field_name" [disabled]="item.is_disable"
+                [label_block]="item.label_in_line"
+                [label]="(item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.label_code) | translate "
+                [required]="item.mandatory_flag == 1 ? true :false">
+            </app-html-text-editor>
+        </ng-container>
+
+        <!--button Group -->
+        <ng-container *ngSwitchCase="18">
+
+        </ng-container>
+
+        <!--File-single select  -->
+        <ng-container *ngSwitchCase="19">
+            <ng-container *ngIf="item.field_name && form.get([item.field_name])">
+                <app-files ngClass="global_lang" [result]="prev_value" [multiple]="0" [flag]="1" #appfile [form]="form"
+                    [controlName]="item.field_name" [disabled]="item.is_disable"
+                    [required]="item.mandatory_flag == 1 ? true :false"
+                    [label]="(item.label_code && item.label_code != '') ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.label_code) | translate):''"
+                    [callback_func]="callback_func" [on_change_func]="item.on_change_func"
+                    [supported_file_type]="item.supported_file_type" [minLength]="item.min_length"
+                    [maxLength]="item.max_length" [verification_required]="verification_required">
+                    <!--(returnFiles)="filesChanged($event)"-->
+                </app-files>
+            </ng-container>
+        </ng-container>
+
+        <!-- Multiple files -->
+        <ng-container *ngSwitchCase="23">
+            <ng-container *ngIf="item.field_name && form.get([item.field_name])">
+                <app-files ngClass="global_lang" [result]="prev_value" [multiple]="0" [flag]="1" #appfile [form]="form"
+                    [controlName]="item.field_name" [disabled]="item.is_disable"
+                    [required]="item.mandatory_flag == 1 ? true :false"
+                    [label]="(item.label_code && item.label_code != '') ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.label_code) | translate):''"
+                    [callback_func]="callback_func" [on_change_func]="item.on_change_func"
+                    [supported_file_type]="item.supported_file_type" [minLength]="item.min_length"
+                    [maxLength]="item.max_length" [verification_required]="verification_required">
+                    <!--(returnFiles)="filesChanged($event)"-->
+                </app-files>
+            </ng-container>
+        </ng-container>
+
+        <!--File-Multiple select  -->
+        <ng-container *ngSwitchCase="20">
+            <ng-container *ngIf="item.field_name && form.get([item.field_name])">
+                <app-files ngClass="global_lang" [result]="prev_value" [form]="form" #appfile
+                    [controlName]="item.field_name" [disabled]="item.is_disable" [multiple]="1" [flag]="1"
+                    [required]="item.mandatory_flag == 1 ? true :false"
+                    [label]="(item.label_code && item.label_code != '') ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.label_code) | translate):''"
+                    [callback_func]="callback_func" [on_change_func]="item.on_change_func"
+                    [supported_file_type]="item.supported_file_type" [minLength]="item.min_length"
+                    [maxLength]="item.max_length" [verification_required]="verification_required">
+                </app-files>
+            </ng-container>
+        </ng-container>
+
+
+        <!--Phone Number  -->
+        <ng-container *ngSwitchCase="21">
+            <app-phone-number
+                [placeholder]="(item.placeholder_label_code) ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.placeholder_label_code) | translate) : (item.placeholder)"
+                [style]="item.styles" [form]="form" [controlName]="item.field_name" [disabled]="item.is_disable"
+                [label_block]="item.label_in_line"
+                [label]="(item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.label_code) | translate "
+                [required]="item.mandatory_flag == 1 ? true :false" [maxLength]="item.max_length ? item.max_length:''"
+                [data]="form.value[item.field_name]" [split_index_array]="item.description || [3,3]"
+                [minLength]="item.min_length ? item.min_length : ''" [pattern]="item.pattern">
+            </app-phone-number>
+        </ng-container>
+
+        <!-- Postal code control -->
+        <ng-container *ngSwitchCase="26">
+            <app-phone-number
+                [placeholder]="(item.placeholder_label_code) ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.placeholder_label_code) | translate) : (item.placeholder)"
+                [style]="item.styles" [form]="form" [controlName]="item.field_name" [disabled]="item.is_disable"
+                [label_block]="item.label_in_line" [split_index_array]="item.description || [4]"
+                [label]="(item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.label_code) | translate "
+                [required]="item.mandatory_flag == 1 ? true :false" [maxLength]="item.max_length ? item.max_length:''"
+                [data]="form.value[item.field_name]" [minLength]="item.min_length ? item.min_length : ''"
+                [pattern]="item.pattern">
+            </app-phone-number>
+        </ng-container>
+
+        <!-- If control type doesn't match with the above cases, text field will be displayed -->
+        <ng-container *ngSwitchDefault>
+            <ng-container [style.visibility]="item.visibility == 1 ? 'visible':'hidden'">
+                <app-text
+                    [placeholder]="(item.placeholder_label_code) ? ((item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.placeholder_label_code) | translate) : (item.placeholder)"
+                    [style]="item.styles" [form]="form" [controlName]="item.field_name" [disabled]="item.is_disable"
+                    [label_block]="item.label_in_line"
+                    [label]="(item.module_code+'_'+item.sub_module_code+'_'+item.form_code+'_'+item.label_code) | translate "
+                    [required]="item.mandatory_flag == 1 ? true :false" [pattern]="item.pattern">
+                </app-text>
+            </ng-container>
+        </ng-container>
+    </ng-container>
+</ng-template>

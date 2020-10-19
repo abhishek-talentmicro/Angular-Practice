@@ -1,0 +1,27 @@
+<!-- <form [formGroup]="form">
+    <mat-form-field>
+        <mat-label>{{label}}</mat-label>
+        <textarea  matInput [placeholder]="placeholder" [value]="value" type="text" [id]="id" [style]="style"
+            [formControlName]="controlName" [required]="required">
+            </textarea>
+        <mat-hint>{{hint}}</mat-hint>
+        <mat-error>
+            {{error_msg}}
+        </mat-error>
+    </mat-form-field>
+</form> -->
+<label *ngIf="label_block" class="m-0" class="input-label html-label" [ngClass]="{'req' : required }"
+    [innerHtml]="label | HTMLFormatter"></label>
+<mat-label *ngIf="!label_block" class="input-label text-nowrap" [ngClass]="{req : required }"
+    [innerHtml]="label | HTMLFormatter">
+</mat-label>
+<div class="form-group" style="box-shadow: 0 0 1px 1px #b3b3b3">
+    <form [formGroup]="form">
+        <!-- <ckeditor [formControlName]="controlName" [editor]="Editor" (ready)="onReady($event)" placeholder="Content"
+            style="box-shadow: none !important;">
+        </ckeditor> -->
+        <angular-editor *ngIf="controlName" (contextmenu)="clickListner($event)" (change)="onChangeListner($event)"
+            [formControlName]="controlName" [config]="editorConfig">
+        </angular-editor>
+    </form>
+</div>

@@ -1,0 +1,363 @@
+// @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+// @import "~@ng-select/ng-select/themes/material.theme.css";
+@import "~@mat-datetimepicker/core/datetimepicker/datetimepicker-theme.scss";
+@import "~@angular/material/theming";
+// @import "~@fullcalendar/core/main.css";
+// @import "~@fullcalendar/daygrid/main.css";
+// @import "~@fullcalendar/timegrid/main.css";
+
+@include mat-core();
+
+$app-primary: mat-palette($mat-indigo);
+$app-accent: mat-palette($mat-pink);
+$app-warn: mat-palette($mat-red);
+
+// Custom Sass colors vars (will be available in all the project)
+$primary: mat-color($app-primary);
+$accent: mat-color($app-accent);
+$warn: mat-color($app-warn);
+
+$theme: mat-light-theme($app-primary, $app-accent, $app-warn);
+
+@include angular-material-theme($theme);
+// Using the $theme variable from the pre-built theme you can call the theming function
+@include mat-datetimepicker-theme($theme);
+//style.css
+body {
+  // background-color: #fff7f2 !important;
+  background-color: #f5f5f5 !important;
+}
+
+.tab-content {
+  background: white !important;
+}
+
+.mat-drawer-container {
+  background: transparent !important;
+}
+
+.btn-light.active,
+.search-input-group:hover,
+.language-tabs.active,
+.nav-tabs,
+.vertical-nav .nav-item:hover {
+  color: #00b0f0 !important;
+}
+
+.vertical-nav .nav-item:hover {
+  background: transparent !important;
+}
+
+.vertical-nav .nav-item.active {
+  background: transparent !important;
+  color: #ff7112 !important;
+  border-left: 1px solid;
+}
+
+.nav-tabs .nav-link {
+  color: #555;
+  border: 0px solid gainsboro !important;
+  border-left: 0 !important;
+  background: linear-gradient(to left, #f0f0f0, #dbdbdb);
+  //   background: linear-gradient(to left, #f0f0f0, #fafafa);
+}
+
+.nav-tabs .nav-link:hover {
+  background: #f9f9f9;
+}
+
+.fa.fa-times:hover {
+  color: #eb0000 !important;
+}
+
+.nav-tabs .nav-link.active {
+  background: white !important;
+  border-left: 1px solid gainsboro !important;
+  border-right: 1px solid gainsboro !important;
+}
+
+// ul.nav.nav-tabs.justify-content-start {
+//   //   border-left: 1px solid gainsboro;
+// }
+
+.nav-link.active,
+.nav-tabs .nav-link.active {
+  color: #ff6600 !important;
+  border-bottom-color: white !important;
+}
+
+.navbar-dark .navbar-nav .nav-link:focus {
+  color: #002257;
+}
+
+.language-tabs {
+  color: #656b79 !important;
+  background-color: #e9ecf0 !important;
+  border-color: #e9ecf0 !important;
+  margin-right: 2px;
+  padding: 3px 10px !important;
+}
+
+.language-tabs.new {
+  color: white !important;
+  background-color: #17a2b8 !important;
+  border-color: #17a2b8 !important;
+  margin-right: 2px;
+  padding: 3px 10px !important;
+}
+
+.language-tabs:hover.new {
+  background-color: #17a2b8 !important;
+  border-color: #17a2b8 !important;
+}
+
+.language-tabs:hover {
+  background-color: #e2e6ea !important;
+  border-color: #dae0e5 !important;
+}
+
+.language-tabs-delete i,
+.clear-input {
+  color: darkred;
+}
+
+.error-message {
+  background: lightcoral;
+}
+
+.success-message {
+  background: darkseagreen;
+}
+
+.created-updated {
+  border-right: 1px solid gainsboro;
+}
+
+.search-input-group {
+  border-color: white !important;
+  background: white !important;
+}
+
+.mat-radio-checked .mat-radio-outer-circle,
+.language-tabs.active {
+  border-color: #00b0f0 !important;
+}
+
+.mat-radio-checked .mat-radio-inner-circle,
+.mat-checkbox-checked.mat-accent .mat-checkbox-background,
+.mat-progress-bar-fill::after {
+  background: #00b0f0 !important;
+}
+
+.clear-input:hover,
+.mat-form-field-required-marker {
+  color: red !important;
+}
+
+.language-tabs.active {
+  background: white !important;
+}
+
+.language-tabs.inactive,
+.language-tabs.archived {
+  color: lightcoral !important;
+}
+
+.bg-light {
+  background: #f8f9fa;
+}
+
+.form-body {
+  border-top-color: gainsboro !important;
+  background: white !important;
+}
+
+.entity-form-body {
+  border-top-color: gainsboro !important;
+}
+
+.form-heading {
+  border-bottom-color: gainsboro !important;
+  background: aliceblue;
+}
+
+.form-status-bar {
+  border-right-color: gainsboro !important;
+}
+
+.mat-progress-spinner circle,
+.mat-spinner circle {
+  stroke: gainsboro;
+}
+
+.mat-progress-bar-buffer {
+  background-color: white;
+}
+
+//end
+//header
+app-header {
+  .navbar-dark .navbar-nav .nav-link:hover .dashboard-icon,
+  .active {
+    color: #00b0f0 !important;
+  }
+  .navbar-dark .navbar-nav .nav-link:hover {
+    color: #002257 !important;
+  }
+  .navbar-dark .navbar-nav .nav-link {
+    color: #002257 !important;
+  }
+  .navbar-dark .navbar-nav .nav-link.active {
+    color: #ff7112 !important;
+  }
+  .navbar {
+    border-bottom: 2px solid #002257;
+  }
+  .bg-dark {
+    background-color: white !important;
+    //   #343a40!important
+  }
+  .divider {
+    border-right-color: #f7f7f7 !important;
+  }
+}
+
+//end
+//university-details
+app-university-details {
+  .rating-list li:hover,
+  .rating-list li:hover ~ li,
+  .rating-list li.selected {
+    color: #620ee9;
+  }
+  .rating-list li {
+    color: #ddd;
+  }
+  .rating:not(:checked) > label {
+    color: #ddd;
+  }
+  .rating > input:checked ~ label {
+    color: #f70;
+  }
+  .rating:not(:checked) > label:hover,
+  .rating:not(:checked) > label:hover ~ label {
+    color: gold;
+  }
+  .rating > input:checked ~ label:hover,
+  .rating > input:checked ~ label:hover ~ label,
+  .rating > label:hover ~ input:checked ~ label {
+    color: #ea0;
+  }
+}
+
+//end university-details
+//file-upload
+app-file-upload {
+  #drop-zone {
+    color: gainsboro;
+    border-color: gainsboro;
+  }
+  #drop-zone.active {
+    color: black;
+  }
+  .result {
+    box-shadow: 0px 1px 0px 0px gainsboro;
+  }
+}
+
+.mat-radio-checked .mat-radio-inner-circle,
+.mat-checkbox-checked.mat-accent .mat-checkbox-background,
+.mat-progress-bar-fill::after {
+  background: #00b0f0 !important;
+}
+
+//end file-upload
+//footer
+.footer {
+  background-color: #a8c3db;
+  color: #00000094;
+}
+
+.page-footer {
+  box-shadow: 1px 0px 3px 0px gainsboro;
+  background: white;
+}
+
+//end footer
+//image-cropper
+app-image-cropper {
+  .example-handle {
+    color: #ccc;
+  }
+  #cropper-div {
+    border-color: grey;
+  }
+}
+
+.float-right {
+  float: right;
+}
+
+.requirement-view-header,
+.applicant-view-header {
+  background: #283c86;
+  background: -webkit-linear-gradient(to right, #283c86, #45a247);
+  background: linear-gradient(to right, #2873b4, #03628f);
+}
+
+app-tallint-table .tallint-td .checkbox {
+  color: #00b0f0;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.applicant-view .action-items:hover,
+.requirement-view .action-items:hover {
+  color: #ff6600;
+}
+
+#scrollbar::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #f5f5f5;
+}
+
+#scrollbar::-webkit-scrollbar {
+  width: 5px;
+  background-color: #f5f5f5;
+}
+
+#scrollbar::-webkit-scrollbar-thumb {
+  background-color: black;
+  border: 1px solid black;
+  scrollbar-color: dark;
+}
+
+.hgs-icon {
+  color: #002257;
+}
+.hgs-font-color {
+  color: #002257;
+}
+.hgs-bg {
+  color: #002257;
+}
+.hgs-badge-bg {
+  background-color: #fb8c00;
+}
+.scrollbar {
+  background-color: #f5f5f5;
+  float: left;
+  height: 300px;
+  margin-bottom: 25px;
+  margin-left: 22px;
+  margin-top: 40px;
+  width: 65px;
+  overflow-y: scroll;
+}
+
+::ng-deep mat-label p {
+  display: inline !important;
+}

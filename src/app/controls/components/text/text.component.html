@@ -1,0 +1,88 @@
+<form [formGroup]="form">
+    <div *ngIf="control_type == 'string'">
+        <label *ngIf="label_block" class="m-0 html-label" [ngClass]="{'req':required}"
+            [innerHtml]="label | HTMLFormatter"></label>
+        <mat-form-field [title]="label ? (label | HTMLFormatter : 1) : ''" floatLabel="always" appearance="standard"
+            [ngClass]="label_class && label_class!='' ?label_class:''">
+            <mat-label *ngIf="label_block"></mat-label>
+            <!-- placeholder looks like label so empty mat label has been added -->
+            <mat-label *ngIf="!label_block&&required&&label" class="req" [innerHtml]="label | HTMLFormatter">
+            </mat-label>
+            <mat-label *ngIf="!label_block&&!required&&label" [innerHtml]="label | HTMLFormatter"></mat-label>
+            <span matPrefix class="prefix" *ngIf="prefix_label">{{prefix_label}}&nbsp;</span>
+            <span matSuffix class="suffix" *ngIf="suffix_label">&nbsp;{{suffix_label}}</span>
+            <input (keydown)="regexCheck($event)" (keyup)="transformFn()" matInput [placeholder]="placeholder"
+                [value]="value == undefined ? '' : value" type="text" [id]="id" [style]="style"
+                [formControlName]="controlName" [readonly]="disabled ? true : false" [maxlength]="maxLength">
+            <mat-error *ngIf="form.get([controlName]).hasError('required');else maxlength">
+                Field is mandatory
+                <!-- <span [innerHTML]="label + ' is mandatory'"></span> -->
+            </mat-error>
+            <ng-template #maxlength>
+                <mat-error *ngIf="form.get([controlName]).hasError('maxlength');else minlength">
+                    Maximum length ({{maxLength}}) has exceeded
+                </mat-error>
+            </ng-template>
+            <ng-template #minlength>
+                <mat-error *ngIf="form.get([controlName]).hasError('minlength');else maxvalue">
+                    Minimum length must be {{minLength}} digits
+                </mat-error>
+            </ng-template>
+            <ng-template #maxvalue>
+                <mat-error *ngIf="form.get([controlName]).hasError('max');else minvalue">
+                    Value must be lesser than {{maxValue}}
+                </mat-error>
+            </ng-template>
+            <ng-template #minvalue>
+                <mat-error *ngIf="form.get([controlName]).hasError('min'); else pattern">
+                    Value must be greater than {{minValue}}
+                </mat-error>
+            </ng-template>
+            <ng-template #pattern>
+                <mat-error *ngIf="form.get([controlName]).hasError('pattern')">
+                    {{pattern_desc || 'Invalid input'}}
+                </mat-error>
+            </ng-template>
+        </mat-form-field>
+    </div>
+    <div *ngIf="control_type == 'email'">
+        <label *ngIf="label_block&&required" class="m-0" [innerHtml]="label | HTMLFormatter"></label>
+        <label *ngIf="label_block&&!required" class="m-0 req" [innerHtml]="label | HTMLFormatter"></label>
+        <mat-form-field floatLabel="always"  appearance="standard">
+            <mat-label *ngIf="!label_block&&required" class="req" [innerHtml]="label | HTMLFormatter"></mat-label>
+            <mat-label *ngIf="!label_block&&!required" [innerHtml]="label | HTMLFormatter"></mat-label>
+            <input matInput [placeholder]="placeholder" [value]="value == undefined ? '' : value" type="email" [id]="id"
+                [style]="style" [formControlName]="controlName" [readonly]="disabled ? true : false"
+                (keydown)="inputEmail($event)">
+            <mat-error *ngIf="form.get([controlName]).hasError('required');else maxlength">
+                Field is mandatory
+                <!-- <span [innerHTML]="label + ' is mandatory'"></span> -->
+            </mat-error>
+            <ng-template #maxlength>
+                <mat-error *ngIf="form.get([controlName]).hasError('maxlength');else minlength">
+                    Maximum length ({{maxLength}}) has exceeded
+                </mat-error>
+            </ng-template>
+            <ng-template #minlength>
+                <mat-error *ngIf="form.get([controlName]).hasError('minlength');else maxvalue">
+                    Minimum length must be {{minLength}} digits
+                </mat-error>
+            </ng-template>
+            <ng-template #maxvalue>
+                <mat-error *ngIf="form.get([controlName]).hasError('max');else minvalue">
+                    Value must be lesser than {{maxValue}}
+                </mat-error>
+            </ng-template>
+            <ng-template #minvalue>
+                <mat-error *ngIf="form.get([controlName]).hasError('min'); else pattern">
+                    Value must be greater than {{minValue}}
+                </mat-error>
+            </ng-template>
+            <ng-template #pattern>
+                <mat-error *ngIf="form.get([controlName]).hasError('pattern')">
+                    {{pattern_desc || 'Invalid input'}}
+                </mat-error>
+            </ng-template>
+        </mat-form-field>
+    </div>
+</form>

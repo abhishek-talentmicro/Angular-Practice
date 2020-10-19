@@ -1,0 +1,254 @@
+<div class="container-fluid  bg-white text-white ">
+    <div class="header-body">
+        <!-- Card stats -->
+
+        <!-- dynamic header color selection -->
+        <!-- <button mat-icon-button [matMenuTriggerFor]="menu">
+        <i class=" fa fa-cog text-primary"></i>"
+      </button>
+      <mat-menu #menu="matMenu">
+        <span mat-menu-item>
+          <mat-icon (click)="icon(1)" class="bg-primary rounded"></mat-icon>
+          <mat-icon (click)="icon(2)" class="bg-warning rounded">
+          </mat-icon>
+        </span>
+  
+      </mat-menu> -->
+        <div class="row ">
+
+            <div class="col-07">
+                <div class="sidebar-wrapper dash-sidebar " style="z-index: 888; width: 73px;position: fixed;">
+                    <ul class="nav d-inline-block"
+                        style="height: calc( 100vh - 59px ); overflow : auto; min-height: 250px;">
+                        <li *ngFor="let menuItem of template" class="wpx-73">
+                            <span style="outline: none;" (click)="onSectionClick(menuItem) "
+                                [ngClass]="{'active' : current_section.section_id == menuItem.section_id} "
+                                class="nav-link text-center pointer border border-right-0 border-left-0 border-bottom-0  hgs-font-color"
+                                style="line-height: 1;">
+                                <i class="fa fa-{{menuItem.section_icon}} dash-item text-center hgs-icon"
+                                    *ngIf="menuItem['display_title']" style="font-size: 16px; "> </i>
+                                <i class=" text-center dash-item " style="font-size: 12px; "
+                                    *ngIf="!menuItem['display_title']">
+                                    {{menuItem.section_title}}
+                                </i>
+                            </span>
+                        </li>
+                        <li (mouseleave)="team_hover= false">
+                            <div class=" nav-link text-center text-primary pointer team-div-padding  border border-right-0 border-left-0 border-bottom-0"
+                                style="font-size: 12px;" #menuTrigger2 (mouseenter)="team_hover = true">
+                                <button type="button" class="btn no-right-radius f-12 w-5"
+                                    [ngClass]="{'selected-btn' : team_hover}">
+                                    <i class="fa fa-user hgs-icon"></i> {{team_title}} </button>
+                                <div class="btn-group time-button  " *ngIf="team_hover" [@slideInOut]
+                                    style="position: absolute; z-index: 999;" role="group" aria-label="Basic example">
+                                    <ng-container *ngFor="let item of team_buttons; let i=index">
+                                        <button type="button" *ngIf="team_type != item.team_type"
+                                            [ngClass]="{'no-left-radius' : i==0 || i==1 }"
+                                            [ngClass]="{'current-status' : team_type == item.team_type }"
+                                            (click)="team_hover= false; setTeamTitle(item.title, item.team_type)"
+                                            class="btn btn-border f-12 bg-white w-5  ">
+                                            <span class="p-0 m-0" style="white-space: nowrap">{{item.title}} </span>
+                                        </button>
+                                    </ng-container>
+
+
+                                </div>
+                            </div>
+
+                        </li>
+                        <li (mouseleave)="time_hover= false">
+                            <div class=" nav-link text-center text-primary pointer team-div-padding  " #menuTrigger2
+                                (mouseenter)="time_hover = true">
+                                <button type="button" class="btn w-5  f-12 no-right-radius "
+                                    [ngClass]="{'selected-btn' : time_hover}">
+                                    <i class="fa fa-calendar hgs-icon"></i> {{time_title}} </button>
+                                <div class="btn-group time-button " *ngIf="time_hover" [@slideInOut]
+                                    style="position: absolute; z-index: 999;" role="group" aria-label="Basic example">
+                                    <ng-container *ngFor="let item of Buttons; let i =index">
+                                        <button type="button" *ngIf="time_type != item.time_type"
+                                            [ngClass]="{'no-left-radius' : i==0 || i==1 }"
+                                            [ngClass]="{'current-status' : time_type == item.time_type }"
+                                            (click)="time_hover = false; setTimeTitle(item.title, item.time_type)"
+                                            class="btn btn-border f-12 bg-white w-5 ">
+                                            {{item.title}} </button>
+                                    </ng-container>
+
+
+                                </div>
+                            </div>
+
+                        </li>
+                        <li *ngIf="dashboard.from && dashboard.to">
+                            <div class=" nav-link text-center text-primary pointer custom-div-padding  ">
+                                <button type="button" matTooltip="From" class="btn w-5 pt-0 pb-0  f-12 no-right-radius "
+                                    style="font-size: 10px !important;">
+                                    <i class=" hgs-icon"></i> {{dashboard.from  | UtcToLocalTime | date : 'd-MMM-yyyy'}}
+                                </button>
+                            </div>
+                        </li>
+                        <li *ngIf="dashboard.from && dashboard.to">
+                            <div class=" nav-link text-center text-primary pointer pt-0 pb-0  "
+                                style="line-height: 1 !important;">
+                                <button type="button" matTooltip="To" class="btn w-5  pt-0 pb-0 f-12 no-right-radius "
+                                    style="font-size: 10px !important;">
+                                    <i class=" hgs-icon"></i> {{'to'}} </button>
+                            </div>
+                        </li>
+                        <li *ngIf="dashboard.from && dashboard.to">
+                            <div class=" nav-link text-center text-primary pointer  "
+                                style="padding-top: .5px !important;   padding-bottom: 4.5px !important;">
+                                <button type="button" matTooltip="To" class="btn pt-0 pb-0 w-5  f-12 no-right-radius "
+                                    style="font-size: 10px !important;">
+                                    <i class=" hgs-icon"></i> {{dashboard.to | UtcToLocalTime | date : 'd-MMM-yyyy'}}
+                                </button>
+                            </div>
+                        </li>
+                        <li *ngIf="dashboard.from && dashboard.to">
+                            <div class=" nav-link text-center text-primary pointer pt-0 pb-0  "
+                                style="line-height: 1 !important;">
+                                <button (click)="changeCustomDate()" type="button" matTooltip="Change custom date"
+                                    class="btn w-5  pt-0 pb-0 f-12 no-right-radius change ">
+                                    <i class=""></i> {{'Change'}} </button>
+                            </div>
+                        </li>
+
+                    </ul>
+                    <!--  -->
+                </div>
+            </div>
+            <div class="col-93">
+                <div class="row m-0" *ngIf="current_section">
+                    <div class="col-xl-3 col-lg-3 mb-2 mt-2 dashboard-col" *ngFor="let card of current_section.summary">
+                        <div class="card no-rounded card-stats mb-4 mb-xl-0 dynamic-card pointer  border-0 requirement-bg "
+                            (click)="dynamicAllCountClicked({func : card.function_name, data : card})"
+                            [ngStyle]="card.style">
+                            <!-- [ngStyle]="card.style" -->
+                            <div class="card-header dash-card-header">
+                                <h6 class="card-title text-white mb-0"> {{card.header_title}} </h6>
+                            </div>
+                            <div class="card-body dash-card-body ">
+                                <div class="row">
+                                    <div class="col">
+                                        <ng-container>
+                                            <span *ngIf="card.count_type==1001" class="h2 font-weight-bold mb-0">
+                                                {{card.count | number}} </span>
+                                            <span *ngIf="card.count_type==1002" class="h2 font-weight-bold mb-0">
+                                                {{card.count}} </span>
+                                            <span *ngIf="card.count_type==1003" class="h2 font-weight-bold mb-0">
+                                                {{card.count}}% </span>
+
+                                        </ng-container>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape dynamic-icon rounded-circle ">
+                                            <img class="dynamic-svg" [ngStyle]="{'filter': card.svg_filter}"
+                                                [src]="card.icon_src">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer dash-card-footer">
+                                <h6 class="card-title text-white mb-0 dash-footer-text">{{card.footer_title}}</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard-col " style="flex: 0 0 75%;">
+                        <div class="row" id="chart-container">
+                        </div>
+                    </div>
+                    <div class=" " style="flex: 0 0 25%;">
+                        <div class="row" style="padding-top:1.9375rem;">
+                            <div class="col-xl-12 form-group followsup-card "
+                                *ngFor="let item of current_section.tasks">
+                                <div class="card " [ngStyle]=" item.style " style="max-height: 50vh;">
+                                    <!--  [ngStyle]="item.style "-->
+                                    <div class="card-header card-header-warning ml-2 mr-2   followup-header-bg">
+                                        <h4 class="card-title m-0"> {{item.title}} </h4>
+                                    </div>
+                                    <div class="card-body table-responsive followup-table pl-0 pr-0 pb-0">
+                                        <table
+                                            class="table table-activity table-hover pointer no-margin-b text-grey in">
+                                            <tbody>
+                                                <tr class="font-13 followup-row"
+                                                    *ngFor="let follow of item.data;let i=index"
+                                                    (click)="taskClickListner({data : follow,func : item.function_name})">
+                                                    <td> <span class="followup-title">{{follow.title}} </span>
+                                                        <span class="text-right float-right f">
+                                                            <a
+                                                                class="number-count badge hgs-badge-bg ng-binding">{{follow.count}}</a>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                <tr *ngIf=" !item || (item.data && item.data.length==0) ">
+                                                    <td colspan="12">
+                                                        <h6 class="text-center" style="opacity: .5;">No data found!</h6>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="col-xl-12 form-group followsup-card ">
+                  <div class="card " style="max-height: 180px;">
+                    <div class="card-header card-header-warning ml-2 mr-2   followup-header-bg">
+                      <h4 class="card-title m-0">Follow-ups</h4>
+                    </div>
+                    <div class="card-body table-responsive followup-table pl-0 pr-0 pb-0">
+                      <table class="table table-activity table-hover pointer no-margin-b text-grey in">
+                        <tbody>
+                          <tr class="font-13 followup-row" *ngFor="let follow of follow_up_list;let i=index"
+                            (click)="followupsActivityClick(follow,1)">
+                            <td> <span class="followup-title">{{follow.title}} </span>
+                              <span class="text-right float-right f">
+                                <a class="number-count badge hgs-badge-bg ng-binding">{{follow.count}}</a>
+                              </span>
+                            </td>
+                          </tr>
+                          <tr *ngIf="follow_up_list.length==0">
+                            <td colspan="12">
+                              <h6 class="text-center" style="opacity: .5;">No data found!</h6>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>  
+                  </div>
+                </div>
+                <div class="col-xl-12">
+                  <div class="card " style="height: calc(100vh - 389px) !important; min-height:150px ">
+                    <div class="card-header card-header-warning  followup-header-bg ml-2 mr-2">
+                      <h4 class="card-title m-0">Activities</h4>
+                    </div>
+                    <div class="card-body table-responsive followup-table pl-0 pr-0 pb-0">
+                      <table class="table table-activity table-hover pointer no-margin-b text-grey in">
+                        <tbody>
+                          <tr class="font-13 followup-row " *ngFor="let active of activities_list;let i=index"
+                            (click)="followupsActivityClick( active ,2)">
+                            <td>{{active.title}}
+                              <span class="text-right followup-text float-right "><a
+                                  class="number-count badge hgs-badge-bg ng-binding">{{active.count}}</a>
+                              </span>
+                            </td>
+                          </tr>
+                          <tr *ngIf="activities_list.length==0">
+                            <td colspan="12">
+                              <h6 class="text-center" style="opacity: .5;">No data found!</h6>
+                            </td>
+                          </tr>
+  
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div> -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <app-textarea [form]="dash_form" [controlName]="'notes'"></app-textarea> -->

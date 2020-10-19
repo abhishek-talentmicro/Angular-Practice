@@ -1,0 +1,301 @@
+<!-- Requirement View -->
+<div class="container-fluid p-0 requirement-view"
+  *ngIf="1||access_rights&&!isEmpty(access_rights)&&(access_rights['1']['sub_modules']['200']['forms']['1200005']['enable'])"
+  [style.height]="(!(applicant_view_data && applicant_view_data.is_collapsed) && !(requirement_view_data && requirement_view_data.is_collapsed) ?'40%': (requirement_view_data && requirement_view_data.is_collapsed)?'31.33px':'92%')">
+  <div class="requirement-view-header">
+    <div class="d-inline-block pointer" style="width: 150px;" (click)="toggleCollapseReq()">
+      Requirements ({{requirement_view_data&&requirement_view_data.total_count}})
+      <i class="fa fa-angle-up pointer toggle-icon"
+        *ngIf="requirement_view_data && requirement_view_data.is_collapsed"></i>
+      <i class="fa fa-angle-down pointer toggle-icon"
+        *ngIf="!(requirement_view_data && requirement_view_data.is_collapsed)"></i>
+    </div>
+    <div class="action-items dropdown float-right mr-0">
+      <div class="action-items dropdown float-right action-buttons">
+        <a class="dropdown-toggle pointer" [matMenuTriggerFor]="menu1">
+          Action
+        </a>
+        <mat-menu #menu1="matMenu">
+          <a mat-menu-item (click)=" exportToExcelConfirmation(2) " class=" pointer">
+            <img class="action-icons" src="/assets/workbench-action-icons/export.svg" alt="" style="height: 18px;
+            width: 18px;
+            margin-right: 7px;"> Export
+
+          </a>
+          <a mat-menu-item (click)=" requirement_view_data.table_configuration_flag=true; ngAfterViewInit(); "
+            class=" pointer">
+            <img class="action-icons" src="/assets/workbench-action-icons/edit-grid.svg" alt="" style="height: 18px;
+            width: 18px;
+            margin-right: 7px;"> Edit Grid
+          </a>
+        </mat-menu>
+      </div>
+    </div>
+
+
+
+    <div class="d-inline-block" style="position: relative;width: 10px;margin-right: 12px !important;">
+      <i [matTooltip]="requirement_request.lock_search_filter ? 'Click to include search parameters' : 'Click to exclude search parameters'"
+        (click)="lockRequirementFilter(1)" class="fa pointer"
+        [ngClass]="{'fa-unlock': !requirement_request.lock_search_filter, 'fa-lock': requirement_request.lock_search_filter}"
+        style="font-size: 20px;
+        position: absolute;
+        top: -14px;"></i>
+    </div>
+    <div class="d-inline-block requirement-filters" style="width:30%">
+      <div class="input-group" style="border-bottom: 1px solid white;height: 21px !important;width:100%">
+
+        <div style="width: 30%;padding-right: 6px;">
+          <app-tm-basic-select [style]="search_style" [enable_close]="true" [is_default_value]="true"
+            [options]="requirement_view_list" bckcolor="#186ca4" [form_group]="requirement_search_form"
+            form_control="search" title_property="title" [id_property]="'property'" [placeholder]="'Select'"
+            float_label="always" (selected_obj)="searchFocus(1,$event)">
+          </app-tm-basic-select>
+        </div>
+        <input placeholder="Search" #search_requirement [(ngModel)]="req_search" name="value"
+          (keyup.enter)="requirementSearchEtr()" type="text"
+          style="border: none;color: white;padding-left: 0px; border-radius: 0;background-color: transparent;height: 20px;font-size: 13px;box-shadow: none;"
+          class="form-control ">
+
+        <div class="input-group-append" (click)="requirementSearchEtr()"
+          style="background-color: transparent;border-radius: none;border: none;padding-right: 3px;">
+          <!-- <i class="fa fa-plus pointer" style="font-size: 13px;line-height: 140%;padding-top: 2px;" (click)="requirementSearchEtr()"></i> -->
+          <i class="input-group-text pointer action-items"
+            [attr.data-toggle]="selected_requirement_search && selected_requirement_search.length ?'dropdown':''"
+            style="border: none;color: white;border-radius: 0;background-color: transparent;height: 20px;padding-left: 5px;font-size: 13px;box-shadow: none;padding: 0;">
+            {{selected_requirement_search ? selected_requirement_search.length || '' : ''}}
+            <div [ngClass]="{'dropdown-menu':selected_requirement_search && selected_requirement_search.length}"
+              class="dropdown-menu-right " style="padding: 6px;">
+              <div *ngFor="let s of selected_requirement_search;let i=index">
+                <span class="dropdown-item selected-list"
+                  href="#">{{ s.field_name | GetTitlePipe : this.requirement_view_list }}
+                  : {{s.value}}
+                  <a class="ml-auto pl-2" style="float: right;" (click)="removeSearchItem($event,i,1)">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                  </a>
+                </span>
+              </div>
+            </div>
+          </i>
+        </div>
+        <div class="input-group-append"
+          style="background-color: transparent;border-radius: none;border: none;line-height: 150%;">
+          <i class="fa fa-search input-group-text pointer"
+            style="border: none; color: white;border-radius: 0;background-color: transparent;height: 20px;font-size: 13px;box-shadow: none;padding: 0;line-height: 160%;"
+            (click)="requirementSearchClk()"></i>
+        </div>
+      </div>
+    </div>
+    <div class="ml-4 d-inline-block" style="position: relative;width: 10px;margin-right: 12px !important;">
+      <i [matTooltip]="requirement_request.lock_filter_template ? 'Click to include filter' : 'Click to exclude filter'"
+        (click)="lockRequirementFilter(2)" class="fa pointer"
+        [ngClass]="{'fa-unlock': !requirement_request.lock_filter_template, 'fa-lock': requirement_request.lock_filter_template}"
+        style="font-size: 20px;
+        position: absolute;
+        top: -14px;"></i>
+    </div>
+    <div class="d-inline-block requirement-filters">
+      <div class="input-group" style=" border-bottom: 1px solid white; width: 100%;height: 21px;">
+        <form [formGroup]="form_requirement" style=" width: 179px;">
+          <app-tm-basic-select [style]="template_style" [edit_option]="true"
+            [options]="requirement_view_data ? requirement_view_data.filter_templates : []" bckcolor="#186ca4"
+            [enable_close]="true" (selected_obj)="filterRequirements($event)" (edit_obj)="editRequirementFilter($event)"
+            [form_group]="form_requirement" form_control="search" title_property="filter_template_title"
+            id_property="filter_template_id" [placeholder]="'Filters'" float_label="always" [label]="">
+          </app-tm-basic-select>
+        </form>
+        <div class="input-group-append action-items">
+          <i (click)="openDynamicModal(8002,null,'requirement',null)" class="fa fa-plus input-group-text"
+            style="border: none;color: white;border-radius: 0;background-color: transparent;height: 21px;padding-left: 5px;font-size: 13px;box-shadow: none;padding: 0;line-height: 22px;"></i>
+        </div>
+        <div #filterIcon1 class="action-items input-group-append mr-0" (click)="requirementFilterOnspot()">
+          <i class="fa fa-filter" aria-hidden="true"></i>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div style="height: 5px;display: table-row;" *ngIf="!(requirement_view_data && requirement_view_data.is_collapsed)">
+  </div>
+  <div class="requirement-view-body" *ngIf="!(requirement_view_data && requirement_view_data.is_collapsed)">
+    <div class="row requirement-view-table">
+      <div class="col-md-12">
+        <app-tallint-table #requirement_view_table
+          [style.height]="(requirement_view_data && requirement_view_data.is_collapsed)? '0%':'100%'"
+          *ngIf="requirement_view_data" (checkboxSelected)="requirementViewCheckboxSelected($event)"
+          (cellClicked)="CellClicked($event)" [table_records]="requirement_view_data.requirement_list"
+          [total_count]="requirement_view_data.total_count" [multi_select]="true"
+          [table_columns]="requirement_view_data.grid_layout"
+          [selected_entries]="requirement_view_data.selected_entries" [display_filter]="false"
+          [fetching_entries]="requirement_view_data.fetching_entries" [export]="requirement_view_data.export_flag"
+          [export_ready]="export_ready_req" [export_callback]="getExportListReq.bind(this)"
+          [export_records]="export_data_list_req" [file_name]="requirement_view_data.file_name"
+          [table_code]="requirement_view_data.table_code" [summary]="requirement_view_data.summary">
+        </app-tallint-table>
+      </div>
+    </div>
+  </div>
+  <ngb-pagination class="d-flex justify-content-center"
+    *ngIf="!(requirement_view_data && requirement_view_data.is_collapsed) && requirement_view_data.requirement_list && requirement_view_data.requirement_list.length>0"
+    style="
+  /* position: fixed; */
+  font-size: 12px;" [collectionSize]="requirement_view_data.total_count" [(page)]="startPage" [maxSize]="2"
+    [rotate]="true" (pageChange)="ReqListScroll($event)" [pageSize]="backend_take">
+  </ngb-pagination>
+</div>
+
+
+<!-- Applicant View -->
+
+
+<div class="container-fluid p-0 applicant-view"
+  *ngIf="1||access_rights&&!isEmpty(access_rights)&&(access_rights['1']['sub_modules']['200']['forms']['1200010']['enable'])"
+  [style.height]="(!(applicant_view_data && applicant_view_data.is_collapsed) && !(requirement_view_data && requirement_view_data.is_collapsed) ?'59%': (applicant_view_data && applicant_view_data.is_collapsed)?'31.33px':'92%')">
+  <div class="applicant-view-header">
+
+    <div class="d-inline-block pointer" style="width: 150px;" (click)="toggleCollapseApplicant()">
+      Applicants ({{applicant_view_data.total_count}})
+
+      <i class="fa fa-angle-down pointer toggle-icon"
+        *ngIf="!(applicant_view_data && applicant_view_data.is_collapsed)"></i>
+      <i class="fa fa-angle-up pointer toggle-icon"
+        *ngIf="(applicant_view_data && applicant_view_data.is_collapsed)"></i>
+    </div>
+    <div _ngcontent-vya-c11="" class="d-inline-block mr-3"
+      style="position: relative;width: 10px;margin-right: 12px !important;">
+      <i [matTooltip]="applicant_request.lock_search_filter ? 'Click to include search parameters' : 'Click to exclude search parameters'"
+        (click)="lockApplicantFilter(1)" class="fa pointer"
+        [ngClass]="{'fa-unlock': !applicant_request.lock_search_filter, 'fa-lock': applicant_request.lock_search_filter}"
+        style="font-size: 20px;
+        position: absolute;
+        top: -14px;"></i>
+    </div>
+
+    <div class="d-inline-block requirement-filters" style="width:30%">
+      <div class="input-group" style="border: none; border-bottom: 1px solid white;width:100%">
+        <div style="width: 30%;padding-right: 6px;">
+          <app-tm-basic-select [style]="search_style" [enable_close]="true" [is_default_value]="true"
+            [options]="applicant_view_list" bckcolor="#186ca4" [form_group]="applicant_search_form"
+            form_control="search" title_property="title" id_property="property" [placeholder]="'Select'"
+            float_label="always" (selected_obj)="searchFocus(2,$event)">
+          </app-tm-basic-select>
+        </div>
+
+        <input placeholder="Search" #search_applicant type="text" (keyup.enter)="applicantSearchEtr()"
+          style="border: none; color: white;border-radius: 0;padding-left: 0px; height: 20px;font-size: 13px;box-shadow: none;background-color: transparent;"
+          class="form-control" name="value" [(ngModel)]="search">
+
+        <div class="input-group-append" (click)="applicantSearchEtr()"
+          style="background-color: transparent;border-radius: none;border: none;padding-right: 3px;">
+          <i class=" input-group-text pointer action-items "
+            [attr.data-toggle]="selected_applicant_search && selected_applicant_search.length ?'dropdown':''"
+            style="border: none;color: white;border-radius: 0;background-color: transparent;height: 20px;padding-left: 5px;font-size: 13px;box-shadow: none;padding: 0;">
+            {{selected_applicant_search ? selected_applicant_search.length || '' : ''}}
+            <div [ngClass]="{'dropdown-menu':selected_applicant_search && selected_applicant_search.length }"
+              class="dropdown-menu-right" style="padding: 6px;">
+
+              <div *ngFor="let s of selected_applicant_search;let i=index">
+                <span class="dropdown-item selected-list"
+                  href="#">{{ s.field_name | GetTitlePipe :this.applicant_view_list  }}
+                  : {{s.value}}
+                  <a class="ml-auto pl-2" style="float: right;" (click)="removeSearchItem($event,i,2)">
+                    <i class="fa fa-times" aria-hidden="true">
+                    </i>
+                  </a>
+                </span>
+              </div>
+            </div>
+          </i>
+        </div>
+        <div class="input-group-append"
+          style="background-color: transparent;border-radius: none;border: none; line-height: 150%;">
+          <i class="fa fa-search input-group-text pointer"
+            style="border: none;color: white;border-radius: 0;background-color: transparent;height: 20px;padding-left: 5px;font-size: 13px;box-shadow: none;padding: 0;line-height: 160%;"
+            (click)="applicantSearchClk()"></i>
+        </div>
+      </div>
+    </div>
+    <div class="ml-4 d-inline-block" style="position: relative;width: 10px;margin-right: 12px !important;">
+      <i [matTooltip]="applicant_request.lock_filter_template ? 'Click to include filter' : 'Click to exclude filter'"
+        (click)="lockApplicantFilter(2)" class="fa pointer"
+        [ngClass]="{'fa-unlock': !applicant_request.lock_filter_template, 'fa-lock': applicant_request.lock_filter_template}"
+        style="font-size: 20px;
+        position: absolute;
+        top: -14px;"></i>
+    </div>
+    <div class="d-inline-block requirement-filters">
+      <div class="input-group" style="border-bottom: 1px solid white;height:21px;width: 100%;">
+        <form [formGroup]="form_applicant" style="width:179px">
+          <app-tm-basic-select [style]="template_style" [edit_option]="true" [enable_close]="true"
+            [options]="applicant_view_data.filter_template" bckcolor="#186ca4" (selected_obj)="filterApplicants($event)"
+            (edit_obj)="editApplicantFilter($event)" [form_group]="form_applicant" form_control="search"
+            title_property="filter_template_title" id_property="filter_template_id" [placeholder]="'Filters'"
+            float_label="always">
+          </app-tm-basic-select>
+        </form>
+
+        <div class="input-group-append action-items">
+          <i (click)="openDynamicModal(1221,null,'applicant',null)" class="fa fa-plus input-group-text"
+            style="border: none; color: white;border-radius: 0;background-color: transparent;height: 21px;padding-left: 5px;font-size: 13px;box-shadow: none;padding: 0;line-height: 22px;"></i>
+        </div>
+        <div class="input-group-append action-items mr-0" (click)="applicantFilterOnspot()">
+          <i #filterIcon class="action-items float-right" class="fa fa-filter" aria-hidden="true"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-items dropdown float-right action-buttons">
+      <a class="dropdown-toggle pointer" [matMenuTriggerFor]="menu">
+        Action
+      </a>
+      <mat-menu #menu="matMenu">
+        <a mat-menu-item (click)=" exportToExcelConfirmation(1)" class="pointer">
+          <img class="action-icons" src="/assets/workbench-action-icons/export.svg" alt=""
+            style="height: 18px; width: 18px;margin-right: 7px;"> Export
+        </a>
+        <a mat-menu-item (click)=" applicant_view_data.table_configuration_flag=true;  ngAfterViewInit();"
+          class="pointer">
+          <img class="action-icons" src="/assets/workbench-action-icons/edit-grid.svg" alt=""
+            style="height: 18px;width: 18px;margin-right: 7px;"> Edit Grid
+        </a>
+      </mat-menu>
+    </div>
+
+    <div class="action-items float-right action-buttons" (click)="newResume()"
+      *ngIf="access_rights && access_rights['1'] && access_rights['1']['sub_modules'] &&  access_rights['1']['sub_modules']['200'] && access_rights['1']['sub_modules']['200']['forms'] && access_rights['1']['sub_modules']['200']['forms']['1515'] && access_rights['1']['sub_modules']['200']['forms']['1515']['enable'] && access_rights['1']['sub_modules']['200']['forms']['1515']['my_write']">
+      <i class="fa fa-plus" matTooltip="New Resume"></i> New Resume
+    </div>
+    <div class="action-items float-right action-buttons" (click)="newTab(4,null,null)"
+      *ngIf="access_rights && access_rights['1'] && access_rights['1']['sub_modules'] &&  access_rights['1']['sub_modules']['200'] && access_rights['1']['sub_modules']['200']['forms'] && access_rights['1']['sub_modules']['200']['forms']['1515'] && access_rights['1']['sub_modules']['200']['forms']['1515']['enable'] && access_rights['1']['sub_modules']['200']['forms']['1515']['my_write']">
+      <!-- <i class="fa fa-plus" matTooltip="New Resume"></i> -->
+      Import Resume
+    </div>
+  </div>
+
+  <div style="height: 5px;display: table-row;" *ngIf="!(applicant_view_data && applicant_view_data.is_collapsed)">
+  </div>
+  <div class="applicant-view-body" *ngIf="!(applicant_view_data && applicant_view_data.is_collapsed)">
+    <div class="row applicant-view-table">
+      <div class="col-md-12">
+        <app-tallint-table [style.height]="applicant_view_data && applicant_view_data.is_collapsed? '0%':'100%'"
+          #applicant_view_table [table_records]="applicant_view_data.applicant_list"
+          [total_count]="applicant_view_data.total_count" [selected_entries]="applicant_view_data.selected_entries"
+          multi_select="true" [table_columns]="applicant_view_data.grid_layout"
+          (cellClicked)="applicantCellClicked($event)" [fetching_entries]="applicant_view_data.fetching_entries"
+          [item_size]="24.67" [export]="applicant_view_data.export_flag" [export_ready]="export_ready"
+          [export_callback]="getExportList.bind(this)" [export_records]="export_data_list"
+          [file_name]="applicant_view_data.file_name" [table_code]="applicant_view_data.table_code"
+          (checkboxSelected)="applicantViewCheckboxSelected($event)"
+          [filter_template_list]="applicant_view_data.filter_template">
+        </app-tallint-table>
+      </div>
+    </div>
+  </div>
+  <ngb-pagination class="d-flex justify-content-center"
+    *ngIf="!(applicant_view_data && applicant_view_data.is_collapsed) && applicant_view_data.applicant_list && applicant_view_data.applicant_list.length>0"
+    style="
+/* position: fixed; */
+font-size: 12px;" [collectionSize]="applicant_view_data.total_count" [(page)]="startPageApp" [maxSize]="2"
+    [rotate]="true" (pageChange)="ApplListScroll($event)" [pageSize]="backend_take">
+  </ngb-pagination>
+</div>

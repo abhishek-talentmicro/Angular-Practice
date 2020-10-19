@@ -1,0 +1,26 @@
+<h2 style="margin:0;padding:15px;background: linear-gradient(to right, #2873b4, #03628f);color:white;" mat-dialog-title>
+    Requirement Status</h2>
+<div style="padding:20px 25px;">
+    <mat-dialog-content>
+        <form [formGroup]="req_status_form">
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <tm-select [options]="req_status" [form_group]="req_status_form" form_control="status"
+                        title_property="title" id_property="code" placeholder="< - - Select - - >" float_label="always"
+                        label="Status" [mandatory]="1">
+                    </tm-select>
+                </div>
+                <div class="col-md-12 form-group">
+                </div>
+            </div>
+        </form>
+    </mat-dialog-content>
+    <div class="row">
+        <div class="col-md-12 text-right">
+            <button mat-button mat-dialog-close>Cancel</button>
+
+            <button mat-button [mat-dialog-close]="true">Update</button>
+        </div>
+    </div>
+    <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
+</div>

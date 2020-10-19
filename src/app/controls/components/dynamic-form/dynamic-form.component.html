@@ -1,0 +1,501 @@
+<div class="form-group" *ngIf="dynamic_form && section_list">
+  <mat-accordion *ngIf="display_type == 1" #sec_reference>
+    <mat-expansion-panel *ngFor="let section of section_list; let i = index">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h6 class="section_title mb-1 w-100"
+            *ngIf="section && section.enable_title && ((parent_form ? parent_form.value : null) | DynamicSectionConditionCheckPipe : section.conditions : 'dform' : (parent_form?parent_form:null) : dynamic_form)">
+            {{section.section_title}}
+
+            <ng-container
+              *ngIf="(section.command_details | JSONParserAssign) && (section.command_details| JSONParserAssign).length && (section.command_details!='' || section.command_details!=' ')">
+              <ng-container *ngTemplateOutlet="commands; context: {section:section,i:i,t_id:t_id,
+                  parent_functions:parent_functions,parent_form : parent_form,row_data:row_data,evalFunctionRef:
+                  evalFunctionRef}"></ng-container>
+            </ng-container>
+          </h6>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <ng-container *ngTemplateOutlet="dynamic_section; context: {section: section, index: i}">
+      </ng-container>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <div class="container-fluid" *ngIf="display_type == 2">
+    <mat-tab-group #sec_reference (selectedTabChange)="stepperChanged($event)">
+      <mat-tab *ngFor="let section of section_list; let i = index" label="{{section_list[i].section_title}}">
+        <ng-template matTabContent>
+          <div style="height: 20px;"></div>
+
+          <ng-container *ngTemplateOutlet="dynamic_section; context: {section: section, index: i}"></ng-container>
+
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+
+  <div class="container-fluid" *ngIf="display_type == 6">
+    <mat-tab-group #sec_reference (selectedTabChange)="stepperChanged($event)">
+      <mat-tab [aria-labelledby]="(is_new_tab && section.enable) || !is_new_tab ? null : 'disabled'"
+        *ngFor="let section of section_list; let i = index;" label="{{section_list[i].section_title}}">
+        <ng-template matTabContent>
+          <div style="height: 20px;"></div>
+
+          <ng-container *ngTemplateOutlet="dynamic_section; context: {section: section, index: i}"></ng-container>
+
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+
+  <div class="container-fluid" *ngIf="display_type==3">
+    <mat-horizontal-stepper labelPosition="bottom" (selectionChange)="stepperChanged($event)" #sec_reference>
+      <mat-step *ngFor="let section of section_list; let i = index;" [stepControl]="section" [editable]="true"
+        [completed]='false' [aria-labelledby]="(is_new_tab && section.enable) || !is_new_tab ? null : 'disabled'">
+        <ng-container
+          *ngIf="section_list[i] && ((parent_form ? parent_form.value : null) | DynamicSectionConditionCheckPipe : section.conditions : null : (parent_form?parent_form:null) : dynamic_form)">
+          <ng-template matStepLabel>
+            {{section_list[i].section_title}}
+          </ng-template>
+        </ng-container>
+        <ng-container *ngIf="section.active_section">
+          <ng-container *ngTemplateOutlet="dynamic_section; context: {section: section, index: i}">
+          </ng-container>
+        </ng-container>
+      </mat-step>
+    </mat-horizontal-stepper>
+  </div>
+
+  <div id="sections_4" *ngIf="!display_type || display_type == 4 || display_type == 0">
+    <div *ngFor="let section of section_list|JSONParser; let i = index" #sec_reference>
+      <ng-container *ngIf="section">
+        <h6 class="section_title mb-1"
+          *ngIf="section && section.enable_title && ((parent_form ? parent_form.value : null) | DynamicSectionConditionCheckPipe : section.conditions : 'dform': (parent_form?parent_form:null) : dynamic_form)">
+          {{section.section_title}}
+          <span class="float-right mt-1 pointer position-relative summary-item-details"
+            *ngIf="section.editable && !section.edit_flag" (click)="enableSave(section)">
+            <i class="fa fa-pencil summary-item-action-icon" aria-hidden="true">
+            </i>
+            Edit
+          </span>
+          <ng-container
+            *ngIf="(section.command_details | JSONParserAssign) && (section.command_details| JSONParserAssign).length && (section.command_details!='' || section.command_details!=' ')">
+            <ng-container *ngTemplateOutlet="commands; context: {section:section,i:i,t_id:t_id,
+                              parent_functions:parent_functions,parent_form : parent_form,row_data:row_data,evalFunctionRef:
+                   evalFunctionRef}">
+            </ng-container>
+          </ng-container>
+          <!-- <ng-container
+              *ngIf="(section.command_details | JSONParserAssign) && (section.command_details| JSONParserAssign).length && (section.command_details!='' || section.command_details!=' ')">
+              <ng-container *ngFor="let btn of (section.command_details| JSONParserAssign)">
+                <span [class]="btn.class ? btn.class : ''" [style]="(btn.style) | SanitizePipe :'style'"
+                  *ngIf="(btn.conditions | evalPipe : t_id : section : row_data : i : row_data)"
+                  (click)="evalFunction(section,dynamic_form,btn.click_func_name,btn)">
+                  <span [innerHtml]="btn.icon | SanitizePipe :'html' "></span>
+                  {{btn && btn.label_code ? ((btn.module_code+'_'+btn.sub_module_code+'_'+btn.form_code+'_'+btn.label_code) | translate) :''}}
+                </span>
+              </ng-container>
+            </ng-container> -->
+
+        </h6>
+
+        <ng-container *ngTemplateOutlet="dynamic_section; context: {section: section, index: i}">
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+
+  <div *ngIf="display_type == 5" class="d-flex" #sec_reference>
+    <!-- <div class="col-18 pr-1">
+        <div class="tab-item p-1">
+          <div class="vertical-nav box-shadow bg-white" *ngIf="section_data && section_data.length">
+            <ul class="nav flex-column bg-white mb-0">
+                <li class="text-center nav-heading">
+                  Action
+                </li>
+                <ng-container *ngFor="let section of section_list let i = index;">
+                  <li
+                    *ngIf="((parent_form ? parent_form.value : null) | DynamicSectionConditionCheckPipe : section.conditions : 'dform': (parent_form?parent_form:null) : dynamic_form)"
+                    class="nav-item pointer" (click)="setSectionVerticleNavbar(i,section)"
+                    [ngClass]="{'active': section.active_section}">
+                    {{section_list[i].section_title}}
+                    <span class="btn-circle" *ngIf="t_id && section_list[i].editable && section.active_section"
+                      (click)="enableSave(section_list[i])">
+                      <i class="fa fa-pencil" aria-hidden="true"></i>
+                    </span>
+                  </li>
+                </ng-container>
+                <ng-container *ngIf="summaries && summaries.length">
+                  <ng-container *ngFor="let item of summaries"></ng-container>
+                  <span [innerHtml]="item"></span>
+                </ng-container>
+            </ul>
+          </div>
+          <div class="vertical-nav box-shadow bg-white mt-1" *ngIf="requirement_details">
+            
+          </div>
+        </div>
+      </div>
+      <div class="tab-item p-1" style="flex:'0 0 82%';" style="max-width: 100%;">
+        <div class="pb-2 box-shadow">
+
+          <div *ngFor="let section of section_list; let i = index">
+            <ng-container *ngIf="section.active_section">
+              <div style="padding-bottom: 15px;">
+                <h6 class="section_title mb-1"
+                  *ngIf="section && section.enable_title && ((parent_form ? parent_form.value : null) | DynamicSectionConditionCheckPipe : section.conditions : 'dform': (parent_form?parent_form:null) : dynamic_form)">
+                  {{section.section_title}}
+                  <span class="float-right mt-1 pointer position-relative summary-item-details"
+                    *ngIf="section_list[i].editable && !section_list[i].edit_flag"
+                    (click)="enableSave(section_list[i])">
+                    <i class="fa fa-pencil summary-item-action-icon" aria-hidden="true">
+                    </i>
+                    Edit
+                  </span>
+                  <ng-container
+                    *ngIf="(section.command_details | JSONParserAssign) && (section.command_details| JSONParserAssign).length && (section.command_details!='' || section.command_details!=' ')">
+                    <ng-container *ngFor="let btn of (section.command_details| JSONParserAssign)">
+                      <span [class]="btn && btn.class ? btn.class: ''"
+                        [style]="btn && btn.style ? (btn.style | SanitizePipe :'style'):''"
+                        *ngIf="(btn.conditions | evalPipe : t_id : section : row_data : i : row_data)"
+                        (click)="evalFunction(section,dynamic_form,btn.click_func_name,btn)">
+                        <span [innerHtml]="btn.icon | SanitizePipe :'html' "></span>
+                        {{btn && btn.label_code ? ((btn.module_code+'_'+btn.sub_module_code+'_'+btn.form_code+'_'+btn.label_code) | translate) :''}}
+                      </span>
+                    </ng-container>
+                  </ng-container>
+
+                </h6>
+                <div style="padding-left: 10px;padding-right: 10px;">
+                  <ng-container *ngTemplateOutlet="dynamic_section; context: {section: section, index: i}">
+                  </ng-container>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+
+        </div>
+      </div> -->
+    <div style="overflow-y: auto;padding: 0px 5px 5px 5px;height: calc(100vh - 120px);flex: 0 0 22.25%;"
+      [ngStyle]="{'flex':vertical_navbar_width}" class="p-1">
+      <div class="vertical-nav bg-white d-inline-block">
+        <ul class="nav flex-column bg-white mb-0">
+          <li class="text-center nav-heading">
+            Action
+          </li>
+          <ng-container *ngFor="let section of section_list let i = index;">
+            <li
+              *ngIf="((parent_form ? parent_form.value : null) | DynamicSectionConditionCheckPipe : section.conditions : 'dform': (parent_form?parent_form:null) : dynamic_form)"
+              class="nav-item pointer" (click)="setSectionVerticleNavbar(i,section)"
+              [ngClass]="{'active': section.active_section}">
+              {{section_list[i].section_title}}
+              <span class="btn-circle" *ngIf="t_id && section_list[i].editable && section.active_section"
+                (click)="enableSave(section_list[i])">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </span>
+            </li>
+          </ng-container>
+          <!-- <span [innerHtml]="summaries"></span> -->
+        </ul>
+      </div>
+      <ng-container *ngIf="summaries && summaries.length">
+        <ng-container *ngFor="let item of summaries">
+          <span [innerHtml]="item | SanitizePipe :'html'"></span>
+        </ng-container>
+      </ng-container>
+    </div>
+
+    <div class="vertical-nav-section p-1" [ngStyle]="{'flex':vertical_navbar_sec_width}">
+      <div *ngFor="let section of section_list; let i = index" style="box-shadow: 0px 0px 5px 0px gainsboro">
+        <ng-container *ngIf="section.active_section">
+          <div style="padding-bottom: 15px;">
+            <h6 class="section_title mb-1"
+              *ngIf="section && section.enable_title && ((parent_form ? parent_form.value : null) | DynamicSectionConditionCheckPipe : section.conditions : 'dform': (parent_form?parent_form:null) : dynamic_form)">
+              {{section.section_title}}
+              <span class="float-right mt-1 pointer position-relative summary-item-details"
+                *ngIf="section_list[i].editable && !section_list[i].edit_flag" (click)="enableSave(section_list[i])">
+                <i class="fa fa-pencil summary-item-action-icon" aria-hidden="true">
+                </i>
+                Edit
+              </span>
+              <ng-container *ngIf="search">
+                <i class="fa fa-angle-double-left  prev-icon pointer" matTooltip="Previous Resume"
+                  [ngClass]="{'out-of-index' : row_data['current_index'] == 0 }"
+                  (click)="(parent_functions.resumeChanged)(row_data['current_index'],0)"
+                  *ngIf="row_data && row_data.resume_list"></i>
+                <span *ngIf="row_data && row_data.resume_list" style="font-size: 14px; font-style: italic;">
+
+                  {{ (row_data['current_index'] + 1)}} / {{row_data['resume_list'].length}}
+
+                </span>
+                <i class="fa fa-angle-double-right next-icon pointer" matTooltip=" Next Resume"
+                  [ngClass]="{'out-of-bound' : row_data['current_index'] > row_data['resume_list'].length - 1 }"
+                  (click)="(parent_functions.resumeChanged)(row_data['current_index'],1)"
+                  *ngIf="row_data && row_data && row_data.resume_list"></i>
+                <span matTooltip="Add Candidate to Requirement" class="pointer mt-1 summary-item-details"
+                  style="display: inline;"
+                  *ngIf=" row_data && row_data && (row_data.tagResume && row_data.requirement_id )  "
+                  (click)=" (parent_functions.tagResume)()">
+                  <i class="fa fa-user-plus summary-item-action-icon"></i>
+                  Tag to requirement
+                </span>
+                <ng-container
+                  *ngIf="(section.command_details | JSONParserAssign) && (section.command_details| JSONParserAssign).length && (section.command_details!='' || section.command_details!=' ')">
+                  <ng-container *ngTemplateOutlet="commands; context: {section:section,i:i,t_id:t_id,
+                      parent_functions:parent_functions,parent_form : parent_form,row_data:row_data,evalFunctionRef:
+                      evalFunctionRef}">
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+
+
+            </h6>
+            <div style="padding-left: 10px;padding-right: 10px;">
+              <ng-container *ngTemplateOutlet="dynamic_section; context: {section: section, index: i}">
+              </ng-container>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="pt-2 pb-2 box-shadow mt-2"
+        *ngIf="duplicate_resume_grid && duplicate_resume_grid.duplicate_resume && nested_level == 1">
+        <div style="overflow: auto;" #duplicate_manager
+          [style.height.px]="(duplicate_resume_grid && duplicate_resume_grid.duplicate_resume && duplicate_resume_grid.duplicate_resume != '[]' && duplicate_resume_grid.duplicate_resume.length != 0) ? (duplicate_resume_grid.duplicate_resume.length > 9 ? '230' : (duplicate_resume_grid.duplicate_resume.length * 24) + 65): ('50')">
+
+          <h6 class="section_title mb-1"> Duplicate Manager</h6>
+          <div class="pl-4 pr-4 h-100">
+            <app-tallint-table (cellClicked)="cellClicked($event)"
+              [table_records]="duplicate_resume_grid.duplicate_resume ? duplicate_resume_grid.duplicate_resume : []"
+              [total_count]="duplicate_resume_grid.duplicate_resume && duplicate_resume_grid.duplicate_resume != '[]' ? duplicate_resume_grid.duplicate_resume.length : 0"
+              [table_columns]="duplicate_resume_grid && (duplicate_resume_grid.grid_layout) && (duplicate_resume_grid.grid_layout).grid_definition ? (duplicate_resume_grid.grid_layout.grid_definition) : (duplicate_resume_grid.field_details | FetchColumnsFromFields)"
+              [enable_sort]="duplicate_resume_grid && duplicate_resume_grid.grid_layout && duplicate_resume_grid.grid_layout.enable_order ? duplicate_resume_grid.grid_layout.enable_order : 0"
+              [edit]="duplicate_resume_grid && duplicate_resume_grid.grid_layout&&duplicate_resume_grid.grid_layout.editable_flag ? duplicate_resume_grid.grid_layout.editable_flag :0">
+            </app-tallint-table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="pt-2 pb-2 box-shadow mt-2" *ngIf="resume_file_path && resume_file_path.file_path">
+    <object id="resumeViewer" frameborder="0" style="width: 100%;height: 500px;"
+      [data]="resume_file_path.file_path  | SafeFilePipe"></object>
+  </div> -->
+</div>
+
+<ng-template #dynamic_section let-section="section" let-i="index">
+  <ng-container
+    *ngIf="((parent_form && parent_form.value ? parent_form.value : null) | DynamicSectionConditionCheckPipe : section.conditions : 'dformT': (parent_form?parent_form:null) : dynamic_form)">
+    <div [class]="section && section.css_class ? 'container-fluid ' + section.css_class : 'container-fluid'">
+      <div class="row">
+        <div class="w-100">
+          <tm-dynamic-section [enable_virtual_scroll_section]="enable_virtual_scroll_section"
+            [callback_func]="callback_func" [other_data]="other_data" [t_id]="t_id" [sharing_data]="sharing_data"
+            [getMethod]="getMethod" [fields]="fields[i]" (createForm)="response($event)"
+            [form]="section.multiple ? section.multiple_form : dynamic_form.get([section.section_id])"
+            [masters]="masters" [section_details]="section" [openMailer]="openMailer" [row_data]="row_data"
+            [parent_form]="parent_form" [verification_required]="verification_required"
+            [sectionActivation]="sectionActivation">
+          </tm-dynamic-section>
+        </div>
+      </div>
+    </div>
+
+    <ng-container *ngIf="section && section.sections && (section.sections != '[]' && section.sections.length)">
+      <tm-dynamic-form [enable_virtual_scroll_section]="enable_virtual_scroll_section" [dataSaved]="dataSaved"
+        [other_data]="other_data" [t_id]="t_id" [sharing_data]="sharing_data" [section_list]="section.sections"
+        [masters]="masters" [display_type]="section.sub_section_display_type" [section_data]="section_data"
+        [dynamic_form]="section.multiple ? section.multiple_form : dynamic_form.get([section.section_id])"
+        [parentCellClicked]="parentCellClicked" [openMailer]="openMailer" [row_data]="row_data"
+        [parent_form]="parent_form" [is_new_tab]="is_new_tab" [callback_func]="callback_func"
+        [verification_required]="verification_required" [parent_functions]="parent_functions" [summaries]="summaries"
+        [search]="search" [dynamic_buttons]="dynamic_buttons" [vertical_navbar_width]="vertical_navbar_width"
+        [vertical_navbar_sec_width]="vertical_navbar_sec_width" [duplicate_resume_grid]="duplicate_resume_grid"
+        [nested_level]="nested_level+1" [sectionActivation]="sectionActivation" [parent_section]="section"
+        [resume_file_path]="resume_file_path" [hide_cancel_btn]="hide_cancel_btn">
+      </tm-dynamic-form>
+    </ng-container>
+    <!-- [formatted_table_records]="(section.data | DynamicFieldsMasterTitle : masters : section.field_details)" -->
+    <!-- {{section_list | json}} -->
+
+    <!--Previous-->
+
+    <ng-container *ngIf="!(dynamic_buttons && section.button_details && section.button_details.length)">
+      <div class="w-100 mx-auto mb-2 mt-3"
+        *ngIf="((t_id && section.enable_save && section.edit_flag) || (!t_id && section.enable_save && !section.multiple) || (section.multiple && section.edit_flag && section.enable_save)) && !section.hide_multiple_form">
+        <div class="text-center">
+
+          <button class="btn btn-sm cancel-btn mr-2" *ngIf="masters && section_list"
+            (click)="cancel(section, section.multiple ? section.multiple_form : dynamic_form.get([section.section_id]),display_type,parent_section)">
+            <span *ngIf="!t_id">
+              Clear
+            </span>
+            <span *ngIf="t_id">
+              Cancel
+            </span>
+          </button>
+          <button class="btn btn-sm save-btn"
+            (click)="dynamicFormSave(section, section.multiple ? section.multiple_form : dynamic_form.get([section.section_id]), (display_type == 3 || display_type == 6), i)">
+            <span *ngIf="!section.multiple">
+              Save
+              <span *ngIf="display_type==3 || display_type==6">
+                and Proceed
+              </span>
+            </span>
+            <span *ngIf="section.multiple">
+              Add
+            </span>
+          </button>
+        </div>
+      </div>
+
+    </ng-container>
+
+
+    <ng-container *ngIf="dynamic_buttons && section.button_details && section.button_details.length">
+      <div class="w-100 mx-auto mt-3"
+        *ngIf="((t_id && section.enable_save && section.edit_flag) || (!t_id && section.enable_save && !section.multiple) || (section.multiple && section.edit_flag && section.enable_save)) && !section.hide_multiple_form">
+        <div class="text-center">
+          <ng-container *ngIf="section.button_details && section.button_details.length;">
+            <ng-container *ngFor="let btn of section.button_details">
+
+              <button [ngClass]="btn && btn.btn_class ? btn.btn_class: ''"
+                [style]="btn && btn.btn_style ? (btn.btn_style | SanitizePipe :'style'):''"
+                *ngIf="(btn.btn_conditions | evalPipe : t_id : section : row_data : i : row_data:parent_form)"
+                (click)="evalFunction(section,dynamic_form,btn.click_func_name,parent_form,btn)">
+                {{btn && btn.button_label_code ? ((btn.module_code+'_'+btn.sub_module_code+'_'+btn.form_code+'_'+btn.button_label_code) | translate) :''}}
+              </button>
+            </ng-container>
+
+          </ng-container>
+        </div>
+      </div>
+
+    </ng-container>
+
+
+    <div class="mt-3" style="padding: 0 10px;" *ngIf="section.multiple">
+      <div class="row">
+
+        <div class="w-100 text-right" *ngIf="section.enable_save && !section.edit_flag">
+          <button class="btn btn-sm btn-default mb-1" (click)="enableMultipleForm(section, section.multiple_form)">
+            <i class="fa fa-plus"></i>
+            New
+          </button>
+        </div>
+
+        <div *ngIf="display_table&&(section.list_display_type==1||!section.list_display_type)" class="col-md-12"
+          [style.height.px]="(section.data && section.data != '[]' && section.data.length != 0) ? (section.data.length > 9 ? '230' : (section.data.length * 24) + 65): ('50')">
+          <app-tallint-table (cellClicked)="cellClicked($event, section, section.multiple_form)"
+            [table_records]="(section.data | DynamicFieldsMasterTitleTable : masters : section.field_details)"
+            [total_count]="section.data && section.data != '[]' ? section.data.length : 0"
+            [table_columns]="(section.grid_layout) && (section.grid_layout).grid_definition ? (section.grid_layout.grid_definition) : (section.field_details | FetchColumnsFromFields)"
+            [enable_sort]="section.grid_layout && section.grid_layout.enable_order ? section.grid_layout.enable_order : 0"
+            [edit]="section && section.grid_layout && section.grid_layout.editable_flag ? section.grid_layout.editable_flag :0">
+          </app-tallint-table>
+        </div>
+
+        <div *ngIf="display_table && section.list_display_type==2" class="col-md-12 scroll-to-left  p-0"
+          style="display: flex;height:120px;width: 57px;">
+          <h6 class="text-center w-100 m-0" *ngIf="!(section && section.data && section.data.length)">
+            No data found!
+          </h6>
+          <ng-container *ngFor="let details of section.data">
+            <app-contact-us [contact_details]="details"
+              (cellClicked)="cellClicked($event, section, section.multiple_form)"></app-contact-us>
+          </ng-container>
+        </div>
+
+        <div *ngIf="display_table && section.list_display_type==4" class="col-md-12">
+          <h6 class="text-center w-100 m-0" *ngIf="!(section && section.data && section.data.length)">
+            No data found!
+          </h6>
+          <ng-container *ngFor="let emails of section.data | JSONParser ">
+            <app-emails [email]="emails">
+            </app-emails>
+          </ng-container>
+        </div>
+
+        <div *ngIf="display_table && section.list_display_type==5" class="col-md-12">
+          <h6 class="text-center w-100 m-0"
+            *ngIf="!(section && section.data && section.data.length);else appAttachment">
+            No data found!
+          </h6>
+          <ng-template #appAttachment>
+            <div class="row">
+              <ng-container *ngFor=" let field of section.field_details">
+                <ng-container *ngIf="field.control_type_id == 19 || field.control_type_id == 20 ">
+                  <ng-container *ngFor="let attach of section.data | JSONParser">
+
+
+                    <div class="col-md-2 mb-2">
+
+                      <app-attachment-view [row_data]="attach" [property_name]="field.field_name"
+                        (edit)="cellClicked($event, section, section.multiple_form)">
+                      </app-attachment-view>
+                    </div>
+
+
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </div>
+          </ng-template>
+        </div>
+
+        <div *ngIf="display_table && section.list_display_type==6" class="col-md-12">
+          <h6 class="text-center w-100 m-0" *ngIf="!section.data.length">
+            No data found!
+          </h6>
+          <ng-container *ngFor="let assessment of section.data | JSONParser">
+            <app-assessment [assessment]="assessment" [modal_view]="true"></app-assessment>
+          </ng-container>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="pt-2 pb-2 box-shadow mt-2" *ngIf="resume_file_path && resume_file_path.file_path && i==0">
+      <object id="resumeViewer" frameborder="0" style="width: 100%;height: 500px;"
+        [data]="resume_file_path.file_path  | SafeFilePipe"></object>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #commands let-section="section" let-i="i" let-t_id="t_id" let-parent_functions="parent_functions"
+  let-parent_form="parent_form" let-row_data="row_data" let-evalFunctionRef="evalFunctionRef">
+  <ng-container *ngFor="let command of (section.command_details | JSONParserAssign)">
+    <ng-container
+      *ngIf="command && command.command_details && command.command_details != '[]' && (command.command_details).length; else elseTemplate">
+      <span>
+        <app-nested-commands #menu [child_commands]="command.command_details" [section]="section"
+          [dynamic_form]="dynamic_form" [parent_functions]="parent_functions" [evalFunctionRef]="evalFunctionRef"
+          [t_id]="t_id" [row_data]="row_data" [i]="i" [parent_form]="parent_form">
+        </app-nested-commands>
+      </span>
+      <ng-container *ngIf="menu && menu.subMenu">
+        <span [class]="command.class" [style]="command.style | SanitizePipe :'style'"
+          *ngIf="(command.conditions | evalPipe : t_id : section : row_data : i : row_data: parent_form)"
+          (click)="evalFunction(section,dynamic_form,command.click_func_name,parent_form,command,parent_functions)"
+          [matMenuTriggerFor]="menu.subMenu">
+          <span [innerHtml]="command.icon | SanitizePipe :'html'"></span>
+          <span class="margin-left-5">
+            {{command && command.label_code ? ((command.module_code+'_'+command.sub_module_code+'_'+command.form_code+'_'+command.label_code) | translate) :''}}
+          </span>
+        </span>
+      </ng-container>
+    </ng-container>
+    <ng-template #elseTemplate>
+      <span [class]="command.class" [style]="command.style | SanitizePipe :'style'"
+        *ngIf="(command.conditions | evalPipe : t_id : section : row_data : i : row_data: parent_form)"
+        (click)="evalFunction(section,dynamic_form,command.click_func_name,parent_form,command,parent_functions)">
+        <span [innerHtml]="command.icon | SanitizePipe :'html'"></span>
+        <span class="margin-left-5">
+          {{command && command.label_code ? ((command.module_code+'_'+command.sub_module_code+'_'+command.form_code+'_'+command.label_code) | translate) :''}}
+        </span>
+      </span>
+    </ng-template>
+
+  </ng-container>
+</ng-template>

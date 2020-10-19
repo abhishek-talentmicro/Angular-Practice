@@ -1,7 +1,0 @@
-<br>
-<button class="btn btn-danger" (click)="onDisplayDetails($event)">Display Details</button>
-<br><br>
-<p *ngIf="showOnDom()">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam similique perspiciatis eaque saepe dolorum iste dicta
-    tempora asperiores, omnis commodi, odit aspernatur sed aliquam laborum voluptate modi cupiditate harum dolore?</p>
-<div *ngFor="let buton of butons" [ngStyle]="{ backgroundColor : buton>4?'blue':'white' }" [ngClass]="{ white : buton>4 }">{{ buton }}</div>    
-<!-- <div *ngFor="let buton of butons" [(ngModel)]="buton" [ngStyle]="{ backgroundColor : giveColor() }" [ngClass]="{ white : addWhite() }">{{ buton }}</div>     -->

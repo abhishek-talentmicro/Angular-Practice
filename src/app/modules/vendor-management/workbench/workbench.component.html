@@ -1,0 +1,51 @@
+<div class="workbench">
+  <div class="px-1 pt-1 h-100">
+    <ngb-tabset [activeId]="'workbench-tabs-' + current_tab" *ngIf="workbench_tabs" #tabset="ngbTabset"
+      (tabChange)="tabChanged($event)">
+      <ngb-tab *ngFor="let tab of Object.keys(workbench_tabs); let index = index" id="workbench-tabs-{{tab}}">
+        <ng-template ngbTabTitle>
+          <div style="display: flex;">
+            <span style="max-width: 105px !important;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;">
+              {{workbench_tabs[tab].title }}
+            </span>
+            <i *ngIf="index" style="line-height: 160%;padding-left: 2px;" class="fa fa-times"
+              (click)="removeTab($event, tab)"></i>
+          </div>
+        </ng-template>
+        <ng-template ngbTabContent>
+          <div class="workbench-home" *ngIf="workbench_tabs[tab].type == 1 && workbench_tabs[tab].active_tab">
+            <app-workbench-home [workbench_tabs]="workbench_tabs[tab].id" [current_tab]="workbench_tabs[tab].id"
+              [tabset]="tabset" [callApplicantsAPICall]="applicantsAPICallRef"
+              [callGetRequirements]="getRequirementsRef" [applicant_view_data]="applicant_view"
+              [requirement_view_data]="requirement_view" [requirement_view_list]="requirement_view_list_master"
+              [newTabCall]="newTabRef" [req_list]="requirement_view_list_master" [app_list]="applicant_view_list_master"
+              [func_callback]="funcCallBackRef" [requirement_request]="requirement_request"
+              [applicant_request]="applicant_request" (updateWorkbenchValues)="updateWorkbenchValues($event)">
+            </app-workbench-home>
+          </div>
+          <!-- Requirement Manager -->
+          <div class="h-100" *ngIf="workbench_tabs[tab].type == 2 && workbench_tabs[tab].active_tab">
+            <app-requirement-manager [openResume]="openResumeRef" [current_tab]="workbench_tabs[tab].id"
+              [new_tab_callback]="newTabRef" [resetTab]="resetTabRef" [applicantFilter]="applicantFilterRef"
+              [func_callback]="funcCallBackRef">
+            </app-requirement-manager>
+          </div>
+          <!-- Resume Create (Resume Details) -->
+          <div class="h-100" *ngIf="workbench_tabs[tab].type == 3 && workbench_tabs[tab].active_tab">
+            <app-resume-create [current_tab]="workbench_tabs[tab].id" [CellClicked]="cellClickedRef"
+              [newTab]="newTabRef">
+            </app-resume-create>
+          </div>
+          <div class="h-100" *ngIf="workbench_tabs[tab].type == 4 && workbench_tabs[tab].active_tab">
+            <app-resume-import [current_tab]="workbench_tabs[tab].id" [newTab]="newTabRef">
+            </app-resume-import>
+          </div>
+        </ng-template>
+      </ngb-tab>
+    </ngb-tabset>
+  </div>
+
+</div>

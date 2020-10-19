@@ -1,0 +1,42 @@
+<h2 mat-dialog-title>
+    Attachments
+    <a (click)="close()"><i class="fa fa-times pointer pt-2 pr-3 float-right"></i></a>
+</h2>
+<mat-dialog-content>
+    <div class="col-md-12">
+        <p>
+            No of Applicants Selected :
+            <span class="some-space">{{selected_entries.length}}</span>
+        </p>
+    </div>
+    <div class="col-md-12">
+        <form [formGroup]="applicatnt_attachment_form" class="">
+
+            <div class="py-3">
+                <app-files [multiple]="1" [flag]="1" [form]="applicatnt_attachment_form" controlName="attachments">
+                </app-files>
+            </div>
+            <!-- <tm-select [options]="m_requirements" [form_group]="form_fields" form_control="master_table_name" title_property="job_title" id_property="requirement_id" placeholder="Select Stage" float_label="always" (selected_obj)="setColumns($event)">
+            </tm-select> -->
+            <mat-form-field floatLabel="always">
+                <mat-label>Notes</mat-label>
+                <textarea matInput placeholder="Add a note" maxlength="400" formControlName="notes" rows="3" cols="3">
+                </textarea>
+            </mat-form-field>
+        </form>
+    </div>
+    <!-- </div> -->
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <div class="text-right w-100">
+        <button mat-button class="btn-sm cancel-btn" mat-dialog-close>
+            Cancel
+        </button>
+        <button mat-button class="btn-sm save-btn" [disabled]="loading" cdkFocusInitial
+            (click)="saveApplicantAttachments()">
+            Save
+            <i *ngIf="loading" class="fa fa-spinner fa-spin"></i>
+        </button>
+    </div>
+</mat-dialog-actions>

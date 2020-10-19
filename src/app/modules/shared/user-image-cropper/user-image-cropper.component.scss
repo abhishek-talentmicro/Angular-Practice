@@ -1,0 +1,33 @@
+/*
+  Created 
+    by: Upendram Reddy Tanuja
+    on: 06-Aug-2019 03:30 PM
+    purpose: Image Cropper Component
+    comments: to crop an image
+*/
+.example-handle {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: move;
+    width: 24px;
+    height: 24px;
+  }
+  
+  #cropper-div {
+    position: absolute;
+    border: 1px dotted;
+    height: 50px;
+    width: 25px;
+    resize: horizontal;
+    resize: both;
+    overflow: auto;
+    min-width: 300px;
+    min-height: 169px;
+    z-index: 1000;
+  }
+  
+  #cropped-image {
+    z-index: 999;
+  }
+  

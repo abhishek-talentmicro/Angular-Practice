@@ -1,0 +1,234 @@
+#sidebar {
+  width: 16.5%;
+  top: 51px;
+  position: fixed;
+  height: calc(100vh - 71px);
+  overflow-x: hidden;
+  overflow-y: scroll;
+  border-right: 2px solid gainsboro;
+  box-shadow: 0px 1px 3px 0px gainsboro;
+  z-index: 1000;
+}
+
+#sidebar {
+  padding: 0;
+}
+
+#sidebar .nav-item {
+  // border-bottom: 0.5px solid gainsboro;
+  box-shadow: 0px -0.5px 1px 0px gainsboro;
+  width: 100%;
+}
+
+#sidebar .nav-link {
+  color: #333 !important;
+  font-weight: 500;
+}
+
+#sidebar .nav-link:active {
+  color: #00b0f0 !important;
+  font-weight: 500;
+}
+
+#sidebar .nav-item .col-sm-2 {
+  padding-right: 0;
+  text-align: center;
+}
+
+#sidebar .nav-link.active {
+  color: #00b0f0 !important;
+  background: aliceblue;
+}
+
+#sidebar .nav-item:hover {
+  background: aliceblue;
+}
+
+#sidebar .nav-item:hover .nav-item-icon .fa {
+  color: #00b0f0;
+  transition: 0.3s;
+  font-size: 120%;
+}
+
+#sidebar .nav-item .fa {
+  transition: 0.3s;
+}
+
+#sidebar .nav-item-icon {
+  text-align: center;
+  line-height: 2.5;
+}
+
+#sidebar .plr-15 {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+#sidebar .nav-link > .row {
+  height: 40px;
+}
+
+#sidebar .active-link i,
+#sidebar .active-link .nav-link {
+  color: #00b0f0 !important;
+  background: aliceblue;
+}
+
+#sidebar .active-link {
+  background: aliceblue;
+}
+
+#sidebar .nav-item-img {
+  text-align: center;
+  line-height: 2;
+}
+
+#sidebar .nav-item-img img {
+  border-radius: 50%;
+}
+
+.nav-item-img {
+  text-align: center;
+  line-height: 2;
+}
+
+#sidebar .nav-item-img:hover img {
+  transition: 0.3s;
+  height: 100px;
+  width: 100px;
+  position: absolute;
+  z-index: 1000;
+  left: 0;
+}
+
+.nav-header {
+  background: #dcdcdc29 !important;
+  color: #00b0f0 !important;
+}
+
+.nav-item-title {
+  line-height: 2.5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#sidebar.sidebar-list-view {
+  width: 25%;
+  box-shadow: 0px 0px 0px 1px gainsboro;
+  border-right: none;
+  top: 51px;
+  height: calc(100vh - 110px);
+  overflow: hidden;
+  z-index: 1;
+}
+
+#sidebar.sidebar-list-view.client {
+  height:100vh !important;
+}
+.sub-menu {
+  max-height: 0;
+  transition: max-height 0.15s ease-out;
+  list-style: none;
+  padding: 0;
+  width: 100%;
+  overflow: hidden;
+  padding-left: 10px;
+}
+.sub-class-menu {
+  max-height: 0;
+  transition: max-height 0.15s ease-out;
+  list-style: none;
+  padding: 0;
+  width: 100%;
+  overflow: hidden;
+  padding-left: 10px;
+}
+
+
+
+.sub-menu.open {
+  max-height: 1000px;
+  transition: max-height 0.25s ease-in;
+  margin-bottom: 1px;
+}
+.sub-class-menu.open {
+  max-height: 1000px;
+  transition: max-height 0.25s ease-in;
+  margin-bottom: 1px;
+}
+
+.sub-menu-open .fa.fa-chevron-down {
+  transform: rotateX(180deg);
+  transition: transform 0.25s ease-in;
+}
+.sub-class-menu-open .fa.fa-chevron-down {
+  transform: rotateX(180deg);
+  transition: transform 0.25s ease-in;
+}
+
+
+.sub-menu .nav-item {
+  font-size: 14px;
+}
+.sub-class-menu .nav-item {
+  font-size: 12px;
+}
+
+.sub-menu .nav-item:hover {
+  color: #00b0f0;
+}
+.sub-class-menu .nav-item:hover {
+  color: #00b0f0;
+}
+.sub-class-menu .nav-item:hover {
+  color: #00b0f0;
+}
+
+
+.sidebar-list-view .input-group {
+  border-bottom: 1px solid gainsboro;
+}
+
+#sidebar .pointer {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+#sidebar .sub-menu-open:hover {
+  background: none;
+}
+#sidebar .sub-class-menu-open:hover {
+  background: none;
+}
+
+#sidebar .sub-menu-open > .nav-link.active .row {
+  background: none;
+}
+
+#sidebar .sub-class-menu-open > .nav-link.active .row {
+  background: none;
+}
+#sidebar .sub-menu.open .nav-item {
+  box-shadow: 1px -0.5px 1px 0px gainsboro;
+}
+#sidebar .sub-class-menu.open .nav-item {
+  box-shadow: 1px -0.5px 1px 0px gainsboro;
+}
+
+#sidebar .sub-menu.open .row {
+  height: auto;
+}
+
+#sidebar .sub-class-menu.open .row {
+  height: auto;
+}
+
+.sidebar-list-view .nav-item-title {
+  line-height: 30px;
+  vertical-align: middle !important;
+}
+
+.sidebar-list-view .nav-link > .row {
+  height: 30px !important;
+}

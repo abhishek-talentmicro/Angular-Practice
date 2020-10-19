@@ -1,0 +1,20 @@
+<form [formGroup]="form">
+    <label *ngIf="label_block" class="m-0 html-label" [ngClass]="{'req':required}" [innerHtml]="label|HTMLFormatter"
+        [title]="label ? (label | HTMLFormatter : 1) : ''"></label>
+    <mat-form-field floatLabel="always" class="mat-border-none" *ngIf="options && options.length">
+        <mat-label *ngIf="!label_block&&required" class="req" [innerHtml]="label" [title]="label ? (label | HTMLFormatter : 1) : ''">
+        </mat-label>
+        <mat-label *ngIf="!label_block&&!required" [innerHtml]="label" [title]="label ? (label | HTMLFormatter : 1) : ''"></mat-label>
+        <mat-radio-group [formControlName]="controlName">
+            <mat-radio-button *ngFor="let item of options" [value]="item.code">{{item.title}}</mat-radio-button>
+        </mat-radio-group>
+
+        <input type="text" matInput style="display: none;">
+
+
+
+        <div *ngIf="form.get([controlName]).touched &&form.get([controlName]).hasError('required')" class="error">
+            Field is mandatory
+        </div>
+    </mat-form-field>
+</form>

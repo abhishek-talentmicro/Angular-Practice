@@ -1,0 +1,74 @@
+.social-media-icon {
+  width: 75%;
+  cursor: pointer;
+}
+
+.social-media-share:hover {
+  background: aliceblue;
+  border-radius: 5px;
+  cursor: pointer;
+}
+::ng-deep .mat-horizontal-content-container {
+  overflow: hidden;
+  padding: 0px 24px !important;
+}
+#or {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  color: #aaa;
+}
+
+#or::before,
+#or::after {
+  position: absolute;
+  width: 40%;
+  height: 1px;
+  top: 24px;
+  background-color: #aaa;
+  content: "";
+}
+
+#or::before {
+  left: 0;
+}
+
+#or::after {
+  right: 0;
+}
+
+hr{
+  position: absolute;
+  width: 100%;
+ top:-9px;
+  background-color: #aaa;
+  content: "";
+}
+// .card-link{
+// background-color: white;
+// color:black;
+// }
+::ng-deep .mat-horizontal-stepper-header {
+  height: 42px !important;
+
+}
+.copy{
+  float: right;
+  cursor: pointer;
+  border: 1px solid gainsboro;
+  margin-left: 10px;
+}
+.skip{
+ margin-top: 10px;
+ cursor: pointer;
+}
+div.card {
+  border-radius: 9px !important;
+}
+// .card-link:active{
+//   background-color: #1e90ff !important;
+//   color: white !important;
+//   transition: 0.5s !important;
+// }

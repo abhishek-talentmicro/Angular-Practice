@@ -1,0 +1,160 @@
+<h2 mat-dialog-title style="line-height: normal;">
+
+  {{all_files[index].file_title}}
+  <a class=" ml-2 download mr-2"
+    [attr.href]="all_files[index] && all_files[index].content ? ((all_files[index].content) | SafeFilePipe):(all_files[index].file_path&& all_files[index].file_path!='' ? all_files[index].file_path+'?original_type=1' : '')"
+    [attr.download]="all_files[index].file_title" matTooltip="Download" target='_blank'>
+    <i class="fa fa-download" aria-hidden="true"></i>
+  </a>
+
+
+  <span class="ml-auto" (click)="close()" style="float: right;cursor:pointer">
+    <i class="fa fa-times" aria-hidden="true"></i>
+  </span>
+
+
+  <span class="float-right mr-4">
+    <i class="fa fa-angle-double-left prev-icon pointer" matTooltip="Previous"
+      [ngClass]="{'out-of-index' : negative_index }" (click)="previousFile()"
+      *ngIf="index != 0 && all_files.length > 1">
+    </i>
+    <span class="count" *ngIf="all_files.length > 1">{{index + 1 +' of '+ all_files.length}}</span>
+    <i class="fa fa-angle-double-right next-icon pointer" matTooltip=" Next"
+      [ngClass]="{'out-of-bound' : index_outof_bound }" (click)="nextFile()"
+      *ngIf="index != all_files.length -1  && all_files.length > 1">
+    </i>
+  </span>
+
+</h2>
+
+<!-- <h6 class="section_title mb-1">
+    {{all_files[index].file_title}}
+    <span class="float-right" *ngIf="all_files.length > 1">
+        <i class="fa fa-angle-double-left  prev-icon pointer" matTooltip="Previos"
+            [ngClass]="{'out-of-index' : negative_index }" (click)="previousFile()" *ngIf="index != 0">
+        </i>
+
+        <i class="fa fa-angle-double-right next-icon pointer" matTooltip=" Next"
+            [ngClass]="{'out-of-bound' : index_outof_bound }" (click)="nextFile()" *ngIf="index != all_files.length -1">
+        </i>
+    </span>
+</h6> -->
+
+<div [ngClass]="(other_data && (other_data.cr_user_id ||other_data.lu_user_id ||  other_data.notes)) ?'h-75':'height'">
+  <ng-container
+    *ngIf="all_files[index] && all_files[index].file_path && all_files[index].file_path.indexOf('http') > -1 && all_files[index].file_path.split('.'); else elseTemplate">
+    <div class="" style="padding : 0 10px !important;height: 100%;"
+      *ngIf="reset_object_tag && !all_files[index].is_table && !all_files[index].is_doc;else xlsx">
+      <object id="resumeViewer" frameborder="0" style="width: 100%;height: 100%;object-fit: contain;"
+        [data]="all_files[index].file_path | SafeFilePipe" [title]="all_files[index].file_title || ''">
+      </object>
+      <!-- <div class="d-flex justify-content-center h-75 loader">
+                <div class="align-self-center" *ngIf="loader">
+                    <div class="wandering-cubes">
+                        <div class="cube loader-cube1"></div>
+                        <div class="cube loader-cube2"></div>
+                        <div class="cube loader-cube3"></div>
+                        <div class="cube loader-cube4"></div>
+                    </div>
+                </div>
+                <span *ngIf="!loader" class="align-self-center">No Preview Available</span>
+            </div> -->
+    </div>
+  </ng-container>
+  <ng-template #elseTemplate>
+    <div class="" style="padding : 0 10px !important;height: 100%;"
+      *ngIf="reset_embed_tag && !all_files[index].is_table && !all_files[index].is_doc;else xlsx">
+      <embed id="resumeViewer" frameborder="0" style="width: 100%;height: 100%;object-fit: contain;"
+        [src]="all_files[index].content | SafeFilePipe" [type]="all_files[index].mime_type"
+        [title]="all_files[index].file_title || ''">
+
+      <!-- <div class="d-flex justify-content-center h-75 loader">
+                <div class="align-self-center">
+                    <div class="wandering-cubes" *ngIf="loader">
+                        <div class="cube loader-cube1"></div>
+                        <div class="cube loader-cube2"></div>
+                        <div class="cube loader-cube3"></div>
+                        <div class="cube loader-cube4"></div>
+                    </div>
+                    <span *ngIf="!loader">No Preview Available</span>
+                </div>
+            </div> -->
+    </div>
+  </ng-template>
+
+  <ng-template #xlsx>
+    <ng-container *ngIf="all_files[index].table_data;">
+      <div class="h-100" style="z-index: 1000;">
+        <app-tallint-table [table_records]="all_files[index].table_data"
+          [total_count]="all_files[index].table_data.length">
+        </app-tallint-table>
+      </div>
+
+      <!-- <div class="d-flex justify-content-center h-75 loader">
+                <div class="align-self-center">
+                    <div class="wandering-cubes" *ngIf="loader">
+                        <div class="cube loader-cube1"></div>
+                        <div class="cube loader-cube2"></div>
+                        <div class="cube loader-cube3"></div>
+                        <div class="cube loader-cube4"></div>
+                    </div>
+                    <span *ngIf="!loader">No Preview Available</span>
+                </div>
+            </div> -->
+    </ng-container>
+    <ng-container *ngIf="all_files[index].base64">
+      <div class="h-100">
+        <embed id="resumeViewer" frameborder="0" style="width: 100%;height: 100%;object-fit: contain;"
+          [src]="all_files[index].base64 | SafeFilePipe" [title]="all_files[index].file_title || ''">
+
+
+      </div>
+    </ng-container>
+
+  </ng-template>
+
+
+
+
+
+  <!-- <ng-template #noPreview>
+        <ng-container *ngIf="!all_files[index].table_data; else elseTemplate1">
+            <div class="d-flex justify-content-center h-75">
+                <div class="loader-overlay">
+                    <div class="wandering-cubes align-self-center">
+                        <div class="cube loader-cube1"></div>
+                        <div class="cube loader-cube2"></div>
+                        <div class="cube loader-cube3"></div>
+                        <div class="cube loader-cube4"></div>
+                    </div>
+                </div>
+                <span class="align-self-center">No Preview Available</span>
+            </div>
+        </ng-container>
+        <ng-template #elseTemplate1>
+            <div class="h-75" style="z-index: 1000;">
+                <app-tallint-table [table_records]="all_files[index].table_data"
+                    [total_count]="all_files[index].table_data.length">
+                </app-tallint-table>
+            </div>
+        </ng-template>
+
+    </ng-template>-->
+</div>
+
+<div mat-dialog-actions *ngIf="other_data && (other_data.cr_user_id ||other_data.lu_user_id ||  other_data.notes)">
+  <div class="mat-action">
+    <span class="desc">
+      {{ (other_data.description ? other_data.description: (other_data.notes ? other_data.notes :'')) }}
+    </span>
+
+    <span class="cr-date">
+      {{(other_data.cr_user_id ? 'Created by ' + other_data.cr_user_id + ' on ' +(( other_data.cr_date | UtcToLocalTime) |date: 'd-MMM-yyyy h:mm a'):'')}}
+    </span>
+
+    <span class="lu-date">
+      {{(other_data.lu_user_id ?'Updated by ' + other_data.lu_user_id + ' on ' +(( other_data.lu_date | UtcToLocalTime) | date: 'd-MMM-yyyy h:mm a'):'')}}
+    </span>
+  </div>
+
+</div>

@@ -1,0 +1,98 @@
+// .visible:hover {
+//     background: dimgrey !important;
+//     color: white !important;
+// }
+// .column :hover {
+//     background: gray !important;
+//     color: black !important;
+// }
+.visible:hover {
+    background: rgba(177, 168, 168, 0.87) !important;
+    color: black !important;
+    -webkit-animation: 0.5s draw linear forwards;
+    animation: 0.5s draw linear forwards;
+}
+
+@keyframes draw {
+    0% {
+        stroke-dasharray: 140 540;
+        stroke-dashoffset: -474;
+        stroke-width: 8px;
+    }
+    100% {
+        stroke-dasharray: 760;
+        stroke-dashoffset: 0;
+        stroke-width: 2px;
+    }
+}
+
+.mat-list-base .mat-list-item, .mat-list-base .mat-list-option{
+    height: 35px !important;
+    margin-bottom: 5px;
+    font-size: 13px;
+}
+
+ 
+  .list {
+    border: solid 1px #ccc;
+    min-height: 30px;
+    background: white;
+    border-radius: 4px;
+    overflow: hidden;
+    display: block;
+  }
+  
+  .box {
+    padding: 10px;
+    border-bottom: solid 1px #ccc;
+    color: rgba(0, 0, 0, 0.87);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    cursor: move;
+    background: white;
+    font-size: 14px;
+  }
+  
+  .cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+                0 8px 10px 1px rgba(0, 0, 0, 0.14),
+                0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  }
+  
+  .cdk-drag-placeholder {
+    opacity: 0;
+  }
+  
+  .cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  
+  .box:last-child {
+    border: none;
+  }
+  
+  .list.cdk-drop-list-dragging .box:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+
+  #drop-zone {
+    border: 2px dotted gainsboro;
+  }
+  
+  #drop-zone {
+    text-align: center;
+  }
+
+  #drop-zone1 {
+    border: 2px dotted gainsboro;
+  }
+  
+  #drop-zone1 {
+    text-align: center;
+  }
+  

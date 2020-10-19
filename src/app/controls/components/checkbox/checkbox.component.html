@@ -1,0 +1,9 @@
+<form [formGroup]="form">
+  <mat-checkbox [title]="label ? (label | HTMLFormatter : 1) : ''" class="check" [formControlName]="controlName"
+    [disabled]="disabled ? true:false" [required]="required" [id]="id" [style]="style"
+    (change)="selectedCheckbox($event)">
+
+    <span class="check" *ngIf="label_block" class="m-0 html-label" [innerHtml]="label | HTMLFormatter"></span>
+    <span class="check" *ngIf="!label_block" [innerHtml]="label | HTMLFormatter"></span>
+  </mat-checkbox>
+</form>

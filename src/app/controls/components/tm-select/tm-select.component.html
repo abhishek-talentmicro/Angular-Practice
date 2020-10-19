@@ -1,0 +1,78 @@
+<form class="full-size-block" [formGroup]="form_group">
+    <label *ngIf="label_block&&label" class="m-0 html-label" [ngClass]="{'req':mandatory}"
+        [innerHtml]="label | HTMLFormatter"></label>
+    <mat-form-field #hidden_input id="{{random_id}}" *ngIf="!basic" style="margin-bottom : 0px;" floatLabel="always"
+        appearance="standard">
+        <mat-label [ngClass]="label_class && label_class!='' ?label_class:''" *ngIf="!label_block&&mandatory&&label"
+            class="req" [innerHtml]="label | HTMLFormatter"></mat-label>
+        <mat-label [ngClass]="label_class && label_class!='' ?label_class:''" *ngIf="!label_block&&!mandatory&&label"
+            [innerHtml]="label | HTMLFormatter">
+        </mat-label>
+        <input style="display: none;" type="text" autocomplete="off" placeholder="{{placeholder}}" matInput
+            [formControl]="form_group.get([form_control])" [readonly]="disabled ? true : false">
+
+        <span matPrefix *ngIf="prefix_label" class="prefix">{{prefix_label}}&nbsp;</span>
+        <input title="{{search.value}}" class="pr-1" style="z-index: 1001;" type="text" autocomplete="off"
+            placeholder="{{placeholder}}" (keydown)="checkForTab($event)" (focusin)="showList($event);"
+            (click)="showList($event)" (keyup)="searchKeyPress($event)" matInput [formControl]="search"
+            [readonly]="disabled ? true : false">
+
+        <i class="fa fa-close mr-2 x" matSuffix (click)="clearValue($event)"
+            *ngIf="!mandatory && form_group.get(form_control).value && !disabled"
+            style="cursor: pointer;"></i>
+        <i (click)="showList($event)" class="fa fa-angle-down" matSuffix *ngIf="!disabled"></i>
+        <i class="fa fa-plus ml-2 x" matSuffix (click)="masterCallbackRef()" *ngIf="master_form_code"
+            style="cursor: pointer;"></i>
+        <span matSuffix *ngIf="suffix_label" class="suffix">&nbsp;{{suffix_label}}</span>
+        <mat-error *ngIf="form_group.get([form_control]).hasError('required');else maxlength">
+            Field is mandatory
+            <!-- <span [innerHTML]="label + ' is mandatory'"></span> -->
+        </mat-error>
+        <ng-template #maxlength>
+            <mat-error *ngIf="form_group.get([form_control]).hasError('maxlength');else minlength">
+                Maximum length ({{maxLength}}) has exceeded
+            </mat-error>
+        </ng-template>
+        <ng-template #minlength>
+            <mat-error *ngIf="form_group.get([form_control]).hasError('minlength');else maxvalue">
+                Minimum length must be {{minLength}} digits
+            </mat-error>
+        </ng-template>
+        <ng-template #maxvalue>
+            <mat-error *ngIf="form_group.get([form_control]).hasError('max');else minvalue">
+                Value must be lesser than {{maxValue}}
+            </mat-error>
+        </ng-template>
+        <ng-template #minvalue>
+            <mat-error *ngIf="form_group.get([form_control]).hasError('min')">
+                Value must be greater than {{minValue}}
+            </mat-error>
+        </ng-template>
+    </mat-form-field>
+    <div class="input-group" *ngIf="basic">
+        <input type="text" [ngStyle]="style" autocomplete="off" title="{{placeholder}}" placeholder="{{placeholder}}"
+            [formControl]="search" #text (keydown)="searchKeyPress($event)" (keyup)="searchKeyPress($event)">
+        <div class="input-group-append my-auto p-1">
+            <i class="fa fa-times" matSuffix *ngIf="!disabled"></i>
+            <i class="fa fa-angle-down" matSuffix *ngIf="!disabled"></i>
+        </div>
+    </div>
+
+    <cdk-virtual-scroll-viewport #options_list_view
+        style="z-index:1001;opacity: 1; pointer-events: auto;color: black;position:fixed;background-color: white;top: 45px;"
+        *ngIf="show_list" itemSize="40" class="viewport select-menu tm-select-menu"
+        (scrolledIndexChange)="getNextBatch($event);" [style.left.px]="left" [style.top.px]="top">
+        <ng-container *cdkVirtualFor="let option of (filtered_options); let i = index">
+            <li class="select-options" (click)="onSelect(option)" [class.active]="i == arrow_key_location"
+                [value]="option[id_property]">
+                {{ option[title_property] }}
+            </li>
+        </ng-container>
+        <li *ngIf="filtered_options == null || filtered_options == undefined || filtered_options.length == 0 "
+            class="select-options"> No data found!</li>
+    </cdk-virtual-scroll-viewport>
+
+    <div id="overlay_mat_select_search" (click)="hideList()" *ngIf="display_overlay"
+        style="position: fixed;width: 100%;height: 100%;z-index: 1000;left: 0;top: 0;">
+    </div>
+</form>

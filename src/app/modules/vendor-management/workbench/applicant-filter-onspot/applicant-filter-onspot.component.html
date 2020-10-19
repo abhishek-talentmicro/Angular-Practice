@@ -1,0 +1,36 @@
+<h2 mat-dialog-title>
+    Applicant Filter
+    <a (click)="onCancel()"><i class="fa fa-times pointer pt-2 pr-3 float-right"></i></a>
+</h2>
+<mat-dialog-content>
+    <div class="pt-2">
+        <tm-dynamic-form *ngIf="masters && section_data" [section_list]="section_data" [masters]="masters"
+            [display_type]="display_type" [dynamic_form]="form_group">
+        </tm-dynamic-form>
+    </div>
+
+    <div class="text-center mb-4" *ngIf="stage_data">
+        <span style="padding: 3px 10px; display:inline-block;box-shadow:0 0 5px 0 #999;font-size:13px;">
+            {{stage_data.display_title}} <i class="fa fa-times pointer" (click)="removeStageData()"></i>
+        </span>
+    </div>
+    <div class="text-center mb-4" *ngIf="code_master">
+        <span style="padding: 3px 10px; display:inline-block;box-shadow:0 0 5px 0 #999;font-size:13px;">
+            {{code_master.code_master_title}} <i class="fa fa-times pointer" (click)="removeCodeMaster()"></i>
+        </span>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <div class="col-md-12 mx-auto">
+        <div class="text-center">
+            <button class="btn btn-sm cancel-btn mr-2" style="width:48%" (click)="onCancel()">
+                Close
+            </button>
+            <button class="btn btn-sm save-btn" style="width:48%" (click)="sendData()">
+                <span>
+                    Filter
+                </span>
+            </button>
+        </div>
+    </div>
+</mat-dialog-actions>
